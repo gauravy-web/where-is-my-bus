@@ -1,17 +1,25 @@
+
 const admin = require('firebase-admin');
 
-// ✅ Local pe file, Render pe environment variable
 let serviceAccount;
+
+// Use environment variable on Render; use local JSON file otherwise.
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } catch (error) {
+    throw new Error(
+      'FIREBASE_SERVICE_ACCOUNT is not valid JSON. Check your Render environment variable.'
+    );
+  }
 } else {
   serviceAccount = require('../../firebase-admin.json');
 }
 
-// Firebase initialize
+// Initialize Firebase Admin only once.
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
@@ -20,43 +28,58 @@ const sendNotification = async (fcmToken, title, body, data = {}) => {
     const message = {
       token: fcmToken,
       notification: { title, body },
-      data: data,
+      data: Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, String(value)])
+      ),
       android: {
         priority: 'high',
         notification: {
           sound: 'default',
-          channelId: 'whereismybus'
-        }
-      }
+          channelId: 'whereismybus',
+        },
+      },
     };
+
     const response = await admin.messaging().send(message);
     console.log('Notification sent:', response);
     return response;
   } catch (err) {
-    console.log('Notification error:', err.message);
+    console.error('Notification error:', err.message);
+    throw err;
   }
 };
 
 const sendMulticast = async (fcmTokens, title, body, data = {}) => {
-  if (!fcmTokens || fcmTokens.length === 0) return;
+  if (!Array.isArray(fcmTokens) || fcmTokens.length === 0) {
+    return;
+  }
+
   try {
     const message = {
       tokens: fcmTokens,
       notification: { title, body },
-      data: data,
+      data: Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, String(value)])
+      ),
       android: {
         priority: 'high',
         notification: {
           sound: 'default',
-          channelId: 'whereismybus'
-        }
-      }
+          channelId: 'whereismybus',
+        },
+      },
     };
+
     const response = await admin.messaging().sendEachForMulticast(message);
-    console.log(`Sent: ${response.successCount}, Failed: ${response.failureCount}`);
+
+    console.log(
+      `Sent: ${response.successCount}, Failed: ${response.failureCount}`
+    );
+
     return response;
   } catch (err) {
-    console.log('Multicast error:', err.message);
+    console.error('Multicast error:', err.message);
+    throw err;
   }
 };
 
