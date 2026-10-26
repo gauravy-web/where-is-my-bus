@@ -1,0 +1,252 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  phone     String   @unique
+  name      String?
+  role      Role     @default(PARENT)
+  password  String?
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+  fcmToken  String?
+}
+
+model Bus {
+  id         String    @id @default(dbgenerated("gen_random_uuid()"))
+  busNo      String    @unique
+  driverName String
+  status     BusStatus @default(INACTIVE)
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+  label      String?
+}
+
+model LiveLocation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  busId     String
+  lat       Float
+  lng       Float
+  speed     Float    @default(0)
+  timestamp DateTime @default(now()) @db.Timestamp(6)
+}
+
+// ── needsLocation added: true when a stop was auto-created by CSV bulk
+// import and geocoding either failed or returned a low-confidence
+// match — Admin must confirm/fix its lat/lng before it's trusted for
+// navigation/ETA. Manually-added stops (map picker) are always false. ──
+model Stop {
+  id            String        @id @default(dbgenerated("gen_random_uuid()"))
+  name          String
+  lat           Float
+  lng           Float
+  busId         String
+  order         Int
+  needsLocation Boolean       @default(false)
+  direction     TripDirection @default(PICKUP)
+  studentId     String?
+
+  @@index([busId, direction, order])
+}
+
+// ── NEW — one-time Admin setup: acts as the geocoding anchor for
+// auto-created stops and the destination for auto-generated routes. ──
+model School {
+  id           String   @id @default(dbgenerated("gen_random_uuid()"))
+  name         String
+  address      String?
+  lat          Float
+  lng          Float
+  updatedAt    DateTime @default(now()) @updatedAt @db.Timestamp(6)
+  contactPhone String?
+}
+
+model Admin {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model Attendance {
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  busId       String
+  studentId   String
+  date        String
+  tripType    String    @default("pickup")
+  boarded     Boolean?  @default(false)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  tripId      String?
+  conductorId String?
+  checkedAt   DateTime? @db.Timestamp(6)
+  type        String?
+
+  @@unique([tripId, studentId, type])
+}
+
+model Driver {
+  id            String   @id @default(dbgenerated("gen_random_uuid()"))
+  name          String
+  phone         String
+  busId         String?
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  licenseNo     String?
+  licenseExpiry String?
+  experience    Int?     @default(0)
+}
+
+model Conductor {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  name      String
+  phone     String
+  busId     String?
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model Emergency {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  busId      String
+  driverName String?
+  type       String   @default("SOS")
+  notes      String?
+  status     String?  @default("open")
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+}
+
+model Student {
+  id           String   @id @default(dbgenerated("gen_random_uuid()"))
+  name         String
+  admissionNo  String
+  busId        String
+  parentPhone  String
+  stopId       String?
+  class        String?
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  dropStopId   String?
+  parentPhone2 String?
+  fatherName   String?
+  motherName   String?
+
+  @@index([admissionNo])
+}
+
+enum Role {
+  PARENT
+  DRIVER
+  CONDUCTOR
+  ADMIN
+}
+
+enum BusStatus {
+  ACTIVE
+  INACTIVE
+  ON_TRIP
+}
+
+enum TripDirection {
+  PICKUP
+  DROP
+}
+
+enum TripStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TripStopStatus {
+  PENDING
+  ARRIVED
+  COMPLETED
+  SKIPPED
+  CANCELLED
+}
+
+model Route {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  name       String
+  busId      String
+  startPoint String
+  endPoint   String?
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+
+  stops RouteStop[]
+}
+
+// ── FIX: @relation(...) must be written on a single line — the
+// original multi-line version (fields:/references:/onDelete: each on
+// their own line) is what Prisma 5.22's parser was rejecting. ──
+model RouteStop {
+  id                String   @id @default(dbgenerated("gen_random_uuid()"))
+  routeId           String
+  name              String
+  lat               Float
+  lng               Float
+  order             Int
+  distanceFromStart Float    @default(0)
+  estimatedTime     Int      @default(0)
+  createdAt         DateTime @default(now()) @db.Timestamp(6)
+
+  route Route @relation(fields: [routeId], references: [id], onDelete: Cascade)
+}
+
+model Trip {
+  id             String        @id @default(dbgenerated("gen_random_uuid()"))
+  busId          String
+  driverId       String
+  direction      TripDirection
+  status         TripStatus    @default(ACTIVE)
+  startedAt      DateTime      @default(now()) @db.Timestamp(6)
+  endedAt        DateTime?     @db.Timestamp(6)
+  lastLat        Float?
+  lastLng        Float?
+  lastSpeed      Float?
+  lastHeading    Float?
+  lastLocationAt DateTime?     @db.Timestamp(6)
+  destName       String?
+  destLat        Float?
+  destLng        Float?
+
+  stops TripStop[]
+
+  @@index([busId, status])
+}
+
+model TripStop {
+  id          String         @id @default(dbgenerated("gen_random_uuid()"))
+  tripId      String
+  stopId      String
+  order       Int
+  name        String
+  lat         Float
+  lng         Float
+  status      TripStopStatus @default(PENDING)
+  arrivedAt   DateTime?      @db.Timestamp(6)
+  completedAt DateTime?      @db.Timestamp(6)
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([tripId, order])
+}
+
+model NotificationLog {
+  id         String    @id @default(dbgenerated("gen_random_uuid()"))
+  tripId     String
+  tripStopId String
+  studentId  String
+  type       String
+  status     String
+  etaSeconds Int?
+  sentAt     DateTime? @db.Timestamp(6)
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+
+  @@unique([tripId, tripStopId, studentId, type])
+}

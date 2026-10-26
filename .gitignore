@@ -1,0 +1,26 @@
+
+# Dependencies
+node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.env
+
+# Firebase credentials
+firebase-admin*.json
+
+# Google Services credentials
+google-services*.json
+
+# Expo and Android builds
+.expo/
+*.apk
+
+# Generated Prisma files and temporary files
+src/generated/prisma/*.tmp*
+*.log
+
+# Test output
+coverage/
