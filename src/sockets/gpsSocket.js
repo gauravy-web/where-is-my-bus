@@ -58,6 +58,12 @@ function createGpsSocket(deps = {}) {
     const svc = typeof deps.locationService === 'function' ? deps.locationService() : deps.locationService;
     return svc || require('../services/locationService');
   };
+  const getMobileIngest = () => {
+    if (deps.locationSourceService) return (id, fix) => deps.locationSourceService.ingestMobile(id, fix);
+    if (deps.locationService) return (id, fix) => getLocation().ingest(id, fix);
+    const source = require('../services/locationSourceService');
+    return (id, fix) => source.ingestMobile(id, fix);
+  };
   const getTrips = () => deps.tripService || require('../services/tripService');
   const now = deps.now || (() => Date.now());
 
@@ -203,8 +209,11 @@ function createGpsSocket(deps = {}) {
         if (!busId) return;
         try {
           const fix = toIngestFix(data, now());
-          const result = await getLocation().ingest(busId, fix);
-          if (!result.accepted) return;
+          // Phone fixes go through the source service, which forwards them to
+          // ingest unless a GPS device is this bus's primary source. Tests that
+          // inject their own locationService keep the direct path.
+          const result = await getMobileIngest()(busId, fix);
+          if (!result.accepted || result.backup) return;
 
           // Speed alert — 60+ km/h pe sirf admin ko notify karo
           const kmh = Math.round(Number(fix.speed) * 3.6);
@@ -330,6 +339,36 @@ function createGpsSocket(deps = {}) {
         }
       });
 
+
+      // -- Chat typing indicator --
+      socket.on('chat:typing', async (data) => {
+        try {
+          const { busId, isTyping } = data;
+          if (!busId) return;
+
+          // Verify authorization
+          const hasAccess = await getAccess().canViewBus(user, busId);
+          if (!hasAccess) {
+            socket.emit('error', { code: 'FORBIDDEN', message: 'Access denied' });
+            return;
+          }
+
+          // Get user display name
+          const chatService = require('../services/chatService');
+          const userName = await chatService.getSenderDisplayName(user.id, user.role);
+
+          // Broadcast to bus room (exclude sender)
+          socket.to(busRoom(busId)).emit('chat:typing', {
+            busId,
+            userId: user.id,
+            userName,
+            isTyping: !!isTyping,
+          });
+        } catch (error) {
+          console.error('chat:typing error:', error);
+          socket.emit('error', { code: 'INTERNAL_ERROR', message: 'Failed to process typing indicator' });
+        }
+      });
       socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
       });
@@ -375,6 +414,9 @@ const gpsSocket = (io) => {
   locationService.setOnFix((busId, fix, trip) => {
     etaCoordinator.onFix(busId, fix, trip); // never rejects
   });
+  const locationSource = require('../services/locationSourceService');
+  locationSource.setEmitter(emitter);
+  locationSource.start();
   wireNotifier(etaCoordinator);
   wireSafetyAlerts();
   return createGpsSocket()(io);

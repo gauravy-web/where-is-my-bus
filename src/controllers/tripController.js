@@ -236,9 +236,145 @@ const getActiveBuses = async (req, res) => {
   }
 };
 
+// GET /api/trips/current/students — Requirement 11: fetch students for active trip grouped by stop
+const getCurrentTripStudents = async (req, res) => {
+  try {
+    const { user } = req;
+    let busId;
+    
+    // Resolve busId from driver/conductor assignment
+    if (user.role === 'DRIVER') {
+      const driver = await accessService.getDriverForUser(user);
+      if (!hasBus(driver)) {
+        return res.json({ success: true, students: [], stops: [], trip: null, noStopStudents: [] });
+      }
+      busId = String(driver.busId);
+    } else if (user.role === 'CONDUCTOR') {
+      const conductor = await accessService.getConductorForUser(user);
+      if (!conductor || !conductor.busId) {
+        return res.json({ success: true, students: [], stops: [], trip: null, noStopStudents: [] });
+      }
+      busId = String(conductor.busId);
+    } else {
+      return res.status(403).json({ message: 'Only drivers and conductors can access this endpoint' });
+    }
+
+    // Fetch active trip with included stops
+    const trip = await prisma.trip.findFirst({
+      where: { busId, status: 'ACTIVE' },
+      include: {
+        stops: {
+          orderBy: { order: 'asc' }
+        }
+      }
+    });
+
+    if (!trip) {
+      return res.json({ success: true, students: [], stops: [], trip: null, noStopStudents: [] });
+    }
+
+    // Fetch all students for this bus
+    const students = await prisma.student.findMany({
+      where: { busId },
+      select: {
+        id: true,
+        name: true,
+        admissionNo: true,
+        stopId: true,
+        dropStopId: true,
+        class: true
+      }
+    });
+
+    // Fetch existing attendance for this trip
+    const today = new Date().toISOString().split('T')[0];
+    const attendanceRecords = await prisma.attendance.findMany({
+      where: {
+        tripId: trip.id,
+        date: today
+      }
+    });
+
+    // Build attendance map
+    const attendanceMap = {};
+    attendanceRecords.forEach(record => {
+      const key = `${record.studentId}_${record.type || record.tripType}`;
+      attendanceMap[key] = {
+        boarded: record.boarded,
+        checkedAt: record.checkedAt || record.createdAt,
+        conductorId: record.conductorId
+      };
+    });
+
+    // Determine relevant stop field based on trip direction
+    const relevantStopField = trip.direction === 'PICKUP' ? 'stopId' : 'dropStopId';
+
+    // Enrich students with attendance status
+    const enrichedStudents = students.map(student => {
+      const relevantStop = student[relevantStopField];
+      const attendanceKey = `${student.id}_${trip.direction}`;
+      const attendance = attendanceMap[attendanceKey];
+
+      return {
+        ...student,
+        relevantStop,
+        attendance: attendance ? {
+          boarded: attendance.boarded,
+          checkedAt: attendance.checkedAt,
+          conductorId: attendance.conductorId
+        } : null
+      };
+    });
+
+    // Group by stop
+    const stopMap = {};
+    trip.stops.forEach(stop => {
+      stopMap[stop.stopId] = {
+        id: stop.stopId,
+        tripStopId: stop.id,
+        name: stop.name,
+        order: stop.order,
+        status: stop.status,
+        students: []
+      };
+    });
+
+    // Categorize students
+    const noStopStudents = [];
+    enrichedStudents.forEach(student => {
+      if (!student.relevantStop) {
+        noStopStudents.push(student);
+      } else if (stopMap[student.relevantStop]) {
+        stopMap[student.relevantStop].students.push(student);
+      }
+    });
+
+    // Convert to array and sort by order
+    const stopsWithStudents = Object.values(stopMap).sort((a, b) => a.order - b.order);
+
+    return res.json({
+      success: true,
+      trip: {
+        id: trip.id,
+        busId: trip.busId,
+        direction: trip.direction,
+        status: trip.status,
+        currentStopId: currentStop(trip)?.stopId || null
+      },
+      stops: stopsWithStudents,
+      noStopStudents
+    });
+
+  } catch (err) {
+    console.error('[tripController] getCurrentTripStudents failed:', err);
+    return res.status(500).json({ message: 'Failed to fetch trip students' });
+  }
+};
+
 module.exports = {
   startTrip,
   getCurrentTrip,
+  getCurrentTripStudents,
   completeStop,
   skipStop,
   cancelStop,

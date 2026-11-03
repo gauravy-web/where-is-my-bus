@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   startTrip,
   getCurrentTrip,
+  getCurrentTripStudents,
   completeStop,
   skipStop,
   cancelStop,
@@ -23,6 +24,7 @@ const driverOfBodyBus = requireBusAccess('busId', { from: 'body', roles: ['ADMIN
 router.post('/start', protect, requireRole('DRIVER'), startTrip);
 router.post('/end', protect, driverOfBodyBus, endTrip);
 router.get('/current', protect, requireRole('DRIVER', 'CONDUCTOR', 'ADMIN'), getCurrentTrip);
+router.get('/current/students', protect, requireRole('DRIVER', 'CONDUCTOR'), getCurrentTripStudents);
 router.get('/active', protect, requireRole('ADMIN'), getActiveBuses);
 router.post('/:id/stops/:tripStopId/complete', protect, requireRole('DRIVER'), completeStop);
 router.post('/:id/stops/:tripStopId/skip', protect, requireRole('DRIVER'), skipStop);

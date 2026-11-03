@@ -5,11 +5,11 @@ const { protect } = require('../middleware/authMiddleware');
 const { requireRole } = require('../middleware/requireRole');
 const { requireBusAccess } = require('../middleware/busAccess');
 router.get('/', protect, requireRole('ADMIN'), getAttendance);
-// ADMIN or the DRIVER assigned to body.busId.
+// ADMIN, the DRIVER, or the CONDUCTOR assigned to body.busId.
 router.post(
   '/',
   protect,
-  requireBusAccess('busId', { from: 'body', roles: ['ADMIN', 'DRIVER'] }),
+  requireBusAccess('busId', { from: 'body', roles: ['ADMIN', 'DRIVER', 'CONDUCTOR'] }),
   markAttendance,
 );
 module.exports = router;

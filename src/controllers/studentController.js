@@ -1,14 +1,11 @@
-const prisma = require('../db');
+﻿const prisma = require('../db');
 const { validateDropStop, validatePickupStop } = require('../services/stopService');
+const { offsetPaginate, paginationResponse } = require('../utils/pagination');
 
 const has = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
 
 // Read an optional nullable string from the body (stop ids, parentPhone2,
 // fatherName, motherName).
-//   absent          -> { given: false }
-//   null or blank   -> { given: true, value: null }  (clear the field)
-//   non-empty text  -> { given: true, value: '<trimmed>' }
-//   anything else   -> { error }
 function readNullableString(body, key) {
   if (!has(body, key) || body[key] === undefined) return { given: false };
   const raw = body[key];
@@ -17,10 +14,7 @@ function readNullableString(body, key) {
   return { given: true, value: raw.trim() || null };
 }
 
-// Check requested stop links against the student's bus. `student` only needs
-// busId. Returns { data } with the fields to write, or { error } for a 400.
-// Student.stopId is the pickup stop; dropStopId must be a DROP stop of the
-// same bus (Requirements 5.7, 5.8).
+// Check requested stop links against the student's bus.
 async function resolveStopLinks(student, pickup, drop) {
   const data = {};
   const checks = [
@@ -39,11 +33,53 @@ async function resolveStopLinks(student, pickup, drop) {
   return { data };
 }
 
+// GET /api/students?page=1&limit=50&busId=xxx (with pagination)
 const getStudents = async (req, res) => {
   try {
-    const students = await prisma.student.findMany({ orderBy: { createdAt: 'desc' } });
-    res.json({ success: true, students });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+    const { page, limit, busId, search } = req.query;
+    const { skip, take, page: pageNum, limit: limitNum } = offsetPaginate(page, limit);
+
+    // Build where clause
+    const where = {};
+    if (busId) where.busId = busId;
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { admissionNo: { contains: search, mode: 'insensitive' } },
+        { parentPhone: { contains: search } },
+      ];
+    }
+
+    // Fetch paginated students
+    const [students, total] = await Promise.all([
+      prisma.student.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          admissionNo: true,
+          busId: true,
+          parentPhone: true,
+          parentPhone2: true,
+          class: true,
+          stopId: true,
+          dropStopId: true,
+          fatherName: true,
+          motherName: true,
+          createdAt: true,
+        },
+      }),
+      prisma.student.count({ where }),
+    ]);
+
+    res.json(paginationResponse(students, total, pageNum, limitNum));
+  } catch (err) {
+    console.error('[studentController] getStudents error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 const addStudent = async (req, res) => {
@@ -78,10 +114,12 @@ const addStudent = async (req, res) => {
       },
     });
     res.json({ success: true, student });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    console.error('[studentController] addStudent error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// PUT /api/students/:id { dropStopId?, stopId? } (ADMIN). null clears a link.
 const updateStudent = async (req, res) => {
   try {
     const body = req.body || {};
@@ -101,18 +139,22 @@ const updateStudent = async (req, res) => {
 
     const updated = await prisma.student.update({ where: { id: student.id }, data: links.data });
     res.json({ success: true, student: updated });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    console.error('[studentController] updateStudent error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 const deleteStudent = async (req, res) => {
   try {
     await prisma.student.delete({ where: { id: req.params.id } });
     res.json({ success: true });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    console.error('[studentController] deleteStudent error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// A CONDUCTOR sees only names and Relevant_Stops (Requirement 3.9): no
-// parent phones or other family details.
 const conductorView = (s) => ({
   id: s.id,
   name: s.name,
@@ -124,11 +166,15 @@ const conductorView = (s) => ({
 const getStudentsByBus = async (req, res) => {
   try {
     const rows = await prisma.student.findMany({
-      where: { busId: req.params.busId }, orderBy: { name: 'asc' },
+      where: { busId: req.params.busId },
+      orderBy: { name: 'asc' },
     });
     const students = req.user && req.user.role === 'CONDUCTOR' ? rows.map(conductorView) : rows;
     res.json({ success: true, students });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    console.error('[studentController] getStudentsByBus error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 module.exports = { getStudents, addStudent, updateStudent, deleteStudent, getStudentsByBus };

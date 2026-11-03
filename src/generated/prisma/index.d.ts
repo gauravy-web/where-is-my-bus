@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Bus = $Result.DefaultSelection<Prisma.$BusPayload>
 /**
+ * Model GpsDevice
+ * 
+ */
+export type GpsDevice = $Result.DefaultSelection<Prisma.$GpsDevicePayload>
+/**
  * Model LiveLocation
  * 
  */
@@ -93,6 +98,21 @@ export type TripStop = $Result.DefaultSelection<Prisma.$TripStopPayload>
  * 
  */
 export type NotificationLog = $Result.DefaultSelection<Prisma.$NotificationLogPayload>
+/**
+ * Model AbsenceNotification
+ * 
+ */
+export type AbsenceNotification = $Result.DefaultSelection<Prisma.$AbsenceNotificationPayload>
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
+/**
+ * Model ChatReadStatus
+ * 
+ */
+export type ChatReadStatus = $Result.DefaultSelection<Prisma.$ChatReadStatusPayload>
 
 /**
  * Enums
@@ -115,6 +135,23 @@ export const BusStatus: {
 };
 
 export type BusStatus = (typeof BusStatus)[keyof typeof BusStatus]
+
+
+export const LocationMode: {
+  MOBILE_PRIMARY: 'MOBILE_PRIMARY',
+  DEVICE_PRIMARY: 'DEVICE_PRIMARY'
+};
+
+export type LocationMode = (typeof LocationMode)[keyof typeof LocationMode]
+
+
+export const LocationSource: {
+  MOBILE: 'MOBILE',
+  DEVICE: 'DEVICE',
+  NONE: 'NONE'
+};
+
+export type LocationSource = (typeof LocationSource)[keyof typeof LocationSource]
 
 
 export const TripDirection: {
@@ -144,6 +181,23 @@ export const TripStopStatus: {
 
 export type TripStopStatus = (typeof TripStopStatus)[keyof typeof TripStopStatus]
 
+
+export const AbsenceStatus: {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  LATE: 'LATE'
+};
+
+export type AbsenceStatus = (typeof AbsenceStatus)[keyof typeof AbsenceStatus]
+
+
+export const MessageType: {
+  MESSAGE: 'MESSAGE',
+  ANNOUNCEMENT: 'ANNOUNCEMENT'
+};
+
+export type MessageType = (typeof MessageType)[keyof typeof MessageType]
+
 }
 
 export type Role = $Enums.Role
@@ -153,6 +207,14 @@ export const Role: typeof $Enums.Role
 export type BusStatus = $Enums.BusStatus
 
 export const BusStatus: typeof $Enums.BusStatus
+
+export type LocationMode = $Enums.LocationMode
+
+export const LocationMode: typeof $Enums.LocationMode
+
+export type LocationSource = $Enums.LocationSource
+
+export const LocationSource: typeof $Enums.LocationSource
 
 export type TripDirection = $Enums.TripDirection
 
@@ -165,6 +227,14 @@ export const TripStatus: typeof $Enums.TripStatus
 export type TripStopStatus = $Enums.TripStopStatus
 
 export const TripStopStatus: typeof $Enums.TripStopStatus
+
+export type AbsenceStatus = $Enums.AbsenceStatus
+
+export const AbsenceStatus: typeof $Enums.AbsenceStatus
+
+export type MessageType = $Enums.MessageType
+
+export const MessageType: typeof $Enums.MessageType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -310,6 +380,16 @@ export class PrismaClient<
   get bus(): Prisma.BusDelegate<ExtArgs>;
 
   /**
+   * `prisma.gpsDevice`: Exposes CRUD operations for the **GpsDevice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GpsDevices
+    * const gpsDevices = await prisma.gpsDevice.findMany()
+    * ```
+    */
+  get gpsDevice(): Prisma.GpsDeviceDelegate<ExtArgs>;
+
+  /**
    * `prisma.liveLocation`: Exposes CRUD operations for the **LiveLocation** model.
     * Example usage:
     * ```ts
@@ -448,6 +528,36 @@ export class PrismaClient<
     * ```
     */
   get notificationLog(): Prisma.NotificationLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.absenceNotification`: Exposes CRUD operations for the **AbsenceNotification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AbsenceNotifications
+    * const absenceNotifications = await prisma.absenceNotification.findMany()
+    * ```
+    */
+  get absenceNotification(): Prisma.AbsenceNotificationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.chatMessage`: Exposes CRUD operations for the **ChatMessage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatMessages
+    * const chatMessages = await prisma.chatMessage.findMany()
+    * ```
+    */
+  get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs>;
+
+  /**
+   * `prisma.chatReadStatus`: Exposes CRUD operations for the **ChatReadStatus** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatReadStatuses
+    * const chatReadStatuses = await prisma.chatReadStatus.findMany()
+    * ```
+    */
+  get chatReadStatus(): Prisma.ChatReadStatusDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -891,6 +1001,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Bus: 'Bus',
+    GpsDevice: 'GpsDevice',
     LiveLocation: 'LiveLocation',
     Stop: 'Stop',
     School: 'School',
@@ -904,7 +1015,10 @@ export namespace Prisma {
     RouteStop: 'RouteStop',
     Trip: 'Trip',
     TripStop: 'TripStop',
-    NotificationLog: 'NotificationLog'
+    NotificationLog: 'NotificationLog',
+    AbsenceNotification: 'AbsenceNotification',
+    ChatMessage: 'ChatMessage',
+    ChatReadStatus: 'ChatReadStatus'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -920,7 +1034,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "bus" | "liveLocation" | "stop" | "school" | "admin" | "attendance" | "driver" | "conductor" | "emergency" | "student" | "route" | "routeStop" | "trip" | "tripStop" | "notificationLog"
+      modelProps: "user" | "bus" | "gpsDevice" | "liveLocation" | "stop" | "school" | "admin" | "attendance" | "driver" | "conductor" | "emergency" | "student" | "route" | "routeStop" | "trip" | "tripStop" | "notificationLog" | "absenceNotification" | "chatMessage" | "chatReadStatus"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1061,6 +1175,76 @@ export namespace Prisma {
           count: {
             args: Prisma.BusCountArgs<ExtArgs>
             result: $Utils.Optional<BusCountAggregateOutputType> | number
+          }
+        }
+      }
+      GpsDevice: {
+        payload: Prisma.$GpsDevicePayload<ExtArgs>
+        fields: Prisma.GpsDeviceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GpsDeviceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GpsDeviceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          findFirst: {
+            args: Prisma.GpsDeviceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GpsDeviceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          findMany: {
+            args: Prisma.GpsDeviceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>[]
+          }
+          create: {
+            args: Prisma.GpsDeviceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          createMany: {
+            args: Prisma.GpsDeviceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GpsDeviceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>[]
+          }
+          delete: {
+            args: Prisma.GpsDeviceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          update: {
+            args: Prisma.GpsDeviceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          deleteMany: {
+            args: Prisma.GpsDeviceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GpsDeviceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.GpsDeviceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GpsDevicePayload>
+          }
+          aggregate: {
+            args: Prisma.GpsDeviceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGpsDevice>
+          }
+          groupBy: {
+            args: Prisma.GpsDeviceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GpsDeviceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GpsDeviceCountArgs<ExtArgs>
+            result: $Utils.Optional<GpsDeviceCountAggregateOutputType> | number
           }
         }
       }
@@ -2044,6 +2228,216 @@ export namespace Prisma {
           }
         }
       }
+      AbsenceNotification: {
+        payload: Prisma.$AbsenceNotificationPayload<ExtArgs>
+        fields: Prisma.AbsenceNotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AbsenceNotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AbsenceNotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.AbsenceNotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AbsenceNotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          findMany: {
+            args: Prisma.AbsenceNotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>[]
+          }
+          create: {
+            args: Prisma.AbsenceNotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          createMany: {
+            args: Prisma.AbsenceNotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AbsenceNotificationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>[]
+          }
+          delete: {
+            args: Prisma.AbsenceNotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          update: {
+            args: Prisma.AbsenceNotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.AbsenceNotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AbsenceNotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AbsenceNotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AbsenceNotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.AbsenceNotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAbsenceNotification>
+          }
+          groupBy: {
+            args: Prisma.AbsenceNotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AbsenceNotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AbsenceNotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<AbsenceNotificationCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChatMessage: {
+        payload: Prisma.$ChatMessagePayload<ExtArgs>
+        fields: Prisma.ChatMessageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatMessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatMessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          findFirst: {
+            args: Prisma.ChatMessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatMessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          findMany: {
+            args: Prisma.ChatMessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
+          }
+          create: {
+            args: Prisma.ChatMessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          createMany: {
+            args: Prisma.ChatMessageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatMessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
+          }
+          delete: {
+            args: Prisma.ChatMessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          update: {
+            args: Prisma.ChatMessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatMessageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatMessageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ChatMessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          aggregate: {
+            args: Prisma.ChatMessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatMessage>
+          }
+          groupBy: {
+            args: Prisma.ChatMessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatMessageCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessageCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChatReadStatus: {
+        payload: Prisma.$ChatReadStatusPayload<ExtArgs>
+        fields: Prisma.ChatReadStatusFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatReadStatusFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatReadStatusFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          findFirst: {
+            args: Prisma.ChatReadStatusFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatReadStatusFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          findMany: {
+            args: Prisma.ChatReadStatusFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>[]
+          }
+          create: {
+            args: Prisma.ChatReadStatusCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          createMany: {
+            args: Prisma.ChatReadStatusCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatReadStatusCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>[]
+          }
+          delete: {
+            args: Prisma.ChatReadStatusDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          update: {
+            args: Prisma.ChatReadStatusUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatReadStatusDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatReadStatusUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ChatReadStatusUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatReadStatusPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatReadStatusAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatReadStatus>
+          }
+          groupBy: {
+            args: Prisma.ChatReadStatusGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatReadStatusGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatReadStatusCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatReadStatusCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2205,6 +2599,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type StudentCountOutputType
+   */
+
+  export type StudentCountOutputType = {
+    absenceNotifications: number
+  }
+
+  export type StudentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    absenceNotifications?: boolean | StudentCountOutputTypeCountAbsenceNotificationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentCountOutputType
+     */
+    select?: StudentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeCountAbsenceNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AbsenceNotificationWhereInput
+  }
+
+
+  /**
    * Count Type RouteCountOutputType
    */
 
@@ -2241,10 +2666,12 @@ export namespace Prisma {
 
   export type TripCountOutputType = {
     stops: number
+    absenceNotifications: number
   }
 
   export type TripCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stops?: boolean | TripCountOutputTypeCountStopsArgs
+    absenceNotifications?: boolean | TripCountOutputTypeCountAbsenceNotificationsArgs
   }
 
   // Custom InputTypes
@@ -2263,6 +2690,13 @@ export namespace Prisma {
    */
   export type TripCountOutputTypeCountStopsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TripStopWhereInput
+  }
+
+  /**
+   * TripCountOutputType without action
+   */
+  export type TripCountOutputTypeCountAbsenceNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AbsenceNotificationWhereInput
   }
 
 
@@ -3201,6 +3635,9 @@ export namespace Prisma {
     status: $Enums.BusStatus | null
     createdAt: Date | null
     label: string | null
+    locationMode: $Enums.LocationMode | null
+    activeSource: $Enums.LocationSource | null
+    sourceChangedAt: Date | null
   }
 
   export type BusMaxAggregateOutputType = {
@@ -3210,6 +3647,9 @@ export namespace Prisma {
     status: $Enums.BusStatus | null
     createdAt: Date | null
     label: string | null
+    locationMode: $Enums.LocationMode | null
+    activeSource: $Enums.LocationSource | null
+    sourceChangedAt: Date | null
   }
 
   export type BusCountAggregateOutputType = {
@@ -3219,6 +3659,9 @@ export namespace Prisma {
     status: number
     createdAt: number
     label: number
+    locationMode: number
+    activeSource: number
+    sourceChangedAt: number
     _all: number
   }
 
@@ -3230,6 +3673,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     label?: true
+    locationMode?: true
+    activeSource?: true
+    sourceChangedAt?: true
   }
 
   export type BusMaxAggregateInputType = {
@@ -3239,6 +3685,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     label?: true
+    locationMode?: true
+    activeSource?: true
+    sourceChangedAt?: true
   }
 
   export type BusCountAggregateInputType = {
@@ -3248,6 +3697,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     label?: true
+    locationMode?: true
+    activeSource?: true
+    sourceChangedAt?: true
     _all?: true
   }
 
@@ -3330,6 +3782,9 @@ export namespace Prisma {
     status: $Enums.BusStatus
     createdAt: Date
     label: string | null
+    locationMode: $Enums.LocationMode
+    activeSource: $Enums.LocationSource
+    sourceChangedAt: Date | null
     _count: BusCountAggregateOutputType | null
     _min: BusMinAggregateOutputType | null
     _max: BusMaxAggregateOutputType | null
@@ -3356,6 +3811,9 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     label?: boolean
+    locationMode?: boolean
+    activeSource?: boolean
+    sourceChangedAt?: boolean
   }, ExtArgs["result"]["bus"]>
 
   export type BusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3365,6 +3823,9 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     label?: boolean
+    locationMode?: boolean
+    activeSource?: boolean
+    sourceChangedAt?: boolean
   }, ExtArgs["result"]["bus"]>
 
   export type BusSelectScalar = {
@@ -3374,6 +3835,9 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     label?: boolean
+    locationMode?: boolean
+    activeSource?: boolean
+    sourceChangedAt?: boolean
   }
 
 
@@ -3387,6 +3851,9 @@ export namespace Prisma {
       status: $Enums.BusStatus
       createdAt: Date
       label: string | null
+      locationMode: $Enums.LocationMode
+      activeSource: $Enums.LocationSource
+      sourceChangedAt: Date | null
     }, ExtArgs["result"]["bus"]>
     composites: {}
   }
@@ -3786,6 +4253,9 @@ export namespace Prisma {
     readonly status: FieldRef<"Bus", 'BusStatus'>
     readonly createdAt: FieldRef<"Bus", 'DateTime'>
     readonly label: FieldRef<"Bus", 'String'>
+    readonly locationMode: FieldRef<"Bus", 'LocationMode'>
+    readonly activeSource: FieldRef<"Bus", 'LocationSource'>
+    readonly sourceChangedAt: FieldRef<"Bus", 'DateTime'>
   }
     
 
@@ -4071,6 +4541,1046 @@ export namespace Prisma {
      * Select specific fields to fetch from the Bus
      */
     select?: BusSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GpsDevice
+   */
+
+  export type AggregateGpsDevice = {
+    _count: GpsDeviceCountAggregateOutputType | null
+    _avg: GpsDeviceAvgAggregateOutputType | null
+    _sum: GpsDeviceSumAggregateOutputType | null
+    _min: GpsDeviceMinAggregateOutputType | null
+    _max: GpsDeviceMaxAggregateOutputType | null
+  }
+
+  export type GpsDeviceAvgAggregateOutputType = {
+    validFixCount: number | null
+    lastLat: number | null
+    lastLng: number | null
+  }
+
+  export type GpsDeviceSumAggregateOutputType = {
+    validFixCount: number | null
+    lastLat: number | null
+    lastLng: number | null
+  }
+
+  export type GpsDeviceMinAggregateOutputType = {
+    id: string | null
+    deviceId: string | null
+    name: string | null
+    busId: string | null
+    credentialHash: string | null
+    credentialIssuedAt: Date | null
+    revokedAt: Date | null
+    verifiedAt: Date | null
+    validFixCount: number | null
+    lastSeenAt: Date | null
+    lastFixAt: Date | null
+    lastLat: number | null
+    lastLng: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GpsDeviceMaxAggregateOutputType = {
+    id: string | null
+    deviceId: string | null
+    name: string | null
+    busId: string | null
+    credentialHash: string | null
+    credentialIssuedAt: Date | null
+    revokedAt: Date | null
+    verifiedAt: Date | null
+    validFixCount: number | null
+    lastSeenAt: Date | null
+    lastFixAt: Date | null
+    lastLat: number | null
+    lastLng: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GpsDeviceCountAggregateOutputType = {
+    id: number
+    deviceId: number
+    name: number
+    busId: number
+    credentialHash: number
+    credentialIssuedAt: number
+    revokedAt: number
+    verifiedAt: number
+    validFixCount: number
+    lastSeenAt: number
+    lastFixAt: number
+    lastLat: number
+    lastLng: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GpsDeviceAvgAggregateInputType = {
+    validFixCount?: true
+    lastLat?: true
+    lastLng?: true
+  }
+
+  export type GpsDeviceSumAggregateInputType = {
+    validFixCount?: true
+    lastLat?: true
+    lastLng?: true
+  }
+
+  export type GpsDeviceMinAggregateInputType = {
+    id?: true
+    deviceId?: true
+    name?: true
+    busId?: true
+    credentialHash?: true
+    credentialIssuedAt?: true
+    revokedAt?: true
+    verifiedAt?: true
+    validFixCount?: true
+    lastSeenAt?: true
+    lastFixAt?: true
+    lastLat?: true
+    lastLng?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GpsDeviceMaxAggregateInputType = {
+    id?: true
+    deviceId?: true
+    name?: true
+    busId?: true
+    credentialHash?: true
+    credentialIssuedAt?: true
+    revokedAt?: true
+    verifiedAt?: true
+    validFixCount?: true
+    lastSeenAt?: true
+    lastFixAt?: true
+    lastLat?: true
+    lastLng?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GpsDeviceCountAggregateInputType = {
+    id?: true
+    deviceId?: true
+    name?: true
+    busId?: true
+    credentialHash?: true
+    credentialIssuedAt?: true
+    revokedAt?: true
+    verifiedAt?: true
+    validFixCount?: true
+    lastSeenAt?: true
+    lastFixAt?: true
+    lastLat?: true
+    lastLng?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GpsDeviceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GpsDevice to aggregate.
+     */
+    where?: GpsDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GpsDevices to fetch.
+     */
+    orderBy?: GpsDeviceOrderByWithRelationInput | GpsDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GpsDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GpsDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GpsDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GpsDevices
+    **/
+    _count?: true | GpsDeviceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GpsDeviceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GpsDeviceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GpsDeviceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GpsDeviceMaxAggregateInputType
+  }
+
+  export type GetGpsDeviceAggregateType<T extends GpsDeviceAggregateArgs> = {
+        [P in keyof T & keyof AggregateGpsDevice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGpsDevice[P]>
+      : GetScalarType<T[P], AggregateGpsDevice[P]>
+  }
+
+
+
+
+  export type GpsDeviceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GpsDeviceWhereInput
+    orderBy?: GpsDeviceOrderByWithAggregationInput | GpsDeviceOrderByWithAggregationInput[]
+    by: GpsDeviceScalarFieldEnum[] | GpsDeviceScalarFieldEnum
+    having?: GpsDeviceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GpsDeviceCountAggregateInputType | true
+    _avg?: GpsDeviceAvgAggregateInputType
+    _sum?: GpsDeviceSumAggregateInputType
+    _min?: GpsDeviceMinAggregateInputType
+    _max?: GpsDeviceMaxAggregateInputType
+  }
+
+  export type GpsDeviceGroupByOutputType = {
+    id: string
+    deviceId: string
+    name: string | null
+    busId: string | null
+    credentialHash: string
+    credentialIssuedAt: Date
+    revokedAt: Date | null
+    verifiedAt: Date | null
+    validFixCount: number
+    lastSeenAt: Date | null
+    lastFixAt: Date | null
+    lastLat: number | null
+    lastLng: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: GpsDeviceCountAggregateOutputType | null
+    _avg: GpsDeviceAvgAggregateOutputType | null
+    _sum: GpsDeviceSumAggregateOutputType | null
+    _min: GpsDeviceMinAggregateOutputType | null
+    _max: GpsDeviceMaxAggregateOutputType | null
+  }
+
+  type GetGpsDeviceGroupByPayload<T extends GpsDeviceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GpsDeviceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GpsDeviceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GpsDeviceGroupByOutputType[P]>
+            : GetScalarType<T[P], GpsDeviceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GpsDeviceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deviceId?: boolean
+    name?: boolean
+    busId?: boolean
+    credentialHash?: boolean
+    credentialIssuedAt?: boolean
+    revokedAt?: boolean
+    verifiedAt?: boolean
+    validFixCount?: boolean
+    lastSeenAt?: boolean
+    lastFixAt?: boolean
+    lastLat?: boolean
+    lastLng?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["gpsDevice"]>
+
+  export type GpsDeviceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    deviceId?: boolean
+    name?: boolean
+    busId?: boolean
+    credentialHash?: boolean
+    credentialIssuedAt?: boolean
+    revokedAt?: boolean
+    verifiedAt?: boolean
+    validFixCount?: boolean
+    lastSeenAt?: boolean
+    lastFixAt?: boolean
+    lastLat?: boolean
+    lastLng?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["gpsDevice"]>
+
+  export type GpsDeviceSelectScalar = {
+    id?: boolean
+    deviceId?: boolean
+    name?: boolean
+    busId?: boolean
+    credentialHash?: boolean
+    credentialIssuedAt?: boolean
+    revokedAt?: boolean
+    verifiedAt?: boolean
+    validFixCount?: boolean
+    lastSeenAt?: boolean
+    lastFixAt?: boolean
+    lastLat?: boolean
+    lastLng?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $GpsDevicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GpsDevice"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      deviceId: string
+      name: string | null
+      busId: string | null
+      credentialHash: string
+      credentialIssuedAt: Date
+      revokedAt: Date | null
+      verifiedAt: Date | null
+      validFixCount: number
+      lastSeenAt: Date | null
+      lastFixAt: Date | null
+      lastLat: number | null
+      lastLng: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["gpsDevice"]>
+    composites: {}
+  }
+
+  type GpsDeviceGetPayload<S extends boolean | null | undefined | GpsDeviceDefaultArgs> = $Result.GetResult<Prisma.$GpsDevicePayload, S>
+
+  type GpsDeviceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<GpsDeviceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: GpsDeviceCountAggregateInputType | true
+    }
+
+  export interface GpsDeviceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GpsDevice'], meta: { name: 'GpsDevice' } }
+    /**
+     * Find zero or one GpsDevice that matches the filter.
+     * @param {GpsDeviceFindUniqueArgs} args - Arguments to find a GpsDevice
+     * @example
+     * // Get one GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GpsDeviceFindUniqueArgs>(args: SelectSubset<T, GpsDeviceFindUniqueArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one GpsDevice that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {GpsDeviceFindUniqueOrThrowArgs} args - Arguments to find a GpsDevice
+     * @example
+     * // Get one GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GpsDeviceFindUniqueOrThrowArgs>(args: SelectSubset<T, GpsDeviceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first GpsDevice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceFindFirstArgs} args - Arguments to find a GpsDevice
+     * @example
+     * // Get one GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GpsDeviceFindFirstArgs>(args?: SelectSubset<T, GpsDeviceFindFirstArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first GpsDevice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceFindFirstOrThrowArgs} args - Arguments to find a GpsDevice
+     * @example
+     * // Get one GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GpsDeviceFindFirstOrThrowArgs>(args?: SelectSubset<T, GpsDeviceFindFirstOrThrowArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more GpsDevices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GpsDevices
+     * const gpsDevices = await prisma.gpsDevice.findMany()
+     * 
+     * // Get first 10 GpsDevices
+     * const gpsDevices = await prisma.gpsDevice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gpsDeviceWithIdOnly = await prisma.gpsDevice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GpsDeviceFindManyArgs>(args?: SelectSubset<T, GpsDeviceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a GpsDevice.
+     * @param {GpsDeviceCreateArgs} args - Arguments to create a GpsDevice.
+     * @example
+     * // Create one GpsDevice
+     * const GpsDevice = await prisma.gpsDevice.create({
+     *   data: {
+     *     // ... data to create a GpsDevice
+     *   }
+     * })
+     * 
+     */
+    create<T extends GpsDeviceCreateArgs>(args: SelectSubset<T, GpsDeviceCreateArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many GpsDevices.
+     * @param {GpsDeviceCreateManyArgs} args - Arguments to create many GpsDevices.
+     * @example
+     * // Create many GpsDevices
+     * const gpsDevice = await prisma.gpsDevice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GpsDeviceCreateManyArgs>(args?: SelectSubset<T, GpsDeviceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GpsDevices and returns the data saved in the database.
+     * @param {GpsDeviceCreateManyAndReturnArgs} args - Arguments to create many GpsDevices.
+     * @example
+     * // Create many GpsDevices
+     * const gpsDevice = await prisma.gpsDevice.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GpsDevices and only return the `id`
+     * const gpsDeviceWithIdOnly = await prisma.gpsDevice.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GpsDeviceCreateManyAndReturnArgs>(args?: SelectSubset<T, GpsDeviceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a GpsDevice.
+     * @param {GpsDeviceDeleteArgs} args - Arguments to delete one GpsDevice.
+     * @example
+     * // Delete one GpsDevice
+     * const GpsDevice = await prisma.gpsDevice.delete({
+     *   where: {
+     *     // ... filter to delete one GpsDevice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GpsDeviceDeleteArgs>(args: SelectSubset<T, GpsDeviceDeleteArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one GpsDevice.
+     * @param {GpsDeviceUpdateArgs} args - Arguments to update one GpsDevice.
+     * @example
+     * // Update one GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GpsDeviceUpdateArgs>(args: SelectSubset<T, GpsDeviceUpdateArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more GpsDevices.
+     * @param {GpsDeviceDeleteManyArgs} args - Arguments to filter GpsDevices to delete.
+     * @example
+     * // Delete a few GpsDevices
+     * const { count } = await prisma.gpsDevice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GpsDeviceDeleteManyArgs>(args?: SelectSubset<T, GpsDeviceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GpsDevices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GpsDevices
+     * const gpsDevice = await prisma.gpsDevice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GpsDeviceUpdateManyArgs>(args: SelectSubset<T, GpsDeviceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one GpsDevice.
+     * @param {GpsDeviceUpsertArgs} args - Arguments to update or create a GpsDevice.
+     * @example
+     * // Update or create a GpsDevice
+     * const gpsDevice = await prisma.gpsDevice.upsert({
+     *   create: {
+     *     // ... data to create a GpsDevice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GpsDevice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GpsDeviceUpsertArgs>(args: SelectSubset<T, GpsDeviceUpsertArgs<ExtArgs>>): Prisma__GpsDeviceClient<$Result.GetResult<Prisma.$GpsDevicePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of GpsDevices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceCountArgs} args - Arguments to filter GpsDevices to count.
+     * @example
+     * // Count the number of GpsDevices
+     * const count = await prisma.gpsDevice.count({
+     *   where: {
+     *     // ... the filter for the GpsDevices we want to count
+     *   }
+     * })
+    **/
+    count<T extends GpsDeviceCountArgs>(
+      args?: Subset<T, GpsDeviceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GpsDeviceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GpsDevice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GpsDeviceAggregateArgs>(args: Subset<T, GpsDeviceAggregateArgs>): Prisma.PrismaPromise<GetGpsDeviceAggregateType<T>>
+
+    /**
+     * Group by GpsDevice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GpsDeviceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GpsDeviceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GpsDeviceGroupByArgs['orderBy'] }
+        : { orderBy?: GpsDeviceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GpsDeviceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGpsDeviceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GpsDevice model
+   */
+  readonly fields: GpsDeviceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GpsDevice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GpsDeviceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GpsDevice model
+   */ 
+  interface GpsDeviceFieldRefs {
+    readonly id: FieldRef<"GpsDevice", 'String'>
+    readonly deviceId: FieldRef<"GpsDevice", 'String'>
+    readonly name: FieldRef<"GpsDevice", 'String'>
+    readonly busId: FieldRef<"GpsDevice", 'String'>
+    readonly credentialHash: FieldRef<"GpsDevice", 'String'>
+    readonly credentialIssuedAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly revokedAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly verifiedAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly validFixCount: FieldRef<"GpsDevice", 'Int'>
+    readonly lastSeenAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly lastFixAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly lastLat: FieldRef<"GpsDevice", 'Float'>
+    readonly lastLng: FieldRef<"GpsDevice", 'Float'>
+    readonly createdAt: FieldRef<"GpsDevice", 'DateTime'>
+    readonly updatedAt: FieldRef<"GpsDevice", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GpsDevice findUnique
+   */
+  export type GpsDeviceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter, which GpsDevice to fetch.
+     */
+    where: GpsDeviceWhereUniqueInput
+  }
+
+  /**
+   * GpsDevice findUniqueOrThrow
+   */
+  export type GpsDeviceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter, which GpsDevice to fetch.
+     */
+    where: GpsDeviceWhereUniqueInput
+  }
+
+  /**
+   * GpsDevice findFirst
+   */
+  export type GpsDeviceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter, which GpsDevice to fetch.
+     */
+    where?: GpsDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GpsDevices to fetch.
+     */
+    orderBy?: GpsDeviceOrderByWithRelationInput | GpsDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GpsDevices.
+     */
+    cursor?: GpsDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GpsDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GpsDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GpsDevices.
+     */
+    distinct?: GpsDeviceScalarFieldEnum | GpsDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * GpsDevice findFirstOrThrow
+   */
+  export type GpsDeviceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter, which GpsDevice to fetch.
+     */
+    where?: GpsDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GpsDevices to fetch.
+     */
+    orderBy?: GpsDeviceOrderByWithRelationInput | GpsDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GpsDevices.
+     */
+    cursor?: GpsDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GpsDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GpsDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GpsDevices.
+     */
+    distinct?: GpsDeviceScalarFieldEnum | GpsDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * GpsDevice findMany
+   */
+  export type GpsDeviceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter, which GpsDevices to fetch.
+     */
+    where?: GpsDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GpsDevices to fetch.
+     */
+    orderBy?: GpsDeviceOrderByWithRelationInput | GpsDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GpsDevices.
+     */
+    cursor?: GpsDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GpsDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GpsDevices.
+     */
+    skip?: number
+    distinct?: GpsDeviceScalarFieldEnum | GpsDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * GpsDevice create
+   */
+  export type GpsDeviceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * The data needed to create a GpsDevice.
+     */
+    data: XOR<GpsDeviceCreateInput, GpsDeviceUncheckedCreateInput>
+  }
+
+  /**
+   * GpsDevice createMany
+   */
+  export type GpsDeviceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GpsDevices.
+     */
+    data: GpsDeviceCreateManyInput | GpsDeviceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GpsDevice createManyAndReturn
+   */
+  export type GpsDeviceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many GpsDevices.
+     */
+    data: GpsDeviceCreateManyInput | GpsDeviceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GpsDevice update
+   */
+  export type GpsDeviceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * The data needed to update a GpsDevice.
+     */
+    data: XOR<GpsDeviceUpdateInput, GpsDeviceUncheckedUpdateInput>
+    /**
+     * Choose, which GpsDevice to update.
+     */
+    where: GpsDeviceWhereUniqueInput
+  }
+
+  /**
+   * GpsDevice updateMany
+   */
+  export type GpsDeviceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GpsDevices.
+     */
+    data: XOR<GpsDeviceUpdateManyMutationInput, GpsDeviceUncheckedUpdateManyInput>
+    /**
+     * Filter which GpsDevices to update
+     */
+    where?: GpsDeviceWhereInput
+  }
+
+  /**
+   * GpsDevice upsert
+   */
+  export type GpsDeviceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * The filter to search for the GpsDevice to update in case it exists.
+     */
+    where: GpsDeviceWhereUniqueInput
+    /**
+     * In case the GpsDevice found by the `where` argument doesn't exist, create a new GpsDevice with this data.
+     */
+    create: XOR<GpsDeviceCreateInput, GpsDeviceUncheckedCreateInput>
+    /**
+     * In case the GpsDevice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GpsDeviceUpdateInput, GpsDeviceUncheckedUpdateInput>
+  }
+
+  /**
+   * GpsDevice delete
+   */
+  export type GpsDeviceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
+    /**
+     * Filter which GpsDevice to delete.
+     */
+    where: GpsDeviceWhereUniqueInput
+  }
+
+  /**
+   * GpsDevice deleteMany
+   */
+  export type GpsDeviceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GpsDevices to delete
+     */
+    where?: GpsDeviceWhereInput
+  }
+
+  /**
+   * GpsDevice without action
+   */
+  export type GpsDeviceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GpsDevice
+     */
+    select?: GpsDeviceSelect<ExtArgs> | null
   }
 
 
@@ -11690,6 +13200,8 @@ export namespace Prisma {
     parentPhone2?: boolean
     fatherName?: boolean
     motherName?: boolean
+    absenceNotifications?: boolean | Student$absenceNotificationsArgs<ExtArgs>
+    _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
   export type StudentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11722,10 +13234,17 @@ export namespace Prisma {
     motherName?: boolean
   }
 
+  export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    absenceNotifications?: boolean | Student$absenceNotificationsArgs<ExtArgs>
+    _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type StudentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $StudentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Student"
-    objects: {}
+    objects: {
+      absenceNotifications: Prisma.$AbsenceNotificationPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -12103,6 +13622,7 @@ export namespace Prisma {
    */
   export interface Prisma__StudentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    absenceNotifications<T extends Student$absenceNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, Student$absenceNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12157,6 +13677,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * Filter, which Student to fetch.
      */
     where: StudentWhereUniqueInput
@@ -12171,6 +13695,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * Filter, which Student to fetch.
      */
     where: StudentWhereUniqueInput
@@ -12184,6 +13712,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Student
      */
     select?: StudentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
     /**
      * Filter, which Student to fetch.
      */
@@ -12229,6 +13761,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * Filter, which Student to fetch.
      */
     where?: StudentWhereInput
@@ -12273,6 +13809,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * Filter, which Students to fetch.
      */
     where?: StudentWhereInput
@@ -12311,6 +13851,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Student
      */
     select?: StudentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
     /**
      * The data needed to create a Student.
      */
@@ -12352,6 +13896,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * The data needed to update a Student.
      */
     data: XOR<StudentUpdateInput, StudentUncheckedUpdateInput>
@@ -12384,6 +13932,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * The filter to search for the Student to update in case it exists.
      */
     where: StudentWhereUniqueInput
@@ -12406,6 +13958,10 @@ export namespace Prisma {
      */
     select?: StudentSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    /**
      * Filter which Student to delete.
      */
     where: StudentWhereUniqueInput
@@ -12422,6 +13978,26 @@ export namespace Prisma {
   }
 
   /**
+   * Student.absenceNotifications
+   */
+  export type Student$absenceNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    where?: AbsenceNotificationWhereInput
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    cursor?: AbsenceNotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AbsenceNotificationScalarFieldEnum | AbsenceNotificationScalarFieldEnum[]
+  }
+
+  /**
    * Student without action
    */
   export type StudentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12429,6 +14005,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Student
      */
     select?: StudentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
   }
 
 
@@ -14722,6 +16302,7 @@ export namespace Prisma {
     destLat?: boolean
     destLng?: boolean
     stops?: boolean | Trip$stopsArgs<ExtArgs>
+    absenceNotifications?: boolean | Trip$absenceNotificationsArgs<ExtArgs>
     _count?: boolean | TripCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["trip"]>
 
@@ -14763,6 +16344,7 @@ export namespace Prisma {
 
   export type TripInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stops?: boolean | Trip$stopsArgs<ExtArgs>
+    absenceNotifications?: boolean | Trip$absenceNotificationsArgs<ExtArgs>
     _count?: boolean | TripCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TripIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -14771,6 +16353,7 @@ export namespace Prisma {
     name: "Trip"
     objects: {
       stops: Prisma.$TripStopPayload<ExtArgs>[]
+      absenceNotifications: Prisma.$AbsenceNotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15153,6 +16736,7 @@ export namespace Prisma {
   export interface Prisma__TripClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     stops<T extends Trip$stopsArgs<ExtArgs> = {}>(args?: Subset<T, Trip$stopsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TripStopPayload<ExtArgs>, T, "findMany"> | Null>
+    absenceNotifications<T extends Trip$absenceNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, Trip$absenceNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15528,6 +17112,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TripStopScalarFieldEnum | TripStopScalarFieldEnum[]
+  }
+
+  /**
+   * Trip.absenceNotifications
+   */
+  export type Trip$absenceNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    where?: AbsenceNotificationWhereInput
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    cursor?: AbsenceNotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AbsenceNotificationScalarFieldEnum | AbsenceNotificationScalarFieldEnum[]
   }
 
   /**
@@ -17541,6 +19145,2884 @@ export namespace Prisma {
 
 
   /**
+   * Model AbsenceNotification
+   */
+
+  export type AggregateAbsenceNotification = {
+    _count: AbsenceNotificationCountAggregateOutputType | null
+    _min: AbsenceNotificationMinAggregateOutputType | null
+    _max: AbsenceNotificationMaxAggregateOutputType | null
+  }
+
+  export type AbsenceNotificationMinAggregateOutputType = {
+    id: string | null
+    studentId: string | null
+    parentUserId: string | null
+    busId: string | null
+    tripId: string | null
+    stopId: string | null
+    date: string | null
+    reason: string | null
+    status: $Enums.AbsenceStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    cancelledAt: Date | null
+  }
+
+  export type AbsenceNotificationMaxAggregateOutputType = {
+    id: string | null
+    studentId: string | null
+    parentUserId: string | null
+    busId: string | null
+    tripId: string | null
+    stopId: string | null
+    date: string | null
+    reason: string | null
+    status: $Enums.AbsenceStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    cancelledAt: Date | null
+  }
+
+  export type AbsenceNotificationCountAggregateOutputType = {
+    id: number
+    studentId: number
+    parentUserId: number
+    busId: number
+    tripId: number
+    stopId: number
+    date: number
+    reason: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    cancelledAt: number
+    _all: number
+  }
+
+
+  export type AbsenceNotificationMinAggregateInputType = {
+    id?: true
+    studentId?: true
+    parentUserId?: true
+    busId?: true
+    tripId?: true
+    stopId?: true
+    date?: true
+    reason?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    cancelledAt?: true
+  }
+
+  export type AbsenceNotificationMaxAggregateInputType = {
+    id?: true
+    studentId?: true
+    parentUserId?: true
+    busId?: true
+    tripId?: true
+    stopId?: true
+    date?: true
+    reason?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    cancelledAt?: true
+  }
+
+  export type AbsenceNotificationCountAggregateInputType = {
+    id?: true
+    studentId?: true
+    parentUserId?: true
+    busId?: true
+    tripId?: true
+    stopId?: true
+    date?: true
+    reason?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    cancelledAt?: true
+    _all?: true
+  }
+
+  export type AbsenceNotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AbsenceNotification to aggregate.
+     */
+    where?: AbsenceNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AbsenceNotifications to fetch.
+     */
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AbsenceNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AbsenceNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AbsenceNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AbsenceNotifications
+    **/
+    _count?: true | AbsenceNotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AbsenceNotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AbsenceNotificationMaxAggregateInputType
+  }
+
+  export type GetAbsenceNotificationAggregateType<T extends AbsenceNotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateAbsenceNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAbsenceNotification[P]>
+      : GetScalarType<T[P], AggregateAbsenceNotification[P]>
+  }
+
+
+
+
+  export type AbsenceNotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AbsenceNotificationWhereInput
+    orderBy?: AbsenceNotificationOrderByWithAggregationInput | AbsenceNotificationOrderByWithAggregationInput[]
+    by: AbsenceNotificationScalarFieldEnum[] | AbsenceNotificationScalarFieldEnum
+    having?: AbsenceNotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AbsenceNotificationCountAggregateInputType | true
+    _min?: AbsenceNotificationMinAggregateInputType
+    _max?: AbsenceNotificationMaxAggregateInputType
+  }
+
+  export type AbsenceNotificationGroupByOutputType = {
+    id: string
+    studentId: string
+    parentUserId: string
+    busId: string
+    tripId: string | null
+    stopId: string
+    date: string
+    reason: string | null
+    status: $Enums.AbsenceStatus
+    createdAt: Date
+    updatedAt: Date
+    cancelledAt: Date | null
+    _count: AbsenceNotificationCountAggregateOutputType | null
+    _min: AbsenceNotificationMinAggregateOutputType | null
+    _max: AbsenceNotificationMaxAggregateOutputType | null
+  }
+
+  type GetAbsenceNotificationGroupByPayload<T extends AbsenceNotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AbsenceNotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AbsenceNotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AbsenceNotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], AbsenceNotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AbsenceNotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    parentUserId?: boolean
+    busId?: boolean
+    tripId?: boolean
+    stopId?: boolean
+    date?: boolean
+    reason?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cancelledAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    trip?: boolean | AbsenceNotification$tripArgs<ExtArgs>
+  }, ExtArgs["result"]["absenceNotification"]>
+
+  export type AbsenceNotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    parentUserId?: boolean
+    busId?: boolean
+    tripId?: boolean
+    stopId?: boolean
+    date?: boolean
+    reason?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cancelledAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    trip?: boolean | AbsenceNotification$tripArgs<ExtArgs>
+  }, ExtArgs["result"]["absenceNotification"]>
+
+  export type AbsenceNotificationSelectScalar = {
+    id?: boolean
+    studentId?: boolean
+    parentUserId?: boolean
+    busId?: boolean
+    tripId?: boolean
+    stopId?: boolean
+    date?: boolean
+    reason?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cancelledAt?: boolean
+  }
+
+  export type AbsenceNotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    trip?: boolean | AbsenceNotification$tripArgs<ExtArgs>
+  }
+  export type AbsenceNotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    trip?: boolean | AbsenceNotification$tripArgs<ExtArgs>
+  }
+
+  export type $AbsenceNotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AbsenceNotification"
+    objects: {
+      student: Prisma.$StudentPayload<ExtArgs>
+      trip: Prisma.$TripPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      studentId: string
+      parentUserId: string
+      busId: string
+      tripId: string | null
+      stopId: string
+      date: string
+      reason: string | null
+      status: $Enums.AbsenceStatus
+      createdAt: Date
+      updatedAt: Date
+      cancelledAt: Date | null
+    }, ExtArgs["result"]["absenceNotification"]>
+    composites: {}
+  }
+
+  type AbsenceNotificationGetPayload<S extends boolean | null | undefined | AbsenceNotificationDefaultArgs> = $Result.GetResult<Prisma.$AbsenceNotificationPayload, S>
+
+  type AbsenceNotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<AbsenceNotificationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: AbsenceNotificationCountAggregateInputType | true
+    }
+
+  export interface AbsenceNotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AbsenceNotification'], meta: { name: 'AbsenceNotification' } }
+    /**
+     * Find zero or one AbsenceNotification that matches the filter.
+     * @param {AbsenceNotificationFindUniqueArgs} args - Arguments to find a AbsenceNotification
+     * @example
+     * // Get one AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AbsenceNotificationFindUniqueArgs>(args: SelectSubset<T, AbsenceNotificationFindUniqueArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one AbsenceNotification that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {AbsenceNotificationFindUniqueOrThrowArgs} args - Arguments to find a AbsenceNotification
+     * @example
+     * // Get one AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AbsenceNotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, AbsenceNotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first AbsenceNotification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationFindFirstArgs} args - Arguments to find a AbsenceNotification
+     * @example
+     * // Get one AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AbsenceNotificationFindFirstArgs>(args?: SelectSubset<T, AbsenceNotificationFindFirstArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first AbsenceNotification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationFindFirstOrThrowArgs} args - Arguments to find a AbsenceNotification
+     * @example
+     * // Get one AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AbsenceNotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, AbsenceNotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more AbsenceNotifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AbsenceNotifications
+     * const absenceNotifications = await prisma.absenceNotification.findMany()
+     * 
+     * // Get first 10 AbsenceNotifications
+     * const absenceNotifications = await prisma.absenceNotification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const absenceNotificationWithIdOnly = await prisma.absenceNotification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AbsenceNotificationFindManyArgs>(args?: SelectSubset<T, AbsenceNotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a AbsenceNotification.
+     * @param {AbsenceNotificationCreateArgs} args - Arguments to create a AbsenceNotification.
+     * @example
+     * // Create one AbsenceNotification
+     * const AbsenceNotification = await prisma.absenceNotification.create({
+     *   data: {
+     *     // ... data to create a AbsenceNotification
+     *   }
+     * })
+     * 
+     */
+    create<T extends AbsenceNotificationCreateArgs>(args: SelectSubset<T, AbsenceNotificationCreateArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many AbsenceNotifications.
+     * @param {AbsenceNotificationCreateManyArgs} args - Arguments to create many AbsenceNotifications.
+     * @example
+     * // Create many AbsenceNotifications
+     * const absenceNotification = await prisma.absenceNotification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AbsenceNotificationCreateManyArgs>(args?: SelectSubset<T, AbsenceNotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AbsenceNotifications and returns the data saved in the database.
+     * @param {AbsenceNotificationCreateManyAndReturnArgs} args - Arguments to create many AbsenceNotifications.
+     * @example
+     * // Create many AbsenceNotifications
+     * const absenceNotification = await prisma.absenceNotification.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AbsenceNotifications and only return the `id`
+     * const absenceNotificationWithIdOnly = await prisma.absenceNotification.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AbsenceNotificationCreateManyAndReturnArgs>(args?: SelectSubset<T, AbsenceNotificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a AbsenceNotification.
+     * @param {AbsenceNotificationDeleteArgs} args - Arguments to delete one AbsenceNotification.
+     * @example
+     * // Delete one AbsenceNotification
+     * const AbsenceNotification = await prisma.absenceNotification.delete({
+     *   where: {
+     *     // ... filter to delete one AbsenceNotification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AbsenceNotificationDeleteArgs>(args: SelectSubset<T, AbsenceNotificationDeleteArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one AbsenceNotification.
+     * @param {AbsenceNotificationUpdateArgs} args - Arguments to update one AbsenceNotification.
+     * @example
+     * // Update one AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AbsenceNotificationUpdateArgs>(args: SelectSubset<T, AbsenceNotificationUpdateArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more AbsenceNotifications.
+     * @param {AbsenceNotificationDeleteManyArgs} args - Arguments to filter AbsenceNotifications to delete.
+     * @example
+     * // Delete a few AbsenceNotifications
+     * const { count } = await prisma.absenceNotification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AbsenceNotificationDeleteManyArgs>(args?: SelectSubset<T, AbsenceNotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AbsenceNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AbsenceNotifications
+     * const absenceNotification = await prisma.absenceNotification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AbsenceNotificationUpdateManyArgs>(args: SelectSubset<T, AbsenceNotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AbsenceNotification.
+     * @param {AbsenceNotificationUpsertArgs} args - Arguments to update or create a AbsenceNotification.
+     * @example
+     * // Update or create a AbsenceNotification
+     * const absenceNotification = await prisma.absenceNotification.upsert({
+     *   create: {
+     *     // ... data to create a AbsenceNotification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AbsenceNotification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AbsenceNotificationUpsertArgs>(args: SelectSubset<T, AbsenceNotificationUpsertArgs<ExtArgs>>): Prisma__AbsenceNotificationClient<$Result.GetResult<Prisma.$AbsenceNotificationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of AbsenceNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationCountArgs} args - Arguments to filter AbsenceNotifications to count.
+     * @example
+     * // Count the number of AbsenceNotifications
+     * const count = await prisma.absenceNotification.count({
+     *   where: {
+     *     // ... the filter for the AbsenceNotifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends AbsenceNotificationCountArgs>(
+      args?: Subset<T, AbsenceNotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AbsenceNotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AbsenceNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AbsenceNotificationAggregateArgs>(args: Subset<T, AbsenceNotificationAggregateArgs>): Prisma.PrismaPromise<GetAbsenceNotificationAggregateType<T>>
+
+    /**
+     * Group by AbsenceNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AbsenceNotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AbsenceNotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AbsenceNotificationGroupByArgs['orderBy'] }
+        : { orderBy?: AbsenceNotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AbsenceNotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAbsenceNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AbsenceNotification model
+   */
+  readonly fields: AbsenceNotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AbsenceNotification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AbsenceNotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    trip<T extends AbsenceNotification$tripArgs<ExtArgs> = {}>(args?: Subset<T, AbsenceNotification$tripArgs<ExtArgs>>): Prisma__TripClient<$Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AbsenceNotification model
+   */ 
+  interface AbsenceNotificationFieldRefs {
+    readonly id: FieldRef<"AbsenceNotification", 'String'>
+    readonly studentId: FieldRef<"AbsenceNotification", 'String'>
+    readonly parentUserId: FieldRef<"AbsenceNotification", 'String'>
+    readonly busId: FieldRef<"AbsenceNotification", 'String'>
+    readonly tripId: FieldRef<"AbsenceNotification", 'String'>
+    readonly stopId: FieldRef<"AbsenceNotification", 'String'>
+    readonly date: FieldRef<"AbsenceNotification", 'String'>
+    readonly reason: FieldRef<"AbsenceNotification", 'String'>
+    readonly status: FieldRef<"AbsenceNotification", 'AbsenceStatus'>
+    readonly createdAt: FieldRef<"AbsenceNotification", 'DateTime'>
+    readonly updatedAt: FieldRef<"AbsenceNotification", 'DateTime'>
+    readonly cancelledAt: FieldRef<"AbsenceNotification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AbsenceNotification findUnique
+   */
+  export type AbsenceNotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which AbsenceNotification to fetch.
+     */
+    where: AbsenceNotificationWhereUniqueInput
+  }
+
+  /**
+   * AbsenceNotification findUniqueOrThrow
+   */
+  export type AbsenceNotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which AbsenceNotification to fetch.
+     */
+    where: AbsenceNotificationWhereUniqueInput
+  }
+
+  /**
+   * AbsenceNotification findFirst
+   */
+  export type AbsenceNotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which AbsenceNotification to fetch.
+     */
+    where?: AbsenceNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AbsenceNotifications to fetch.
+     */
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AbsenceNotifications.
+     */
+    cursor?: AbsenceNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AbsenceNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AbsenceNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AbsenceNotifications.
+     */
+    distinct?: AbsenceNotificationScalarFieldEnum | AbsenceNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * AbsenceNotification findFirstOrThrow
+   */
+  export type AbsenceNotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which AbsenceNotification to fetch.
+     */
+    where?: AbsenceNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AbsenceNotifications to fetch.
+     */
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AbsenceNotifications.
+     */
+    cursor?: AbsenceNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AbsenceNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AbsenceNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AbsenceNotifications.
+     */
+    distinct?: AbsenceNotificationScalarFieldEnum | AbsenceNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * AbsenceNotification findMany
+   */
+  export type AbsenceNotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which AbsenceNotifications to fetch.
+     */
+    where?: AbsenceNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AbsenceNotifications to fetch.
+     */
+    orderBy?: AbsenceNotificationOrderByWithRelationInput | AbsenceNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AbsenceNotifications.
+     */
+    cursor?: AbsenceNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AbsenceNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AbsenceNotifications.
+     */
+    skip?: number
+    distinct?: AbsenceNotificationScalarFieldEnum | AbsenceNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * AbsenceNotification create
+   */
+  export type AbsenceNotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AbsenceNotification.
+     */
+    data: XOR<AbsenceNotificationCreateInput, AbsenceNotificationUncheckedCreateInput>
+  }
+
+  /**
+   * AbsenceNotification createMany
+   */
+  export type AbsenceNotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AbsenceNotifications.
+     */
+    data: AbsenceNotificationCreateManyInput | AbsenceNotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AbsenceNotification createManyAndReturn
+   */
+  export type AbsenceNotificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many AbsenceNotifications.
+     */
+    data: AbsenceNotificationCreateManyInput | AbsenceNotificationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AbsenceNotification update
+   */
+  export type AbsenceNotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AbsenceNotification.
+     */
+    data: XOR<AbsenceNotificationUpdateInput, AbsenceNotificationUncheckedUpdateInput>
+    /**
+     * Choose, which AbsenceNotification to update.
+     */
+    where: AbsenceNotificationWhereUniqueInput
+  }
+
+  /**
+   * AbsenceNotification updateMany
+   */
+  export type AbsenceNotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AbsenceNotifications.
+     */
+    data: XOR<AbsenceNotificationUpdateManyMutationInput, AbsenceNotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which AbsenceNotifications to update
+     */
+    where?: AbsenceNotificationWhereInput
+  }
+
+  /**
+   * AbsenceNotification upsert
+   */
+  export type AbsenceNotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AbsenceNotification to update in case it exists.
+     */
+    where: AbsenceNotificationWhereUniqueInput
+    /**
+     * In case the AbsenceNotification found by the `where` argument doesn't exist, create a new AbsenceNotification with this data.
+     */
+    create: XOR<AbsenceNotificationCreateInput, AbsenceNotificationUncheckedCreateInput>
+    /**
+     * In case the AbsenceNotification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AbsenceNotificationUpdateInput, AbsenceNotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * AbsenceNotification delete
+   */
+  export type AbsenceNotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+    /**
+     * Filter which AbsenceNotification to delete.
+     */
+    where: AbsenceNotificationWhereUniqueInput
+  }
+
+  /**
+   * AbsenceNotification deleteMany
+   */
+  export type AbsenceNotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AbsenceNotifications to delete
+     */
+    where?: AbsenceNotificationWhereInput
+  }
+
+  /**
+   * AbsenceNotification.trip
+   */
+  export type AbsenceNotification$tripArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Trip
+     */
+    select?: TripSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TripInclude<ExtArgs> | null
+    where?: TripWhereInput
+  }
+
+  /**
+   * AbsenceNotification without action
+   */
+  export type AbsenceNotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbsenceNotification
+     */
+    select?: AbsenceNotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsenceNotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChatMessage
+   */
+
+  export type AggregateChatMessage = {
+    _count: ChatMessageCountAggregateOutputType | null
+    _min: ChatMessageMinAggregateOutputType | null
+    _max: ChatMessageMaxAggregateOutputType | null
+  }
+
+  export type ChatMessageMinAggregateOutputType = {
+    id: string | null
+    busId: string | null
+    senderId: string | null
+    senderRole: $Enums.Role | null
+    senderName: string | null
+    content: string | null
+    type: $Enums.MessageType | null
+    createdAt: Date | null
+    editedAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    isPinned: boolean | null
+  }
+
+  export type ChatMessageMaxAggregateOutputType = {
+    id: string | null
+    busId: string | null
+    senderId: string | null
+    senderRole: $Enums.Role | null
+    senderName: string | null
+    content: string | null
+    type: $Enums.MessageType | null
+    createdAt: Date | null
+    editedAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    isPinned: boolean | null
+  }
+
+  export type ChatMessageCountAggregateOutputType = {
+    id: number
+    busId: number
+    senderId: number
+    senderRole: number
+    senderName: number
+    content: number
+    type: number
+    createdAt: number
+    editedAt: number
+    deletedAt: number
+    deletedBy: number
+    isPinned: number
+    _all: number
+  }
+
+
+  export type ChatMessageMinAggregateInputType = {
+    id?: true
+    busId?: true
+    senderId?: true
+    senderRole?: true
+    senderName?: true
+    content?: true
+    type?: true
+    createdAt?: true
+    editedAt?: true
+    deletedAt?: true
+    deletedBy?: true
+    isPinned?: true
+  }
+
+  export type ChatMessageMaxAggregateInputType = {
+    id?: true
+    busId?: true
+    senderId?: true
+    senderRole?: true
+    senderName?: true
+    content?: true
+    type?: true
+    createdAt?: true
+    editedAt?: true
+    deletedAt?: true
+    deletedBy?: true
+    isPinned?: true
+  }
+
+  export type ChatMessageCountAggregateInputType = {
+    id?: true
+    busId?: true
+    senderId?: true
+    senderRole?: true
+    senderName?: true
+    content?: true
+    type?: true
+    createdAt?: true
+    editedAt?: true
+    deletedAt?: true
+    deletedBy?: true
+    isPinned?: true
+    _all?: true
+  }
+
+  export type ChatMessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessage to aggregate.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatMessages
+    **/
+    _count?: true | ChatMessageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatMessageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatMessageMaxAggregateInputType
+  }
+
+  export type GetChatMessageAggregateType<T extends ChatMessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatMessage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatMessage[P]>
+      : GetScalarType<T[P], AggregateChatMessage[P]>
+  }
+
+
+
+
+  export type ChatMessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatMessageWhereInput
+    orderBy?: ChatMessageOrderByWithAggregationInput | ChatMessageOrderByWithAggregationInput[]
+    by: ChatMessageScalarFieldEnum[] | ChatMessageScalarFieldEnum
+    having?: ChatMessageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatMessageCountAggregateInputType | true
+    _min?: ChatMessageMinAggregateInputType
+    _max?: ChatMessageMaxAggregateInputType
+  }
+
+  export type ChatMessageGroupByOutputType = {
+    id: string
+    busId: string
+    senderId: string
+    senderRole: $Enums.Role
+    senderName: string
+    content: string
+    type: $Enums.MessageType
+    createdAt: Date
+    editedAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    isPinned: boolean
+    _count: ChatMessageCountAggregateOutputType | null
+    _min: ChatMessageMinAggregateOutputType | null
+    _max: ChatMessageMaxAggregateOutputType | null
+  }
+
+  type GetChatMessageGroupByPayload<T extends ChatMessageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatMessageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatMessageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatMessageGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatMessageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    busId?: boolean
+    senderId?: boolean
+    senderRole?: boolean
+    senderName?: boolean
+    content?: boolean
+    type?: boolean
+    createdAt?: boolean
+    editedAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    isPinned?: boolean
+  }, ExtArgs["result"]["chatMessage"]>
+
+  export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    busId?: boolean
+    senderId?: boolean
+    senderRole?: boolean
+    senderName?: boolean
+    content?: boolean
+    type?: boolean
+    createdAt?: boolean
+    editedAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    isPinned?: boolean
+  }, ExtArgs["result"]["chatMessage"]>
+
+  export type ChatMessageSelectScalar = {
+    id?: boolean
+    busId?: boolean
+    senderId?: boolean
+    senderRole?: boolean
+    senderName?: boolean
+    content?: boolean
+    type?: boolean
+    createdAt?: boolean
+    editedAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    isPinned?: boolean
+  }
+
+
+  export type $ChatMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatMessage"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      busId: string
+      senderId: string
+      senderRole: $Enums.Role
+      senderName: string
+      content: string
+      type: $Enums.MessageType
+      createdAt: Date
+      editedAt: Date | null
+      deletedAt: Date | null
+      deletedBy: string | null
+      isPinned: boolean
+    }, ExtArgs["result"]["chatMessage"]>
+    composites: {}
+  }
+
+  type ChatMessageGetPayload<S extends boolean | null | undefined | ChatMessageDefaultArgs> = $Result.GetResult<Prisma.$ChatMessagePayload, S>
+
+  type ChatMessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ChatMessageFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ChatMessageCountAggregateInputType | true
+    }
+
+  export interface ChatMessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatMessage'], meta: { name: 'ChatMessage' } }
+    /**
+     * Find zero or one ChatMessage that matches the filter.
+     * @param {ChatMessageFindUniqueArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatMessageFindUniqueArgs>(args: SelectSubset<T, ChatMessageFindUniqueArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ChatMessage that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ChatMessageFindUniqueOrThrowArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatMessageFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatMessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ChatMessage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindFirstArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatMessageFindFirstArgs>(args?: SelectSubset<T, ChatMessageFindFirstArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ChatMessage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindFirstOrThrowArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatMessageFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatMessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ChatMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatMessages
+     * const chatMessages = await prisma.chatMessage.findMany()
+     * 
+     * // Get first 10 ChatMessages
+     * const chatMessages = await prisma.chatMessage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatMessageWithIdOnly = await prisma.chatMessage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatMessageFindManyArgs>(args?: SelectSubset<T, ChatMessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ChatMessage.
+     * @param {ChatMessageCreateArgs} args - Arguments to create a ChatMessage.
+     * @example
+     * // Create one ChatMessage
+     * const ChatMessage = await prisma.chatMessage.create({
+     *   data: {
+     *     // ... data to create a ChatMessage
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatMessageCreateArgs>(args: SelectSubset<T, ChatMessageCreateArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ChatMessages.
+     * @param {ChatMessageCreateManyArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessage = await prisma.chatMessage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatMessageCreateManyArgs>(args?: SelectSubset<T, ChatMessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatMessages and returns the data saved in the database.
+     * @param {ChatMessageCreateManyAndReturnArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessage = await prisma.chatMessage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatMessages and only return the `id`
+     * const chatMessageWithIdOnly = await prisma.chatMessage.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatMessageCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatMessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ChatMessage.
+     * @param {ChatMessageDeleteArgs} args - Arguments to delete one ChatMessage.
+     * @example
+     * // Delete one ChatMessage
+     * const ChatMessage = await prisma.chatMessage.delete({
+     *   where: {
+     *     // ... filter to delete one ChatMessage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatMessageDeleteArgs>(args: SelectSubset<T, ChatMessageDeleteArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ChatMessage.
+     * @param {ChatMessageUpdateArgs} args - Arguments to update one ChatMessage.
+     * @example
+     * // Update one ChatMessage
+     * const chatMessage = await prisma.chatMessage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatMessageUpdateArgs>(args: SelectSubset<T, ChatMessageUpdateArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ChatMessages.
+     * @param {ChatMessageDeleteManyArgs} args - Arguments to filter ChatMessages to delete.
+     * @example
+     * // Delete a few ChatMessages
+     * const { count } = await prisma.chatMessage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatMessageDeleteManyArgs>(args?: SelectSubset<T, ChatMessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatMessages
+     * const chatMessage = await prisma.chatMessage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatMessageUpdateManyArgs>(args: SelectSubset<T, ChatMessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ChatMessage.
+     * @param {ChatMessageUpsertArgs} args - Arguments to update or create a ChatMessage.
+     * @example
+     * // Update or create a ChatMessage
+     * const chatMessage = await prisma.chatMessage.upsert({
+     *   create: {
+     *     // ... data to create a ChatMessage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatMessage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatMessageUpsertArgs>(args: SelectSubset<T, ChatMessageUpsertArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageCountArgs} args - Arguments to filter ChatMessages to count.
+     * @example
+     * // Count the number of ChatMessages
+     * const count = await prisma.chatMessage.count({
+     *   where: {
+     *     // ... the filter for the ChatMessages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatMessageCountArgs>(
+      args?: Subset<T, ChatMessageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatMessageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatMessageAggregateArgs>(args: Subset<T, ChatMessageAggregateArgs>): Prisma.PrismaPromise<GetChatMessageAggregateType<T>>
+
+    /**
+     * Group by ChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatMessageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatMessageGroupByArgs['orderBy'] }
+        : { orderBy?: ChatMessageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatMessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatMessage model
+   */
+  readonly fields: ChatMessageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatMessage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatMessage model
+   */ 
+  interface ChatMessageFieldRefs {
+    readonly id: FieldRef<"ChatMessage", 'String'>
+    readonly busId: FieldRef<"ChatMessage", 'String'>
+    readonly senderId: FieldRef<"ChatMessage", 'String'>
+    readonly senderRole: FieldRef<"ChatMessage", 'Role'>
+    readonly senderName: FieldRef<"ChatMessage", 'String'>
+    readonly content: FieldRef<"ChatMessage", 'String'>
+    readonly type: FieldRef<"ChatMessage", 'MessageType'>
+    readonly createdAt: FieldRef<"ChatMessage", 'DateTime'>
+    readonly editedAt: FieldRef<"ChatMessage", 'DateTime'>
+    readonly deletedAt: FieldRef<"ChatMessage", 'DateTime'>
+    readonly deletedBy: FieldRef<"ChatMessage", 'String'>
+    readonly isPinned: FieldRef<"ChatMessage", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatMessage findUnique
+   */
+  export type ChatMessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage findUniqueOrThrow
+   */
+  export type ChatMessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage findFirst
+   */
+  export type ChatMessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage findFirstOrThrow
+   */
+  export type ChatMessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage findMany
+   */
+  export type ChatMessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage create
+   */
+  export type ChatMessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ChatMessage.
+     */
+    data: XOR<ChatMessageCreateInput, ChatMessageUncheckedCreateInput>
+  }
+
+  /**
+   * ChatMessage createMany
+   */
+  export type ChatMessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessageCreateManyInput | ChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatMessage createManyAndReturn
+   */
+  export type ChatMessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessageCreateManyInput | ChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatMessage update
+   */
+  export type ChatMessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ChatMessage.
+     */
+    data: XOR<ChatMessageUpdateInput, ChatMessageUncheckedUpdateInput>
+    /**
+     * Choose, which ChatMessage to update.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage updateMany
+   */
+  export type ChatMessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatMessages.
+     */
+    data: XOR<ChatMessageUpdateManyMutationInput, ChatMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatMessages to update
+     */
+    where?: ChatMessageWhereInput
+  }
+
+  /**
+   * ChatMessage upsert
+   */
+  export type ChatMessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ChatMessage to update in case it exists.
+     */
+    where: ChatMessageWhereUniqueInput
+    /**
+     * In case the ChatMessage found by the `where` argument doesn't exist, create a new ChatMessage with this data.
+     */
+    create: XOR<ChatMessageCreateInput, ChatMessageUncheckedCreateInput>
+    /**
+     * In case the ChatMessage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatMessageUpdateInput, ChatMessageUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatMessage delete
+   */
+  export type ChatMessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Filter which ChatMessage to delete.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage deleteMany
+   */
+  export type ChatMessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessages to delete
+     */
+    where?: ChatMessageWhereInput
+  }
+
+  /**
+   * ChatMessage without action
+   */
+  export type ChatMessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChatReadStatus
+   */
+
+  export type AggregateChatReadStatus = {
+    _count: ChatReadStatusCountAggregateOutputType | null
+    _min: ChatReadStatusMinAggregateOutputType | null
+    _max: ChatReadStatusMaxAggregateOutputType | null
+  }
+
+  export type ChatReadStatusMinAggregateOutputType = {
+    id: string | null
+    busId: string | null
+    userId: string | null
+    lastReadAt: Date | null
+    lastMessageId: string | null
+  }
+
+  export type ChatReadStatusMaxAggregateOutputType = {
+    id: string | null
+    busId: string | null
+    userId: string | null
+    lastReadAt: Date | null
+    lastMessageId: string | null
+  }
+
+  export type ChatReadStatusCountAggregateOutputType = {
+    id: number
+    busId: number
+    userId: number
+    lastReadAt: number
+    lastMessageId: number
+    _all: number
+  }
+
+
+  export type ChatReadStatusMinAggregateInputType = {
+    id?: true
+    busId?: true
+    userId?: true
+    lastReadAt?: true
+    lastMessageId?: true
+  }
+
+  export type ChatReadStatusMaxAggregateInputType = {
+    id?: true
+    busId?: true
+    userId?: true
+    lastReadAt?: true
+    lastMessageId?: true
+  }
+
+  export type ChatReadStatusCountAggregateInputType = {
+    id?: true
+    busId?: true
+    userId?: true
+    lastReadAt?: true
+    lastMessageId?: true
+    _all?: true
+  }
+
+  export type ChatReadStatusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatReadStatus to aggregate.
+     */
+    where?: ChatReadStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatReadStatuses to fetch.
+     */
+    orderBy?: ChatReadStatusOrderByWithRelationInput | ChatReadStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatReadStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatReadStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatReadStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatReadStatuses
+    **/
+    _count?: true | ChatReadStatusCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatReadStatusMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatReadStatusMaxAggregateInputType
+  }
+
+  export type GetChatReadStatusAggregateType<T extends ChatReadStatusAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatReadStatus]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatReadStatus[P]>
+      : GetScalarType<T[P], AggregateChatReadStatus[P]>
+  }
+
+
+
+
+  export type ChatReadStatusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatReadStatusWhereInput
+    orderBy?: ChatReadStatusOrderByWithAggregationInput | ChatReadStatusOrderByWithAggregationInput[]
+    by: ChatReadStatusScalarFieldEnum[] | ChatReadStatusScalarFieldEnum
+    having?: ChatReadStatusScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatReadStatusCountAggregateInputType | true
+    _min?: ChatReadStatusMinAggregateInputType
+    _max?: ChatReadStatusMaxAggregateInputType
+  }
+
+  export type ChatReadStatusGroupByOutputType = {
+    id: string
+    busId: string
+    userId: string
+    lastReadAt: Date
+    lastMessageId: string | null
+    _count: ChatReadStatusCountAggregateOutputType | null
+    _min: ChatReadStatusMinAggregateOutputType | null
+    _max: ChatReadStatusMaxAggregateOutputType | null
+  }
+
+  type GetChatReadStatusGroupByPayload<T extends ChatReadStatusGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatReadStatusGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatReadStatusGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatReadStatusGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatReadStatusGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatReadStatusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    busId?: boolean
+    userId?: boolean
+    lastReadAt?: boolean
+    lastMessageId?: boolean
+  }, ExtArgs["result"]["chatReadStatus"]>
+
+  export type ChatReadStatusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    busId?: boolean
+    userId?: boolean
+    lastReadAt?: boolean
+    lastMessageId?: boolean
+  }, ExtArgs["result"]["chatReadStatus"]>
+
+  export type ChatReadStatusSelectScalar = {
+    id?: boolean
+    busId?: boolean
+    userId?: boolean
+    lastReadAt?: boolean
+    lastMessageId?: boolean
+  }
+
+
+  export type $ChatReadStatusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatReadStatus"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      busId: string
+      userId: string
+      lastReadAt: Date
+      lastMessageId: string | null
+    }, ExtArgs["result"]["chatReadStatus"]>
+    composites: {}
+  }
+
+  type ChatReadStatusGetPayload<S extends boolean | null | undefined | ChatReadStatusDefaultArgs> = $Result.GetResult<Prisma.$ChatReadStatusPayload, S>
+
+  type ChatReadStatusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ChatReadStatusFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ChatReadStatusCountAggregateInputType | true
+    }
+
+  export interface ChatReadStatusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatReadStatus'], meta: { name: 'ChatReadStatus' } }
+    /**
+     * Find zero or one ChatReadStatus that matches the filter.
+     * @param {ChatReadStatusFindUniqueArgs} args - Arguments to find a ChatReadStatus
+     * @example
+     * // Get one ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatReadStatusFindUniqueArgs>(args: SelectSubset<T, ChatReadStatusFindUniqueArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ChatReadStatus that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ChatReadStatusFindUniqueOrThrowArgs} args - Arguments to find a ChatReadStatus
+     * @example
+     * // Get one ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatReadStatusFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatReadStatusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ChatReadStatus that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusFindFirstArgs} args - Arguments to find a ChatReadStatus
+     * @example
+     * // Get one ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatReadStatusFindFirstArgs>(args?: SelectSubset<T, ChatReadStatusFindFirstArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ChatReadStatus that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusFindFirstOrThrowArgs} args - Arguments to find a ChatReadStatus
+     * @example
+     * // Get one ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatReadStatusFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatReadStatusFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ChatReadStatuses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatReadStatuses
+     * const chatReadStatuses = await prisma.chatReadStatus.findMany()
+     * 
+     * // Get first 10 ChatReadStatuses
+     * const chatReadStatuses = await prisma.chatReadStatus.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatReadStatusWithIdOnly = await prisma.chatReadStatus.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatReadStatusFindManyArgs>(args?: SelectSubset<T, ChatReadStatusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ChatReadStatus.
+     * @param {ChatReadStatusCreateArgs} args - Arguments to create a ChatReadStatus.
+     * @example
+     * // Create one ChatReadStatus
+     * const ChatReadStatus = await prisma.chatReadStatus.create({
+     *   data: {
+     *     // ... data to create a ChatReadStatus
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatReadStatusCreateArgs>(args: SelectSubset<T, ChatReadStatusCreateArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ChatReadStatuses.
+     * @param {ChatReadStatusCreateManyArgs} args - Arguments to create many ChatReadStatuses.
+     * @example
+     * // Create many ChatReadStatuses
+     * const chatReadStatus = await prisma.chatReadStatus.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatReadStatusCreateManyArgs>(args?: SelectSubset<T, ChatReadStatusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatReadStatuses and returns the data saved in the database.
+     * @param {ChatReadStatusCreateManyAndReturnArgs} args - Arguments to create many ChatReadStatuses.
+     * @example
+     * // Create many ChatReadStatuses
+     * const chatReadStatus = await prisma.chatReadStatus.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatReadStatuses and only return the `id`
+     * const chatReadStatusWithIdOnly = await prisma.chatReadStatus.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatReadStatusCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatReadStatusCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ChatReadStatus.
+     * @param {ChatReadStatusDeleteArgs} args - Arguments to delete one ChatReadStatus.
+     * @example
+     * // Delete one ChatReadStatus
+     * const ChatReadStatus = await prisma.chatReadStatus.delete({
+     *   where: {
+     *     // ... filter to delete one ChatReadStatus
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatReadStatusDeleteArgs>(args: SelectSubset<T, ChatReadStatusDeleteArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ChatReadStatus.
+     * @param {ChatReadStatusUpdateArgs} args - Arguments to update one ChatReadStatus.
+     * @example
+     * // Update one ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatReadStatusUpdateArgs>(args: SelectSubset<T, ChatReadStatusUpdateArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ChatReadStatuses.
+     * @param {ChatReadStatusDeleteManyArgs} args - Arguments to filter ChatReadStatuses to delete.
+     * @example
+     * // Delete a few ChatReadStatuses
+     * const { count } = await prisma.chatReadStatus.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatReadStatusDeleteManyArgs>(args?: SelectSubset<T, ChatReadStatusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatReadStatuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatReadStatuses
+     * const chatReadStatus = await prisma.chatReadStatus.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatReadStatusUpdateManyArgs>(args: SelectSubset<T, ChatReadStatusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ChatReadStatus.
+     * @param {ChatReadStatusUpsertArgs} args - Arguments to update or create a ChatReadStatus.
+     * @example
+     * // Update or create a ChatReadStatus
+     * const chatReadStatus = await prisma.chatReadStatus.upsert({
+     *   create: {
+     *     // ... data to create a ChatReadStatus
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatReadStatus we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatReadStatusUpsertArgs>(args: SelectSubset<T, ChatReadStatusUpsertArgs<ExtArgs>>): Prisma__ChatReadStatusClient<$Result.GetResult<Prisma.$ChatReadStatusPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ChatReadStatuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusCountArgs} args - Arguments to filter ChatReadStatuses to count.
+     * @example
+     * // Count the number of ChatReadStatuses
+     * const count = await prisma.chatReadStatus.count({
+     *   where: {
+     *     // ... the filter for the ChatReadStatuses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatReadStatusCountArgs>(
+      args?: Subset<T, ChatReadStatusCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatReadStatusCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatReadStatus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatReadStatusAggregateArgs>(args: Subset<T, ChatReadStatusAggregateArgs>): Prisma.PrismaPromise<GetChatReadStatusAggregateType<T>>
+
+    /**
+     * Group by ChatReadStatus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatReadStatusGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatReadStatusGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatReadStatusGroupByArgs['orderBy'] }
+        : { orderBy?: ChatReadStatusGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatReadStatusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatReadStatusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatReadStatus model
+   */
+  readonly fields: ChatReadStatusFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatReadStatus.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatReadStatusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatReadStatus model
+   */ 
+  interface ChatReadStatusFieldRefs {
+    readonly id: FieldRef<"ChatReadStatus", 'String'>
+    readonly busId: FieldRef<"ChatReadStatus", 'String'>
+    readonly userId: FieldRef<"ChatReadStatus", 'String'>
+    readonly lastReadAt: FieldRef<"ChatReadStatus", 'DateTime'>
+    readonly lastMessageId: FieldRef<"ChatReadStatus", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatReadStatus findUnique
+   */
+  export type ChatReadStatusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatReadStatus to fetch.
+     */
+    where: ChatReadStatusWhereUniqueInput
+  }
+
+  /**
+   * ChatReadStatus findUniqueOrThrow
+   */
+  export type ChatReadStatusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatReadStatus to fetch.
+     */
+    where: ChatReadStatusWhereUniqueInput
+  }
+
+  /**
+   * ChatReadStatus findFirst
+   */
+  export type ChatReadStatusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatReadStatus to fetch.
+     */
+    where?: ChatReadStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatReadStatuses to fetch.
+     */
+    orderBy?: ChatReadStatusOrderByWithRelationInput | ChatReadStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatReadStatuses.
+     */
+    cursor?: ChatReadStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatReadStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatReadStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatReadStatuses.
+     */
+    distinct?: ChatReadStatusScalarFieldEnum | ChatReadStatusScalarFieldEnum[]
+  }
+
+  /**
+   * ChatReadStatus findFirstOrThrow
+   */
+  export type ChatReadStatusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatReadStatus to fetch.
+     */
+    where?: ChatReadStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatReadStatuses to fetch.
+     */
+    orderBy?: ChatReadStatusOrderByWithRelationInput | ChatReadStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatReadStatuses.
+     */
+    cursor?: ChatReadStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatReadStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatReadStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatReadStatuses.
+     */
+    distinct?: ChatReadStatusScalarFieldEnum | ChatReadStatusScalarFieldEnum[]
+  }
+
+  /**
+   * ChatReadStatus findMany
+   */
+  export type ChatReadStatusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter, which ChatReadStatuses to fetch.
+     */
+    where?: ChatReadStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatReadStatuses to fetch.
+     */
+    orderBy?: ChatReadStatusOrderByWithRelationInput | ChatReadStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatReadStatuses.
+     */
+    cursor?: ChatReadStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatReadStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatReadStatuses.
+     */
+    skip?: number
+    distinct?: ChatReadStatusScalarFieldEnum | ChatReadStatusScalarFieldEnum[]
+  }
+
+  /**
+   * ChatReadStatus create
+   */
+  export type ChatReadStatusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ChatReadStatus.
+     */
+    data: XOR<ChatReadStatusCreateInput, ChatReadStatusUncheckedCreateInput>
+  }
+
+  /**
+   * ChatReadStatus createMany
+   */
+  export type ChatReadStatusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatReadStatuses.
+     */
+    data: ChatReadStatusCreateManyInput | ChatReadStatusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatReadStatus createManyAndReturn
+   */
+  export type ChatReadStatusCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ChatReadStatuses.
+     */
+    data: ChatReadStatusCreateManyInput | ChatReadStatusCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatReadStatus update
+   */
+  export type ChatReadStatusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ChatReadStatus.
+     */
+    data: XOR<ChatReadStatusUpdateInput, ChatReadStatusUncheckedUpdateInput>
+    /**
+     * Choose, which ChatReadStatus to update.
+     */
+    where: ChatReadStatusWhereUniqueInput
+  }
+
+  /**
+   * ChatReadStatus updateMany
+   */
+  export type ChatReadStatusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatReadStatuses.
+     */
+    data: XOR<ChatReadStatusUpdateManyMutationInput, ChatReadStatusUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatReadStatuses to update
+     */
+    where?: ChatReadStatusWhereInput
+  }
+
+  /**
+   * ChatReadStatus upsert
+   */
+  export type ChatReadStatusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ChatReadStatus to update in case it exists.
+     */
+    where: ChatReadStatusWhereUniqueInput
+    /**
+     * In case the ChatReadStatus found by the `where` argument doesn't exist, create a new ChatReadStatus with this data.
+     */
+    create: XOR<ChatReadStatusCreateInput, ChatReadStatusUncheckedCreateInput>
+    /**
+     * In case the ChatReadStatus was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatReadStatusUpdateInput, ChatReadStatusUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatReadStatus delete
+   */
+  export type ChatReadStatusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+    /**
+     * Filter which ChatReadStatus to delete.
+     */
+    where: ChatReadStatusWhereUniqueInput
+  }
+
+  /**
+   * ChatReadStatus deleteMany
+   */
+  export type ChatReadStatusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatReadStatuses to delete
+     */
+    where?: ChatReadStatusWhereInput
+  }
+
+  /**
+   * ChatReadStatus without action
+   */
+  export type ChatReadStatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatReadStatus
+     */
+    select?: ChatReadStatusSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17574,10 +22056,34 @@ export namespace Prisma {
     driverName: 'driverName',
     status: 'status',
     createdAt: 'createdAt',
-    label: 'label'
+    label: 'label',
+    locationMode: 'locationMode',
+    activeSource: 'activeSource',
+    sourceChangedAt: 'sourceChangedAt'
   };
 
   export type BusScalarFieldEnum = (typeof BusScalarFieldEnum)[keyof typeof BusScalarFieldEnum]
+
+
+  export const GpsDeviceScalarFieldEnum: {
+    id: 'id',
+    deviceId: 'deviceId',
+    name: 'name',
+    busId: 'busId',
+    credentialHash: 'credentialHash',
+    credentialIssuedAt: 'credentialIssuedAt',
+    revokedAt: 'revokedAt',
+    verifiedAt: 'verifiedAt',
+    validFixCount: 'validFixCount',
+    lastSeenAt: 'lastSeenAt',
+    lastFixAt: 'lastFixAt',
+    lastLat: 'lastLat',
+    lastLng: 'lastLng',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GpsDeviceScalarFieldEnum = (typeof GpsDeviceScalarFieldEnum)[keyof typeof GpsDeviceScalarFieldEnum]
 
 
   export const LiveLocationScalarFieldEnum: {
@@ -17783,6 +22289,53 @@ export namespace Prisma {
   export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
 
 
+  export const AbsenceNotificationScalarFieldEnum: {
+    id: 'id',
+    studentId: 'studentId',
+    parentUserId: 'parentUserId',
+    busId: 'busId',
+    tripId: 'tripId',
+    stopId: 'stopId',
+    date: 'date',
+    reason: 'reason',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    cancelledAt: 'cancelledAt'
+  };
+
+  export type AbsenceNotificationScalarFieldEnum = (typeof AbsenceNotificationScalarFieldEnum)[keyof typeof AbsenceNotificationScalarFieldEnum]
+
+
+  export const ChatMessageScalarFieldEnum: {
+    id: 'id',
+    busId: 'busId',
+    senderId: 'senderId',
+    senderRole: 'senderRole',
+    senderName: 'senderName',
+    content: 'content',
+    type: 'type',
+    createdAt: 'createdAt',
+    editedAt: 'editedAt',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy',
+    isPinned: 'isPinned'
+  };
+
+  export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+  export const ChatReadStatusScalarFieldEnum: {
+    id: 'id',
+    busId: 'busId',
+    userId: 'userId',
+    lastReadAt: 'lastReadAt',
+    lastMessageId: 'lastMessageId'
+  };
+
+  export type ChatReadStatusScalarFieldEnum = (typeof ChatReadStatusScalarFieldEnum)[keyof typeof ChatReadStatusScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -17869,16 +22422,30 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
+   * Reference to a field of type 'LocationMode'
    */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+  export type EnumLocationModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LocationMode'>
     
 
 
   /**
-   * Reference to a field of type 'Float[]'
+   * Reference to a field of type 'LocationMode[]'
    */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+  export type ListEnumLocationModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LocationMode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LocationSource'
+   */
+  export type EnumLocationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LocationSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'LocationSource[]'
+   */
+  export type ListEnumLocationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LocationSource[]'>
     
 
 
@@ -17893,6 +22460,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -17942,6 +22523,34 @@ export namespace Prisma {
    * Reference to a field of type 'TripStopStatus[]'
    */
   export type ListEnumTripStopStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStopStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AbsenceStatus'
+   */
+  export type EnumAbsenceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AbsenceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AbsenceStatus[]'
+   */
+  export type ListEnumAbsenceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AbsenceStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MessageType'
+   */
+  export type EnumMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MessageType[]'
+   */
+  export type ListEnumMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageType[]'>
     
   /**
    * Deep Input Types
@@ -18025,6 +22634,9 @@ export namespace Prisma {
     status?: EnumBusStatusFilter<"Bus"> | $Enums.BusStatus
     createdAt?: DateTimeFilter<"Bus"> | Date | string
     label?: StringNullableFilter<"Bus"> | string | null
+    locationMode?: EnumLocationModeFilter<"Bus"> | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFilter<"Bus"> | $Enums.LocationSource
+    sourceChangedAt?: DateTimeNullableFilter<"Bus"> | Date | string | null
   }
 
   export type BusOrderByWithRelationInput = {
@@ -18034,6 +22646,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     label?: SortOrderInput | SortOrder
+    locationMode?: SortOrder
+    activeSource?: SortOrder
+    sourceChangedAt?: SortOrderInput | SortOrder
   }
 
   export type BusWhereUniqueInput = Prisma.AtLeast<{
@@ -18046,6 +22661,9 @@ export namespace Prisma {
     status?: EnumBusStatusFilter<"Bus"> | $Enums.BusStatus
     createdAt?: DateTimeFilter<"Bus"> | Date | string
     label?: StringNullableFilter<"Bus"> | string | null
+    locationMode?: EnumLocationModeFilter<"Bus"> | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFilter<"Bus"> | $Enums.LocationSource
+    sourceChangedAt?: DateTimeNullableFilter<"Bus"> | Date | string | null
   }, "id" | "busNo">
 
   export type BusOrderByWithAggregationInput = {
@@ -18055,6 +22673,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     label?: SortOrderInput | SortOrder
+    locationMode?: SortOrder
+    activeSource?: SortOrder
+    sourceChangedAt?: SortOrderInput | SortOrder
     _count?: BusCountOrderByAggregateInput
     _max?: BusMaxOrderByAggregateInput
     _min?: BusMinOrderByAggregateInput
@@ -18070,6 +22691,113 @@ export namespace Prisma {
     status?: EnumBusStatusWithAggregatesFilter<"Bus"> | $Enums.BusStatus
     createdAt?: DateTimeWithAggregatesFilter<"Bus"> | Date | string
     label?: StringNullableWithAggregatesFilter<"Bus"> | string | null
+    locationMode?: EnumLocationModeWithAggregatesFilter<"Bus"> | $Enums.LocationMode
+    activeSource?: EnumLocationSourceWithAggregatesFilter<"Bus"> | $Enums.LocationSource
+    sourceChangedAt?: DateTimeNullableWithAggregatesFilter<"Bus"> | Date | string | null
+  }
+
+  export type GpsDeviceWhereInput = {
+    AND?: GpsDeviceWhereInput | GpsDeviceWhereInput[]
+    OR?: GpsDeviceWhereInput[]
+    NOT?: GpsDeviceWhereInput | GpsDeviceWhereInput[]
+    id?: StringFilter<"GpsDevice"> | string
+    deviceId?: StringFilter<"GpsDevice"> | string
+    name?: StringNullableFilter<"GpsDevice"> | string | null
+    busId?: StringNullableFilter<"GpsDevice"> | string | null
+    credentialHash?: StringFilter<"GpsDevice"> | string
+    credentialIssuedAt?: DateTimeFilter<"GpsDevice"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    verifiedAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    validFixCount?: IntFilter<"GpsDevice"> | number
+    lastSeenAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    lastFixAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    lastLat?: FloatNullableFilter<"GpsDevice"> | number | null
+    lastLng?: FloatNullableFilter<"GpsDevice"> | number | null
+    createdAt?: DateTimeFilter<"GpsDevice"> | Date | string
+    updatedAt?: DateTimeFilter<"GpsDevice"> | Date | string
+  }
+
+  export type GpsDeviceOrderByWithRelationInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    busId?: SortOrderInput | SortOrder
+    credentialHash?: SortOrder
+    credentialIssuedAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    validFixCount?: SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
+    lastFixAt?: SortOrderInput | SortOrder
+    lastLat?: SortOrderInput | SortOrder
+    lastLng?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GpsDeviceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    deviceId?: string
+    busId?: string
+    AND?: GpsDeviceWhereInput | GpsDeviceWhereInput[]
+    OR?: GpsDeviceWhereInput[]
+    NOT?: GpsDeviceWhereInput | GpsDeviceWhereInput[]
+    name?: StringNullableFilter<"GpsDevice"> | string | null
+    credentialHash?: StringFilter<"GpsDevice"> | string
+    credentialIssuedAt?: DateTimeFilter<"GpsDevice"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    verifiedAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    validFixCount?: IntFilter<"GpsDevice"> | number
+    lastSeenAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    lastFixAt?: DateTimeNullableFilter<"GpsDevice"> | Date | string | null
+    lastLat?: FloatNullableFilter<"GpsDevice"> | number | null
+    lastLng?: FloatNullableFilter<"GpsDevice"> | number | null
+    createdAt?: DateTimeFilter<"GpsDevice"> | Date | string
+    updatedAt?: DateTimeFilter<"GpsDevice"> | Date | string
+  }, "id" | "deviceId" | "busId">
+
+  export type GpsDeviceOrderByWithAggregationInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    busId?: SortOrderInput | SortOrder
+    credentialHash?: SortOrder
+    credentialIssuedAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    validFixCount?: SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
+    lastFixAt?: SortOrderInput | SortOrder
+    lastLat?: SortOrderInput | SortOrder
+    lastLng?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GpsDeviceCountOrderByAggregateInput
+    _avg?: GpsDeviceAvgOrderByAggregateInput
+    _max?: GpsDeviceMaxOrderByAggregateInput
+    _min?: GpsDeviceMinOrderByAggregateInput
+    _sum?: GpsDeviceSumOrderByAggregateInput
+  }
+
+  export type GpsDeviceScalarWhereWithAggregatesInput = {
+    AND?: GpsDeviceScalarWhereWithAggregatesInput | GpsDeviceScalarWhereWithAggregatesInput[]
+    OR?: GpsDeviceScalarWhereWithAggregatesInput[]
+    NOT?: GpsDeviceScalarWhereWithAggregatesInput | GpsDeviceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GpsDevice"> | string
+    deviceId?: StringWithAggregatesFilter<"GpsDevice"> | string
+    name?: StringNullableWithAggregatesFilter<"GpsDevice"> | string | null
+    busId?: StringNullableWithAggregatesFilter<"GpsDevice"> | string | null
+    credentialHash?: StringWithAggregatesFilter<"GpsDevice"> | string
+    credentialIssuedAt?: DateTimeWithAggregatesFilter<"GpsDevice"> | Date | string
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"GpsDevice"> | Date | string | null
+    verifiedAt?: DateTimeNullableWithAggregatesFilter<"GpsDevice"> | Date | string | null
+    validFixCount?: IntWithAggregatesFilter<"GpsDevice"> | number
+    lastSeenAt?: DateTimeNullableWithAggregatesFilter<"GpsDevice"> | Date | string | null
+    lastFixAt?: DateTimeNullableWithAggregatesFilter<"GpsDevice"> | Date | string | null
+    lastLat?: FloatNullableWithAggregatesFilter<"GpsDevice"> | number | null
+    lastLng?: FloatNullableWithAggregatesFilter<"GpsDevice"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"GpsDevice"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GpsDevice"> | Date | string
   }
 
   export type LiveLocationWhereInput = {
@@ -18603,6 +23331,7 @@ export namespace Prisma {
     parentPhone2?: StringNullableFilter<"Student"> | string | null
     fatherName?: StringNullableFilter<"Student"> | string | null
     motherName?: StringNullableFilter<"Student"> | string | null
+    absenceNotifications?: AbsenceNotificationListRelationFilter
   }
 
   export type StudentOrderByWithRelationInput = {
@@ -18618,6 +23347,7 @@ export namespace Prisma {
     parentPhone2?: SortOrderInput | SortOrder
     fatherName?: SortOrderInput | SortOrder
     motherName?: SortOrderInput | SortOrder
+    absenceNotifications?: AbsenceNotificationOrderByRelationAggregateInput
   }
 
   export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -18636,6 +23366,7 @@ export namespace Prisma {
     parentPhone2?: StringNullableFilter<"Student"> | string | null
     fatherName?: StringNullableFilter<"Student"> | string | null
     motherName?: StringNullableFilter<"Student"> | string | null
+    absenceNotifications?: AbsenceNotificationListRelationFilter
   }, "id">
 
   export type StudentOrderByWithAggregationInput = {
@@ -18831,6 +23562,7 @@ export namespace Prisma {
     destLat?: FloatNullableFilter<"Trip"> | number | null
     destLng?: FloatNullableFilter<"Trip"> | number | null
     stops?: TripStopListRelationFilter
+    absenceNotifications?: AbsenceNotificationListRelationFilter
   }
 
   export type TripOrderByWithRelationInput = {
@@ -18850,6 +23582,7 @@ export namespace Prisma {
     destLat?: SortOrderInput | SortOrder
     destLng?: SortOrderInput | SortOrder
     stops?: TripStopOrderByRelationAggregateInput
+    absenceNotifications?: AbsenceNotificationOrderByRelationAggregateInput
   }
 
   export type TripWhereUniqueInput = Prisma.AtLeast<{
@@ -18872,6 +23605,7 @@ export namespace Prisma {
     destLat?: FloatNullableFilter<"Trip"> | number | null
     destLng?: FloatNullableFilter<"Trip"> | number | null
     stops?: TripStopListRelationFilter
+    absenceNotifications?: AbsenceNotificationListRelationFilter
   }, "id">
 
   export type TripOrderByWithAggregationInput = {
@@ -19075,6 +23809,240 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"NotificationLog"> | Date | string
   }
 
+  export type AbsenceNotificationWhereInput = {
+    AND?: AbsenceNotificationWhereInput | AbsenceNotificationWhereInput[]
+    OR?: AbsenceNotificationWhereInput[]
+    NOT?: AbsenceNotificationWhereInput | AbsenceNotificationWhereInput[]
+    id?: StringFilter<"AbsenceNotification"> | string
+    studentId?: StringFilter<"AbsenceNotification"> | string
+    parentUserId?: StringFilter<"AbsenceNotification"> | string
+    busId?: StringFilter<"AbsenceNotification"> | string
+    tripId?: StringNullableFilter<"AbsenceNotification"> | string | null
+    stopId?: StringFilter<"AbsenceNotification"> | string
+    date?: StringFilter<"AbsenceNotification"> | string
+    reason?: StringNullableFilter<"AbsenceNotification"> | string | null
+    status?: EnumAbsenceStatusFilter<"AbsenceNotification"> | $Enums.AbsenceStatus
+    createdAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    updatedAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    cancelledAt?: DateTimeNullableFilter<"AbsenceNotification"> | Date | string | null
+    student?: XOR<StudentRelationFilter, StudentWhereInput>
+    trip?: XOR<TripNullableRelationFilter, TripWhereInput> | null
+  }
+
+  export type AbsenceNotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    parentUserId?: SortOrder
+    busId?: SortOrder
+    tripId?: SortOrderInput | SortOrder
+    stopId?: SortOrder
+    date?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    student?: StudentOrderByWithRelationInput
+    trip?: TripOrderByWithRelationInput
+  }
+
+  export type AbsenceNotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    studentId_busId_date?: AbsenceNotificationStudentIdBusIdDateCompoundUniqueInput
+    AND?: AbsenceNotificationWhereInput | AbsenceNotificationWhereInput[]
+    OR?: AbsenceNotificationWhereInput[]
+    NOT?: AbsenceNotificationWhereInput | AbsenceNotificationWhereInput[]
+    studentId?: StringFilter<"AbsenceNotification"> | string
+    parentUserId?: StringFilter<"AbsenceNotification"> | string
+    busId?: StringFilter<"AbsenceNotification"> | string
+    tripId?: StringNullableFilter<"AbsenceNotification"> | string | null
+    stopId?: StringFilter<"AbsenceNotification"> | string
+    date?: StringFilter<"AbsenceNotification"> | string
+    reason?: StringNullableFilter<"AbsenceNotification"> | string | null
+    status?: EnumAbsenceStatusFilter<"AbsenceNotification"> | $Enums.AbsenceStatus
+    createdAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    updatedAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    cancelledAt?: DateTimeNullableFilter<"AbsenceNotification"> | Date | string | null
+    student?: XOR<StudentRelationFilter, StudentWhereInput>
+    trip?: XOR<TripNullableRelationFilter, TripWhereInput> | null
+  }, "id" | "studentId_busId_date">
+
+  export type AbsenceNotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    parentUserId?: SortOrder
+    busId?: SortOrder
+    tripId?: SortOrderInput | SortOrder
+    stopId?: SortOrder
+    date?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    _count?: AbsenceNotificationCountOrderByAggregateInput
+    _max?: AbsenceNotificationMaxOrderByAggregateInput
+    _min?: AbsenceNotificationMinOrderByAggregateInput
+  }
+
+  export type AbsenceNotificationScalarWhereWithAggregatesInput = {
+    AND?: AbsenceNotificationScalarWhereWithAggregatesInput | AbsenceNotificationScalarWhereWithAggregatesInput[]
+    OR?: AbsenceNotificationScalarWhereWithAggregatesInput[]
+    NOT?: AbsenceNotificationScalarWhereWithAggregatesInput | AbsenceNotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    studentId?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    parentUserId?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    busId?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    tripId?: StringNullableWithAggregatesFilter<"AbsenceNotification"> | string | null
+    stopId?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    date?: StringWithAggregatesFilter<"AbsenceNotification"> | string
+    reason?: StringNullableWithAggregatesFilter<"AbsenceNotification"> | string | null
+    status?: EnumAbsenceStatusWithAggregatesFilter<"AbsenceNotification"> | $Enums.AbsenceStatus
+    createdAt?: DateTimeWithAggregatesFilter<"AbsenceNotification"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AbsenceNotification"> | Date | string
+    cancelledAt?: DateTimeNullableWithAggregatesFilter<"AbsenceNotification"> | Date | string | null
+  }
+
+  export type ChatMessageWhereInput = {
+    AND?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    OR?: ChatMessageWhereInput[]
+    NOT?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    id?: StringFilter<"ChatMessage"> | string
+    busId?: StringFilter<"ChatMessage"> | string
+    senderId?: StringFilter<"ChatMessage"> | string
+    senderRole?: EnumRoleFilter<"ChatMessage"> | $Enums.Role
+    senderName?: StringFilter<"ChatMessage"> | string
+    content?: StringFilter<"ChatMessage"> | string
+    type?: EnumMessageTypeFilter<"ChatMessage"> | $Enums.MessageType
+    createdAt?: DateTimeFilter<"ChatMessage"> | Date | string
+    editedAt?: DateTimeNullableFilter<"ChatMessage"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"ChatMessage"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ChatMessage"> | string | null
+    isPinned?: BoolFilter<"ChatMessage"> | boolean
+  }
+
+  export type ChatMessageOrderByWithRelationInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    senderId?: SortOrder
+    senderRole?: SortOrder
+    senderName?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    isPinned?: SortOrder
+  }
+
+  export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    OR?: ChatMessageWhereInput[]
+    NOT?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    busId?: StringFilter<"ChatMessage"> | string
+    senderId?: StringFilter<"ChatMessage"> | string
+    senderRole?: EnumRoleFilter<"ChatMessage"> | $Enums.Role
+    senderName?: StringFilter<"ChatMessage"> | string
+    content?: StringFilter<"ChatMessage"> | string
+    type?: EnumMessageTypeFilter<"ChatMessage"> | $Enums.MessageType
+    createdAt?: DateTimeFilter<"ChatMessage"> | Date | string
+    editedAt?: DateTimeNullableFilter<"ChatMessage"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"ChatMessage"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ChatMessage"> | string | null
+    isPinned?: BoolFilter<"ChatMessage"> | boolean
+  }, "id">
+
+  export type ChatMessageOrderByWithAggregationInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    senderId?: SortOrder
+    senderRole?: SortOrder
+    senderName?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    isPinned?: SortOrder
+    _count?: ChatMessageCountOrderByAggregateInput
+    _max?: ChatMessageMaxOrderByAggregateInput
+    _min?: ChatMessageMinOrderByAggregateInput
+  }
+
+  export type ChatMessageScalarWhereWithAggregatesInput = {
+    AND?: ChatMessageScalarWhereWithAggregatesInput | ChatMessageScalarWhereWithAggregatesInput[]
+    OR?: ChatMessageScalarWhereWithAggregatesInput[]
+    NOT?: ChatMessageScalarWhereWithAggregatesInput | ChatMessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatMessage"> | string
+    busId?: StringWithAggregatesFilter<"ChatMessage"> | string
+    senderId?: StringWithAggregatesFilter<"ChatMessage"> | string
+    senderRole?: EnumRoleWithAggregatesFilter<"ChatMessage"> | $Enums.Role
+    senderName?: StringWithAggregatesFilter<"ChatMessage"> | string
+    content?: StringWithAggregatesFilter<"ChatMessage"> | string
+    type?: EnumMessageTypeWithAggregatesFilter<"ChatMessage"> | $Enums.MessageType
+    createdAt?: DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
+    editedAt?: DateTimeNullableWithAggregatesFilter<"ChatMessage"> | Date | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ChatMessage"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
+    isPinned?: BoolWithAggregatesFilter<"ChatMessage"> | boolean
+  }
+
+  export type ChatReadStatusWhereInput = {
+    AND?: ChatReadStatusWhereInput | ChatReadStatusWhereInput[]
+    OR?: ChatReadStatusWhereInput[]
+    NOT?: ChatReadStatusWhereInput | ChatReadStatusWhereInput[]
+    id?: StringFilter<"ChatReadStatus"> | string
+    busId?: StringFilter<"ChatReadStatus"> | string
+    userId?: StringFilter<"ChatReadStatus"> | string
+    lastReadAt?: DateTimeFilter<"ChatReadStatus"> | Date | string
+    lastMessageId?: StringNullableFilter<"ChatReadStatus"> | string | null
+  }
+
+  export type ChatReadStatusOrderByWithRelationInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    userId?: SortOrder
+    lastReadAt?: SortOrder
+    lastMessageId?: SortOrderInput | SortOrder
+  }
+
+  export type ChatReadStatusWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    busId_userId?: ChatReadStatusBusIdUserIdCompoundUniqueInput
+    AND?: ChatReadStatusWhereInput | ChatReadStatusWhereInput[]
+    OR?: ChatReadStatusWhereInput[]
+    NOT?: ChatReadStatusWhereInput | ChatReadStatusWhereInput[]
+    busId?: StringFilter<"ChatReadStatus"> | string
+    userId?: StringFilter<"ChatReadStatus"> | string
+    lastReadAt?: DateTimeFilter<"ChatReadStatus"> | Date | string
+    lastMessageId?: StringNullableFilter<"ChatReadStatus"> | string | null
+  }, "id" | "busId_userId">
+
+  export type ChatReadStatusOrderByWithAggregationInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    userId?: SortOrder
+    lastReadAt?: SortOrder
+    lastMessageId?: SortOrderInput | SortOrder
+    _count?: ChatReadStatusCountOrderByAggregateInput
+    _max?: ChatReadStatusMaxOrderByAggregateInput
+    _min?: ChatReadStatusMinOrderByAggregateInput
+  }
+
+  export type ChatReadStatusScalarWhereWithAggregatesInput = {
+    AND?: ChatReadStatusScalarWhereWithAggregatesInput | ChatReadStatusScalarWhereWithAggregatesInput[]
+    OR?: ChatReadStatusScalarWhereWithAggregatesInput[]
+    NOT?: ChatReadStatusScalarWhereWithAggregatesInput | ChatReadStatusScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatReadStatus"> | string
+    busId?: StringWithAggregatesFilter<"ChatReadStatus"> | string
+    userId?: StringWithAggregatesFilter<"ChatReadStatus"> | string
+    lastReadAt?: DateTimeWithAggregatesFilter<"ChatReadStatus"> | Date | string
+    lastMessageId?: StringNullableWithAggregatesFilter<"ChatReadStatus"> | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     phone: string
@@ -19159,6 +24127,9 @@ export namespace Prisma {
     status?: $Enums.BusStatus
     createdAt?: Date | string
     label?: string | null
+    locationMode?: $Enums.LocationMode
+    activeSource?: $Enums.LocationSource
+    sourceChangedAt?: Date | string | null
   }
 
   export type BusUncheckedCreateInput = {
@@ -19168,6 +24139,9 @@ export namespace Prisma {
     status?: $Enums.BusStatus
     createdAt?: Date | string
     label?: string | null
+    locationMode?: $Enums.LocationMode
+    activeSource?: $Enums.LocationSource
+    sourceChangedAt?: Date | string | null
   }
 
   export type BusUpdateInput = {
@@ -19177,6 +24151,9 @@ export namespace Prisma {
     status?: EnumBusStatusFieldUpdateOperationsInput | $Enums.BusStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     label?: NullableStringFieldUpdateOperationsInput | string | null
+    locationMode?: EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFieldUpdateOperationsInput | $Enums.LocationSource
+    sourceChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type BusUncheckedUpdateInput = {
@@ -19186,6 +24163,9 @@ export namespace Prisma {
     status?: EnumBusStatusFieldUpdateOperationsInput | $Enums.BusStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     label?: NullableStringFieldUpdateOperationsInput | string | null
+    locationMode?: EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFieldUpdateOperationsInput | $Enums.LocationSource
+    sourceChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type BusCreateManyInput = {
@@ -19195,6 +24175,9 @@ export namespace Prisma {
     status?: $Enums.BusStatus
     createdAt?: Date | string
     label?: string | null
+    locationMode?: $Enums.LocationMode
+    activeSource?: $Enums.LocationSource
+    sourceChangedAt?: Date | string | null
   }
 
   export type BusUpdateManyMutationInput = {
@@ -19204,6 +24187,9 @@ export namespace Prisma {
     status?: EnumBusStatusFieldUpdateOperationsInput | $Enums.BusStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     label?: NullableStringFieldUpdateOperationsInput | string | null
+    locationMode?: EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFieldUpdateOperationsInput | $Enums.LocationSource
+    sourceChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type BusUncheckedUpdateManyInput = {
@@ -19213,6 +24199,135 @@ export namespace Prisma {
     status?: EnumBusStatusFieldUpdateOperationsInput | $Enums.BusStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     label?: NullableStringFieldUpdateOperationsInput | string | null
+    locationMode?: EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+    activeSource?: EnumLocationSourceFieldUpdateOperationsInput | $Enums.LocationSource
+    sourceChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type GpsDeviceCreateInput = {
+    id?: string
+    deviceId: string
+    name?: string | null
+    busId?: string | null
+    credentialHash: string
+    credentialIssuedAt?: Date | string
+    revokedAt?: Date | string | null
+    verifiedAt?: Date | string | null
+    validFixCount?: number
+    lastSeenAt?: Date | string | null
+    lastFixAt?: Date | string | null
+    lastLat?: number | null
+    lastLng?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GpsDeviceUncheckedCreateInput = {
+    id?: string
+    deviceId: string
+    name?: string | null
+    busId?: string | null
+    credentialHash: string
+    credentialIssuedAt?: Date | string
+    revokedAt?: Date | string | null
+    verifiedAt?: Date | string | null
+    validFixCount?: number
+    lastSeenAt?: Date | string | null
+    lastFixAt?: Date | string | null
+    lastLat?: number | null
+    lastLng?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GpsDeviceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    busId?: NullableStringFieldUpdateOperationsInput | string | null
+    credentialHash?: StringFieldUpdateOperationsInput | string
+    credentialIssuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validFixCount?: IntFieldUpdateOperationsInput | number
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastFixAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GpsDeviceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    busId?: NullableStringFieldUpdateOperationsInput | string | null
+    credentialHash?: StringFieldUpdateOperationsInput | string
+    credentialIssuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validFixCount?: IntFieldUpdateOperationsInput | number
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastFixAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GpsDeviceCreateManyInput = {
+    id?: string
+    deviceId: string
+    name?: string | null
+    busId?: string | null
+    credentialHash: string
+    credentialIssuedAt?: Date | string
+    revokedAt?: Date | string | null
+    verifiedAt?: Date | string | null
+    validFixCount?: number
+    lastSeenAt?: Date | string | null
+    lastFixAt?: Date | string | null
+    lastLat?: number | null
+    lastLng?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GpsDeviceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    busId?: NullableStringFieldUpdateOperationsInput | string | null
+    credentialHash?: StringFieldUpdateOperationsInput | string
+    credentialIssuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validFixCount?: IntFieldUpdateOperationsInput | number
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastFixAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GpsDeviceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deviceId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    busId?: NullableStringFieldUpdateOperationsInput | string | null
+    credentialHash?: StringFieldUpdateOperationsInput | string
+    credentialIssuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validFixCount?: IntFieldUpdateOperationsInput | number
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastFixAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LiveLocationCreateInput = {
@@ -19802,6 +24917,7 @@ export namespace Prisma {
     parentPhone2?: string | null
     fatherName?: string | null
     motherName?: string | null
+    absenceNotifications?: AbsenceNotificationCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateInput = {
@@ -19817,6 +24933,7 @@ export namespace Prisma {
     parentPhone2?: string | null
     fatherName?: string | null
     motherName?: string | null
+    absenceNotifications?: AbsenceNotificationUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUpdateInput = {
@@ -19832,6 +24949,7 @@ export namespace Prisma {
     parentPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     fatherName?: NullableStringFieldUpdateOperationsInput | string | null
     motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceNotifications?: AbsenceNotificationUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateInput = {
@@ -19847,6 +24965,7 @@ export namespace Prisma {
     parentPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     fatherName?: NullableStringFieldUpdateOperationsInput | string | null
     motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceNotifications?: AbsenceNotificationUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateManyInput = {
@@ -20061,6 +25180,7 @@ export namespace Prisma {
     destLat?: number | null
     destLng?: number | null
     stops?: TripStopCreateNestedManyWithoutTripInput
+    absenceNotifications?: AbsenceNotificationCreateNestedManyWithoutTripInput
   }
 
   export type TripUncheckedCreateInput = {
@@ -20080,6 +25200,7 @@ export namespace Prisma {
     destLat?: number | null
     destLng?: number | null
     stops?: TripStopUncheckedCreateNestedManyWithoutTripInput
+    absenceNotifications?: AbsenceNotificationUncheckedCreateNestedManyWithoutTripInput
   }
 
   export type TripUpdateInput = {
@@ -20099,6 +25220,7 @@ export namespace Prisma {
     destLat?: NullableFloatFieldUpdateOperationsInput | number | null
     destLng?: NullableFloatFieldUpdateOperationsInput | number | null
     stops?: TripStopUpdateManyWithoutTripNestedInput
+    absenceNotifications?: AbsenceNotificationUpdateManyWithoutTripNestedInput
   }
 
   export type TripUncheckedUpdateInput = {
@@ -20118,6 +25240,7 @@ export namespace Prisma {
     destLat?: NullableFloatFieldUpdateOperationsInput | number | null
     destLng?: NullableFloatFieldUpdateOperationsInput | number | null
     stops?: TripStopUncheckedUpdateManyWithoutTripNestedInput
+    absenceNotifications?: AbsenceNotificationUncheckedUpdateManyWithoutTripNestedInput
   }
 
   export type TripCreateManyInput = {
@@ -20348,6 +25471,270 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AbsenceNotificationCreateInput = {
+    id?: string
+    parentUserId: string
+    busId: string
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+    student: StudentCreateNestedOneWithoutAbsenceNotificationsInput
+    trip?: TripCreateNestedOneWithoutAbsenceNotificationsInput
+  }
+
+  export type AbsenceNotificationUncheckedCreateInput = {
+    id?: string
+    studentId: string
+    parentUserId: string
+    busId: string
+    tripId?: string | null
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
+  export type AbsenceNotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    student?: StudentUpdateOneRequiredWithoutAbsenceNotificationsNestedInput
+    trip?: TripUpdateOneWithoutAbsenceNotificationsNestedInput
+  }
+
+  export type AbsenceNotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    tripId?: NullableStringFieldUpdateOperationsInput | string | null
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AbsenceNotificationCreateManyInput = {
+    id?: string
+    studentId: string
+    parentUserId: string
+    busId: string
+    tripId?: string | null
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
+  export type AbsenceNotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AbsenceNotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    tripId?: NullableStringFieldUpdateOperationsInput | string | null
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChatMessageCreateInput = {
+    id?: string
+    busId: string
+    senderId: string
+    senderRole: $Enums.Role
+    senderName: string
+    content: string
+    type?: $Enums.MessageType
+    createdAt?: Date | string
+    editedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    isPinned?: boolean
+  }
+
+  export type ChatMessageUncheckedCreateInput = {
+    id?: string
+    busId: string
+    senderId: string
+    senderRole: $Enums.Role
+    senderName: string
+    content: string
+    type?: $Enums.MessageType
+    createdAt?: Date | string
+    editedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    isPinned?: boolean
+  }
+
+  export type ChatMessageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    senderRole?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    senderName?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ChatMessageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    senderRole?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    senderName?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ChatMessageCreateManyInput = {
+    id?: string
+    busId: string
+    senderId: string
+    senderRole: $Enums.Role
+    senderName: string
+    content: string
+    type?: $Enums.MessageType
+    createdAt?: Date | string
+    editedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    isPinned?: boolean
+  }
+
+  export type ChatMessageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    senderRole?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    senderName?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ChatMessageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    senderRole?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    senderName?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ChatReadStatusCreateInput = {
+    id?: string
+    busId: string
+    userId: string
+    lastReadAt?: Date | string
+    lastMessageId?: string | null
+  }
+
+  export type ChatReadStatusUncheckedCreateInput = {
+    id?: string
+    busId: string
+    userId: string
+    lastReadAt?: Date | string
+    lastMessageId?: string | null
+  }
+
+  export type ChatReadStatusUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChatReadStatusUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChatReadStatusCreateManyInput = {
+    id?: string
+    busId: string
+    userId: string
+    lastReadAt?: Date | string
+    lastMessageId?: string | null
+  }
+
+  export type ChatReadStatusUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChatReadStatusUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20501,6 +25888,31 @@ export namespace Prisma {
     not?: NestedEnumBusStatusFilter<$PrismaModel> | $Enums.BusStatus
   }
 
+  export type EnumLocationModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationMode | EnumLocationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationModeFilter<$PrismaModel> | $Enums.LocationMode
+  }
+
+  export type EnumLocationSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationSource | EnumLocationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationSourceFilter<$PrismaModel> | $Enums.LocationSource
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type BusCountOrderByAggregateInput = {
     id?: SortOrder
     busNo?: SortOrder
@@ -20508,6 +25920,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     label?: SortOrder
+    locationMode?: SortOrder
+    activeSource?: SortOrder
+    sourceChangedAt?: SortOrder
   }
 
   export type BusMaxOrderByAggregateInput = {
@@ -20517,6 +25932,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     label?: SortOrder
+    locationMode?: SortOrder
+    activeSource?: SortOrder
+    sourceChangedAt?: SortOrder
   }
 
   export type BusMinOrderByAggregateInput = {
@@ -20526,6 +25944,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     label?: SortOrder
+    locationMode?: SortOrder
+    activeSource?: SortOrder
+    sourceChangedAt?: SortOrder
   }
 
   export type EnumBusStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -20536,6 +25957,160 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBusStatusFilter<$PrismaModel>
     _max?: NestedEnumBusStatusFilter<$PrismaModel>
+  }
+
+  export type EnumLocationModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationMode | EnumLocationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationModeWithAggregatesFilter<$PrismaModel> | $Enums.LocationMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLocationModeFilter<$PrismaModel>
+    _max?: NestedEnumLocationModeFilter<$PrismaModel>
+  }
+
+  export type EnumLocationSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationSource | EnumLocationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationSourceWithAggregatesFilter<$PrismaModel> | $Enums.LocationSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLocationSourceFilter<$PrismaModel>
+    _max?: NestedEnumLocationSourceFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type GpsDeviceCountOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    name?: SortOrder
+    busId?: SortOrder
+    credentialHash?: SortOrder
+    credentialIssuedAt?: SortOrder
+    revokedAt?: SortOrder
+    verifiedAt?: SortOrder
+    validFixCount?: SortOrder
+    lastSeenAt?: SortOrder
+    lastFixAt?: SortOrder
+    lastLat?: SortOrder
+    lastLng?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GpsDeviceAvgOrderByAggregateInput = {
+    validFixCount?: SortOrder
+    lastLat?: SortOrder
+    lastLng?: SortOrder
+  }
+
+  export type GpsDeviceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    name?: SortOrder
+    busId?: SortOrder
+    credentialHash?: SortOrder
+    credentialIssuedAt?: SortOrder
+    revokedAt?: SortOrder
+    verifiedAt?: SortOrder
+    validFixCount?: SortOrder
+    lastSeenAt?: SortOrder
+    lastFixAt?: SortOrder
+    lastLat?: SortOrder
+    lastLng?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GpsDeviceMinOrderByAggregateInput = {
+    id?: SortOrder
+    deviceId?: SortOrder
+    name?: SortOrder
+    busId?: SortOrder
+    credentialHash?: SortOrder
+    credentialIssuedAt?: SortOrder
+    revokedAt?: SortOrder
+    verifiedAt?: SortOrder
+    validFixCount?: SortOrder
+    lastSeenAt?: SortOrder
+    lastFixAt?: SortOrder
+    lastLat?: SortOrder
+    lastLng?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GpsDeviceSumOrderByAggregateInput = {
+    validFixCount?: SortOrder
+    lastLat?: SortOrder
+    lastLng?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -20604,17 +26179,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -20673,22 +26237,6 @@ export namespace Prisma {
     lat?: SortOrder
     lng?: SortOrder
     order?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -20778,17 +26326,6 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type AttendanceTripIdStudentIdTypeCompoundUniqueInput = {
     tripId: string
     studentId: string
@@ -20843,20 +26380,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -20979,6 +26502,16 @@ export namespace Prisma {
     notes?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type AbsenceNotificationListRelationFilter = {
+    every?: AbsenceNotificationWhereInput
+    some?: AbsenceNotificationWhereInput
+    none?: AbsenceNotificationWhereInput
+  }
+
+  export type AbsenceNotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type StudentCountOrderByAggregateInput = {
@@ -21127,17 +26660,6 @@ export namespace Prisma {
     not?: NestedEnumTripStatusFilter<$PrismaModel> | $Enums.TripStatus
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type TripStopListRelationFilter = {
     every?: TripStopWhereInput
     some?: TripStopWhereInput
@@ -21228,22 +26750,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTripStatusFilter<$PrismaModel>
     _max?: NestedEnumTripStatusFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumTripStopStatusFilter<$PrismaModel = never> = {
@@ -21370,6 +26876,175 @@ export namespace Prisma {
     etaSeconds?: SortOrder
   }
 
+  export type EnumAbsenceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AbsenceStatus | EnumAbsenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAbsenceStatusFilter<$PrismaModel> | $Enums.AbsenceStatus
+  }
+
+  export type StudentRelationFilter = {
+    is?: StudentWhereInput
+    isNot?: StudentWhereInput
+  }
+
+  export type TripNullableRelationFilter = {
+    is?: TripWhereInput | null
+    isNot?: TripWhereInput | null
+  }
+
+  export type AbsenceNotificationStudentIdBusIdDateCompoundUniqueInput = {
+    studentId: string
+    busId: string
+    date: string
+  }
+
+  export type AbsenceNotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    parentUserId?: SortOrder
+    busId?: SortOrder
+    tripId?: SortOrder
+    stopId?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cancelledAt?: SortOrder
+  }
+
+  export type AbsenceNotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    parentUserId?: SortOrder
+    busId?: SortOrder
+    tripId?: SortOrder
+    stopId?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cancelledAt?: SortOrder
+  }
+
+  export type AbsenceNotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    parentUserId?: SortOrder
+    busId?: SortOrder
+    tripId?: SortOrder
+    stopId?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cancelledAt?: SortOrder
+  }
+
+  export type EnumAbsenceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AbsenceStatus | EnumAbsenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAbsenceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AbsenceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAbsenceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAbsenceStatusFilter<$PrismaModel>
+  }
+
+  export type EnumMessageTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageType | EnumMessageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMessageTypeFilter<$PrismaModel> | $Enums.MessageType
+  }
+
+  export type ChatMessageCountOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    senderId?: SortOrder
+    senderRole?: SortOrder
+    senderName?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    editedAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+    isPinned?: SortOrder
+  }
+
+  export type ChatMessageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    senderId?: SortOrder
+    senderRole?: SortOrder
+    senderName?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    editedAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+    isPinned?: SortOrder
+  }
+
+  export type ChatMessageMinOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    senderId?: SortOrder
+    senderRole?: SortOrder
+    senderName?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    editedAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+    isPinned?: SortOrder
+  }
+
+  export type EnumMessageTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageType | EnumMessageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMessageTypeWithAggregatesFilter<$PrismaModel> | $Enums.MessageType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMessageTypeFilter<$PrismaModel>
+    _max?: NestedEnumMessageTypeFilter<$PrismaModel>
+  }
+
+  export type ChatReadStatusBusIdUserIdCompoundUniqueInput = {
+    busId: string
+    userId: string
+  }
+
+  export type ChatReadStatusCountOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    userId?: SortOrder
+    lastReadAt?: SortOrder
+    lastMessageId?: SortOrder
+  }
+
+  export type ChatReadStatusMaxOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    userId?: SortOrder
+    lastReadAt?: SortOrder
+    lastMessageId?: SortOrder
+  }
+
+  export type ChatReadStatusMinOrderByAggregateInput = {
+    id?: SortOrder
+    busId?: SortOrder
+    userId?: SortOrder
+    lastReadAt?: SortOrder
+    lastMessageId?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -21390,7 +27065,19 @@ export namespace Prisma {
     set?: $Enums.BusStatus
   }
 
-  export type FloatFieldUpdateOperationsInput = {
+  export type EnumLocationModeFieldUpdateOperationsInput = {
+    set?: $Enums.LocationMode
+  }
+
+  export type EnumLocationSourceFieldUpdateOperationsInput = {
+    set?: $Enums.LocationSource
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
@@ -21398,7 +27085,15 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type IntFieldUpdateOperationsInput = {
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
@@ -21418,16 +27113,54 @@ export namespace Prisma {
     set?: boolean | null
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type AbsenceNotificationCreateNestedManyWithoutStudentInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput> | AbsenceNotificationCreateWithoutStudentInput[] | AbsenceNotificationUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutStudentInput | AbsenceNotificationCreateOrConnectWithoutStudentInput[]
+    createMany?: AbsenceNotificationCreateManyStudentInputEnvelope
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+  }
+
+  export type AbsenceNotificationUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput> | AbsenceNotificationCreateWithoutStudentInput[] | AbsenceNotificationUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutStudentInput | AbsenceNotificationCreateOrConnectWithoutStudentInput[]
+    createMany?: AbsenceNotificationCreateManyStudentInputEnvelope
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+  }
+
+  export type AbsenceNotificationUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput> | AbsenceNotificationCreateWithoutStudentInput[] | AbsenceNotificationUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutStudentInput | AbsenceNotificationCreateOrConnectWithoutStudentInput[]
+    upsert?: AbsenceNotificationUpsertWithWhereUniqueWithoutStudentInput | AbsenceNotificationUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: AbsenceNotificationCreateManyStudentInputEnvelope
+    set?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    disconnect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    delete?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    update?: AbsenceNotificationUpdateWithWhereUniqueWithoutStudentInput | AbsenceNotificationUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: AbsenceNotificationUpdateManyWithWhereWithoutStudentInput | AbsenceNotificationUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
+  }
+
+  export type AbsenceNotificationUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput> | AbsenceNotificationCreateWithoutStudentInput[] | AbsenceNotificationUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutStudentInput | AbsenceNotificationCreateOrConnectWithoutStudentInput[]
+    upsert?: AbsenceNotificationUpsertWithWhereUniqueWithoutStudentInput | AbsenceNotificationUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: AbsenceNotificationCreateManyStudentInputEnvelope
+    set?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    disconnect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    delete?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    update?: AbsenceNotificationUpdateWithWhereUniqueWithoutStudentInput | AbsenceNotificationUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: AbsenceNotificationUpdateManyWithWhereWithoutStudentInput | AbsenceNotificationUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
   }
 
   export type RouteStopCreateNestedManyWithoutRouteInput = {
@@ -21493,6 +27226,13 @@ export namespace Prisma {
     connect?: TripStopWhereUniqueInput | TripStopWhereUniqueInput[]
   }
 
+  export type AbsenceNotificationCreateNestedManyWithoutTripInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput> | AbsenceNotificationCreateWithoutTripInput[] | AbsenceNotificationUncheckedCreateWithoutTripInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutTripInput | AbsenceNotificationCreateOrConnectWithoutTripInput[]
+    createMany?: AbsenceNotificationCreateManyTripInputEnvelope
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+  }
+
   export type TripStopUncheckedCreateNestedManyWithoutTripInput = {
     create?: XOR<TripStopCreateWithoutTripInput, TripStopUncheckedCreateWithoutTripInput> | TripStopCreateWithoutTripInput[] | TripStopUncheckedCreateWithoutTripInput[]
     connectOrCreate?: TripStopCreateOrConnectWithoutTripInput | TripStopCreateOrConnectWithoutTripInput[]
@@ -21500,16 +27240,15 @@ export namespace Prisma {
     connect?: TripStopWhereUniqueInput | TripStopWhereUniqueInput[]
   }
 
-  export type EnumTripStatusFieldUpdateOperationsInput = {
-    set?: $Enums.TripStatus
+  export type AbsenceNotificationUncheckedCreateNestedManyWithoutTripInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput> | AbsenceNotificationCreateWithoutTripInput[] | AbsenceNotificationUncheckedCreateWithoutTripInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutTripInput | AbsenceNotificationCreateOrConnectWithoutTripInput[]
+    createMany?: AbsenceNotificationCreateManyTripInputEnvelope
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type EnumTripStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TripStatus
   }
 
   export type TripStopUpdateManyWithoutTripNestedInput = {
@@ -21526,6 +27265,20 @@ export namespace Prisma {
     deleteMany?: TripStopScalarWhereInput | TripStopScalarWhereInput[]
   }
 
+  export type AbsenceNotificationUpdateManyWithoutTripNestedInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput> | AbsenceNotificationCreateWithoutTripInput[] | AbsenceNotificationUncheckedCreateWithoutTripInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutTripInput | AbsenceNotificationCreateOrConnectWithoutTripInput[]
+    upsert?: AbsenceNotificationUpsertWithWhereUniqueWithoutTripInput | AbsenceNotificationUpsertWithWhereUniqueWithoutTripInput[]
+    createMany?: AbsenceNotificationCreateManyTripInputEnvelope
+    set?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    disconnect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    delete?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    update?: AbsenceNotificationUpdateWithWhereUniqueWithoutTripInput | AbsenceNotificationUpdateWithWhereUniqueWithoutTripInput[]
+    updateMany?: AbsenceNotificationUpdateManyWithWhereWithoutTripInput | AbsenceNotificationUpdateManyWithWhereWithoutTripInput[]
+    deleteMany?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
+  }
+
   export type TripStopUncheckedUpdateManyWithoutTripNestedInput = {
     create?: XOR<TripStopCreateWithoutTripInput, TripStopUncheckedCreateWithoutTripInput> | TripStopCreateWithoutTripInput[] | TripStopUncheckedCreateWithoutTripInput[]
     connectOrCreate?: TripStopCreateOrConnectWithoutTripInput | TripStopCreateOrConnectWithoutTripInput[]
@@ -21538,6 +27291,20 @@ export namespace Prisma {
     update?: TripStopUpdateWithWhereUniqueWithoutTripInput | TripStopUpdateWithWhereUniqueWithoutTripInput[]
     updateMany?: TripStopUpdateManyWithWhereWithoutTripInput | TripStopUpdateManyWithWhereWithoutTripInput[]
     deleteMany?: TripStopScalarWhereInput | TripStopScalarWhereInput[]
+  }
+
+  export type AbsenceNotificationUncheckedUpdateManyWithoutTripNestedInput = {
+    create?: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput> | AbsenceNotificationCreateWithoutTripInput[] | AbsenceNotificationUncheckedCreateWithoutTripInput[]
+    connectOrCreate?: AbsenceNotificationCreateOrConnectWithoutTripInput | AbsenceNotificationCreateOrConnectWithoutTripInput[]
+    upsert?: AbsenceNotificationUpsertWithWhereUniqueWithoutTripInput | AbsenceNotificationUpsertWithWhereUniqueWithoutTripInput[]
+    createMany?: AbsenceNotificationCreateManyTripInputEnvelope
+    set?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    disconnect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    delete?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    connect?: AbsenceNotificationWhereUniqueInput | AbsenceNotificationWhereUniqueInput[]
+    update?: AbsenceNotificationUpdateWithWhereUniqueWithoutTripInput | AbsenceNotificationUpdateWithWhereUniqueWithoutTripInput[]
+    updateMany?: AbsenceNotificationUpdateManyWithWhereWithoutTripInput | AbsenceNotificationUpdateManyWithWhereWithoutTripInput[]
+    deleteMany?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
   }
 
   export type TripCreateNestedOneWithoutStopsInput = {
@@ -21556,6 +27323,44 @@ export namespace Prisma {
     upsert?: TripUpsertWithoutStopsInput
     connect?: TripWhereUniqueInput
     update?: XOR<XOR<TripUpdateToOneWithWhereWithoutStopsInput, TripUpdateWithoutStopsInput>, TripUncheckedUpdateWithoutStopsInput>
+  }
+
+  export type StudentCreateNestedOneWithoutAbsenceNotificationsInput = {
+    create?: XOR<StudentCreateWithoutAbsenceNotificationsInput, StudentUncheckedCreateWithoutAbsenceNotificationsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutAbsenceNotificationsInput
+    connect?: StudentWhereUniqueInput
+  }
+
+  export type TripCreateNestedOneWithoutAbsenceNotificationsInput = {
+    create?: XOR<TripCreateWithoutAbsenceNotificationsInput, TripUncheckedCreateWithoutAbsenceNotificationsInput>
+    connectOrCreate?: TripCreateOrConnectWithoutAbsenceNotificationsInput
+    connect?: TripWhereUniqueInput
+  }
+
+  export type EnumAbsenceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AbsenceStatus
+  }
+
+  export type StudentUpdateOneRequiredWithoutAbsenceNotificationsNestedInput = {
+    create?: XOR<StudentCreateWithoutAbsenceNotificationsInput, StudentUncheckedCreateWithoutAbsenceNotificationsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutAbsenceNotificationsInput
+    upsert?: StudentUpsertWithoutAbsenceNotificationsInput
+    connect?: StudentWhereUniqueInput
+    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutAbsenceNotificationsInput, StudentUpdateWithoutAbsenceNotificationsInput>, StudentUncheckedUpdateWithoutAbsenceNotificationsInput>
+  }
+
+  export type TripUpdateOneWithoutAbsenceNotificationsNestedInput = {
+    create?: XOR<TripCreateWithoutAbsenceNotificationsInput, TripUncheckedCreateWithoutAbsenceNotificationsInput>
+    connectOrCreate?: TripCreateOrConnectWithoutAbsenceNotificationsInput
+    upsert?: TripUpsertWithoutAbsenceNotificationsInput
+    disconnect?: TripWhereInput | boolean
+    delete?: TripWhereInput | boolean
+    connect?: TripWhereUniqueInput
+    update?: XOR<XOR<TripUpdateToOneWithWhereWithoutAbsenceNotificationsInput, TripUpdateWithoutAbsenceNotificationsInput>, TripUncheckedUpdateWithoutAbsenceNotificationsInput>
+  }
+
+  export type EnumMessageTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MessageType
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -21691,6 +27496,31 @@ export namespace Prisma {
     not?: NestedEnumBusStatusFilter<$PrismaModel> | $Enums.BusStatus
   }
 
+  export type NestedEnumLocationModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationMode | EnumLocationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationModeFilter<$PrismaModel> | $Enums.LocationMode
+  }
+
+  export type NestedEnumLocationSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationSource | EnumLocationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationSourceFilter<$PrismaModel> | $Enums.LocationSource
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumBusStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BusStatus | EnumBusStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BusStatus[] | ListEnumBusStatusFieldRefInput<$PrismaModel>
@@ -21699,6 +27529,67 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBusStatusFilter<$PrismaModel>
     _max?: NestedEnumBusStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLocationModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationMode | EnumLocationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationMode[] | ListEnumLocationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationModeWithAggregatesFilter<$PrismaModel> | $Enums.LocationMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLocationModeFilter<$PrismaModel>
+    _max?: NestedEnumLocationModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLocationSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LocationSource | EnumLocationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LocationSource[] | ListEnumLocationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumLocationSourceWithAggregatesFilter<$PrismaModel> | $Enums.LocationSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLocationSourceFilter<$PrismaModel>
+    _max?: NestedEnumLocationSourceFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type NestedFloatFilter<$PrismaModel = never> = {
@@ -21710,6 +27601,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -21740,22 +27647,6 @@ export namespace Prisma {
     not?: NestedEnumTripDirectionFilter<$PrismaModel> | $Enums.TripDirection
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -21779,37 +27670,12 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21826,17 +27692,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumTripStatusFilter<$PrismaModel = never> = {
@@ -21856,22 +27711,6 @@ export namespace Prisma {
     _max?: NestedEnumTripStatusFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumTripStopStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TripStopStatus | EnumTripStopStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TripStopStatus[] | ListEnumTripStopStatusFieldRefInput<$PrismaModel>
@@ -21887,6 +27726,112 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTripStopStatusFilter<$PrismaModel>
     _max?: NestedEnumTripStopStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAbsenceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AbsenceStatus | EnumAbsenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAbsenceStatusFilter<$PrismaModel> | $Enums.AbsenceStatus
+  }
+
+  export type NestedEnumAbsenceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AbsenceStatus | EnumAbsenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AbsenceStatus[] | ListEnumAbsenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAbsenceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AbsenceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAbsenceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAbsenceStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMessageTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageType | EnumMessageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMessageTypeFilter<$PrismaModel> | $Enums.MessageType
+  }
+
+  export type NestedEnumMessageTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageType | EnumMessageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MessageType[] | ListEnumMessageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMessageTypeWithAggregatesFilter<$PrismaModel> | $Enums.MessageType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMessageTypeFilter<$PrismaModel>
+    _max?: NestedEnumMessageTypeFilter<$PrismaModel>
+  }
+
+  export type AbsenceNotificationCreateWithoutStudentInput = {
+    id?: string
+    parentUserId: string
+    busId: string
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+    trip?: TripCreateNestedOneWithoutAbsenceNotificationsInput
+  }
+
+  export type AbsenceNotificationUncheckedCreateWithoutStudentInput = {
+    id?: string
+    parentUserId: string
+    busId: string
+    tripId?: string | null
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
+  export type AbsenceNotificationCreateOrConnectWithoutStudentInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    create: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput>
+  }
+
+  export type AbsenceNotificationCreateManyStudentInputEnvelope = {
+    data: AbsenceNotificationCreateManyStudentInput | AbsenceNotificationCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AbsenceNotificationUpsertWithWhereUniqueWithoutStudentInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    update: XOR<AbsenceNotificationUpdateWithoutStudentInput, AbsenceNotificationUncheckedUpdateWithoutStudentInput>
+    create: XOR<AbsenceNotificationCreateWithoutStudentInput, AbsenceNotificationUncheckedCreateWithoutStudentInput>
+  }
+
+  export type AbsenceNotificationUpdateWithWhereUniqueWithoutStudentInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    data: XOR<AbsenceNotificationUpdateWithoutStudentInput, AbsenceNotificationUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type AbsenceNotificationUpdateManyWithWhereWithoutStudentInput = {
+    where: AbsenceNotificationScalarWhereInput
+    data: XOR<AbsenceNotificationUpdateManyMutationInput, AbsenceNotificationUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type AbsenceNotificationScalarWhereInput = {
+    AND?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
+    OR?: AbsenceNotificationScalarWhereInput[]
+    NOT?: AbsenceNotificationScalarWhereInput | AbsenceNotificationScalarWhereInput[]
+    id?: StringFilter<"AbsenceNotification"> | string
+    studentId?: StringFilter<"AbsenceNotification"> | string
+    parentUserId?: StringFilter<"AbsenceNotification"> | string
+    busId?: StringFilter<"AbsenceNotification"> | string
+    tripId?: StringNullableFilter<"AbsenceNotification"> | string | null
+    stopId?: StringFilter<"AbsenceNotification"> | string
+    date?: StringFilter<"AbsenceNotification"> | string
+    reason?: StringNullableFilter<"AbsenceNotification"> | string | null
+    status?: EnumAbsenceStatusFilter<"AbsenceNotification"> | $Enums.AbsenceStatus
+    createdAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    updatedAt?: DateTimeFilter<"AbsenceNotification"> | Date | string
+    cancelledAt?: DateTimeNullableFilter<"AbsenceNotification"> | Date | string | null
   }
 
   export type RouteStopCreateWithoutRouteInput = {
@@ -22038,6 +27983,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AbsenceNotificationCreateWithoutTripInput = {
+    id?: string
+    parentUserId: string
+    busId: string
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+    student: StudentCreateNestedOneWithoutAbsenceNotificationsInput
+  }
+
+  export type AbsenceNotificationUncheckedCreateWithoutTripInput = {
+    id?: string
+    studentId: string
+    parentUserId: string
+    busId: string
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
+  export type AbsenceNotificationCreateOrConnectWithoutTripInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    create: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput>
+  }
+
+  export type AbsenceNotificationCreateManyTripInputEnvelope = {
+    data: AbsenceNotificationCreateManyTripInput | AbsenceNotificationCreateManyTripInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TripStopUpsertWithWhereUniqueWithoutTripInput = {
     where: TripStopWhereUniqueInput
     update: XOR<TripStopUpdateWithoutTripInput, TripStopUncheckedUpdateWithoutTripInput>
@@ -22070,6 +28053,22 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"TripStop"> | Date | string | null
   }
 
+  export type AbsenceNotificationUpsertWithWhereUniqueWithoutTripInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    update: XOR<AbsenceNotificationUpdateWithoutTripInput, AbsenceNotificationUncheckedUpdateWithoutTripInput>
+    create: XOR<AbsenceNotificationCreateWithoutTripInput, AbsenceNotificationUncheckedCreateWithoutTripInput>
+  }
+
+  export type AbsenceNotificationUpdateWithWhereUniqueWithoutTripInput = {
+    where: AbsenceNotificationWhereUniqueInput
+    data: XOR<AbsenceNotificationUpdateWithoutTripInput, AbsenceNotificationUncheckedUpdateWithoutTripInput>
+  }
+
+  export type AbsenceNotificationUpdateManyWithWhereWithoutTripInput = {
+    where: AbsenceNotificationScalarWhereInput
+    data: XOR<AbsenceNotificationUpdateManyMutationInput, AbsenceNotificationUncheckedUpdateManyWithoutTripInput>
+  }
+
   export type TripCreateWithoutStopsInput = {
     id?: string
     busId: string
@@ -22086,6 +28085,7 @@ export namespace Prisma {
     destName?: string | null
     destLat?: number | null
     destLng?: number | null
+    absenceNotifications?: AbsenceNotificationCreateNestedManyWithoutTripInput
   }
 
   export type TripUncheckedCreateWithoutStopsInput = {
@@ -22104,6 +28104,7 @@ export namespace Prisma {
     destName?: string | null
     destLat?: number | null
     destLng?: number | null
+    absenceNotifications?: AbsenceNotificationUncheckedCreateNestedManyWithoutTripInput
   }
 
   export type TripCreateOrConnectWithoutStopsInput = {
@@ -22138,6 +28139,7 @@ export namespace Prisma {
     destName?: NullableStringFieldUpdateOperationsInput | string | null
     destLat?: NullableFloatFieldUpdateOperationsInput | number | null
     destLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    absenceNotifications?: AbsenceNotificationUpdateManyWithoutTripNestedInput
   }
 
   export type TripUncheckedUpdateWithoutStopsInput = {
@@ -22156,6 +28158,231 @@ export namespace Prisma {
     destName?: NullableStringFieldUpdateOperationsInput | string | null
     destLat?: NullableFloatFieldUpdateOperationsInput | number | null
     destLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    absenceNotifications?: AbsenceNotificationUncheckedUpdateManyWithoutTripNestedInput
+  }
+
+  export type StudentCreateWithoutAbsenceNotificationsInput = {
+    id?: string
+    name: string
+    admissionNo: string
+    busId: string
+    parentPhone: string
+    stopId?: string | null
+    class?: string | null
+    createdAt?: Date | string
+    dropStopId?: string | null
+    parentPhone2?: string | null
+    fatherName?: string | null
+    motherName?: string | null
+  }
+
+  export type StudentUncheckedCreateWithoutAbsenceNotificationsInput = {
+    id?: string
+    name: string
+    admissionNo: string
+    busId: string
+    parentPhone: string
+    stopId?: string | null
+    class?: string | null
+    createdAt?: Date | string
+    dropStopId?: string | null
+    parentPhone2?: string | null
+    fatherName?: string | null
+    motherName?: string | null
+  }
+
+  export type StudentCreateOrConnectWithoutAbsenceNotificationsInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutAbsenceNotificationsInput, StudentUncheckedCreateWithoutAbsenceNotificationsInput>
+  }
+
+  export type TripCreateWithoutAbsenceNotificationsInput = {
+    id?: string
+    busId: string
+    driverId: string
+    direction: $Enums.TripDirection
+    status?: $Enums.TripStatus
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+    lastLat?: number | null
+    lastLng?: number | null
+    lastSpeed?: number | null
+    lastHeading?: number | null
+    lastLocationAt?: Date | string | null
+    destName?: string | null
+    destLat?: number | null
+    destLng?: number | null
+    stops?: TripStopCreateNestedManyWithoutTripInput
+  }
+
+  export type TripUncheckedCreateWithoutAbsenceNotificationsInput = {
+    id?: string
+    busId: string
+    driverId: string
+    direction: $Enums.TripDirection
+    status?: $Enums.TripStatus
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+    lastLat?: number | null
+    lastLng?: number | null
+    lastSpeed?: number | null
+    lastHeading?: number | null
+    lastLocationAt?: Date | string | null
+    destName?: string | null
+    destLat?: number | null
+    destLng?: number | null
+    stops?: TripStopUncheckedCreateNestedManyWithoutTripInput
+  }
+
+  export type TripCreateOrConnectWithoutAbsenceNotificationsInput = {
+    where: TripWhereUniqueInput
+    create: XOR<TripCreateWithoutAbsenceNotificationsInput, TripUncheckedCreateWithoutAbsenceNotificationsInput>
+  }
+
+  export type StudentUpsertWithoutAbsenceNotificationsInput = {
+    update: XOR<StudentUpdateWithoutAbsenceNotificationsInput, StudentUncheckedUpdateWithoutAbsenceNotificationsInput>
+    create: XOR<StudentCreateWithoutAbsenceNotificationsInput, StudentUncheckedCreateWithoutAbsenceNotificationsInput>
+    where?: StudentWhereInput
+  }
+
+  export type StudentUpdateToOneWithWhereWithoutAbsenceNotificationsInput = {
+    where?: StudentWhereInput
+    data: XOR<StudentUpdateWithoutAbsenceNotificationsInput, StudentUncheckedUpdateWithoutAbsenceNotificationsInput>
+  }
+
+  export type StudentUpdateWithoutAbsenceNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    admissionNo?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    parentPhone?: StringFieldUpdateOperationsInput | string
+    stopId?: NullableStringFieldUpdateOperationsInput | string | null
+    class?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dropStopId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StudentUncheckedUpdateWithoutAbsenceNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    admissionNo?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    parentPhone?: StringFieldUpdateOperationsInput | string
+    stopId?: NullableStringFieldUpdateOperationsInput | string | null
+    class?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dropStopId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TripUpsertWithoutAbsenceNotificationsInput = {
+    update: XOR<TripUpdateWithoutAbsenceNotificationsInput, TripUncheckedUpdateWithoutAbsenceNotificationsInput>
+    create: XOR<TripCreateWithoutAbsenceNotificationsInput, TripUncheckedCreateWithoutAbsenceNotificationsInput>
+    where?: TripWhereInput
+  }
+
+  export type TripUpdateToOneWithWhereWithoutAbsenceNotificationsInput = {
+    where?: TripWhereInput
+    data: XOR<TripUpdateWithoutAbsenceNotificationsInput, TripUncheckedUpdateWithoutAbsenceNotificationsInput>
+  }
+
+  export type TripUpdateWithoutAbsenceNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    direction?: EnumTripDirectionFieldUpdateOperationsInput | $Enums.TripDirection
+    status?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLocationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    destName?: NullableStringFieldUpdateOperationsInput | string | null
+    destLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    destLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    stops?: TripStopUpdateManyWithoutTripNestedInput
+  }
+
+  export type TripUncheckedUpdateWithoutAbsenceNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    direction?: EnumTripDirectionFieldUpdateOperationsInput | $Enums.TripDirection
+    status?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastLocationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    destName?: NullableStringFieldUpdateOperationsInput | string | null
+    destLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    destLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    stops?: TripStopUncheckedUpdateManyWithoutTripNestedInput
+  }
+
+  export type AbsenceNotificationCreateManyStudentInput = {
+    id?: string
+    parentUserId: string
+    busId: string
+    tripId?: string | null
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
+  export type AbsenceNotificationUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trip?: TripUpdateOneWithoutAbsenceNotificationsNestedInput
+  }
+
+  export type AbsenceNotificationUncheckedUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    tripId?: NullableStringFieldUpdateOperationsInput | string | null
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AbsenceNotificationUncheckedUpdateManyWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    tripId?: NullableStringFieldUpdateOperationsInput | string | null
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type RouteStopCreateManyRouteInput = {
@@ -22214,6 +28441,20 @@ export namespace Prisma {
     completedAt?: Date | string | null
   }
 
+  export type AbsenceNotificationCreateManyTripInput = {
+    id?: string
+    studentId: string
+    parentUserId: string
+    busId: string
+    stopId: string
+    date: string
+    reason?: string | null
+    status?: $Enums.AbsenceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledAt?: Date | string | null
+  }
+
   export type TripStopUpdateWithoutTripInput = {
     id?: StringFieldUpdateOperationsInput | string
     stopId?: StringFieldUpdateOperationsInput | string
@@ -22250,11 +28491,57 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type AbsenceNotificationUpdateWithoutTripInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    student?: StudentUpdateOneRequiredWithoutAbsenceNotificationsNestedInput
+  }
+
+  export type AbsenceNotificationUncheckedUpdateWithoutTripInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AbsenceNotificationUncheckedUpdateManyWithoutTripInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    parentUserId?: StringFieldUpdateOperationsInput | string
+    busId?: StringFieldUpdateOperationsInput | string
+    stopId?: StringFieldUpdateOperationsInput | string
+    date?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAbsenceStatusFieldUpdateOperationsInput | $Enums.AbsenceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
 
 
   /**
    * Aliases for legacy arg types
    */
+    /**
+     * @deprecated Use StudentCountOutputTypeDefaultArgs instead
+     */
+    export type StudentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StudentCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use RouteCountOutputTypeDefaultArgs instead
      */
@@ -22271,6 +28558,10 @@ export namespace Prisma {
      * @deprecated Use BusDefaultArgs instead
      */
     export type BusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BusDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use GpsDeviceDefaultArgs instead
+     */
+    export type GpsDeviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GpsDeviceDefaultArgs<ExtArgs>
     /**
      * @deprecated Use LiveLocationDefaultArgs instead
      */
@@ -22327,6 +28618,18 @@ export namespace Prisma {
      * @deprecated Use NotificationLogDefaultArgs instead
      */
     export type NotificationLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use AbsenceNotificationDefaultArgs instead
+     */
+    export type AbsenceNotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AbsenceNotificationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ChatMessageDefaultArgs instead
+     */
+    export type ChatMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ChatMessageDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ChatReadStatusDefaultArgs instead
+     */
+    export type ChatReadStatusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ChatReadStatusDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

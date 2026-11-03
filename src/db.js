@@ -1,13 +1,48 @@
-const { PrismaClient } = require('./generated/prisma');
+﻿const { PrismaClient } = require('./generated/prisma');
 const { getConfig } = require('./config/env');
 
-// Prisma 5.22's experimental Neon driver-adapter path serializes PostgreSQL
-// enum casts as a single quoted identifier, for example `"public.Role"`.
-// PostgreSQL then searches for a type literally named `public.Role` instead of
-// the existing `"Role"` type in the `public` schema. This long-lived Express
-// server can use Prisma's standard PostgreSQL engine and the same DATABASE_URL
-// without the adapter; it emits the correct enum type qualification.
+// Optimized Prisma client with connection pooling for Neon
+// Neon's pooler handles connection pooling at the proxy level
+// Connection limit is configured via DATABASE_URL query parameter
 getConfig();
-const prisma = new PrismaClient();
+
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+    },
+  },
+  log: process.env.NODE_ENV === 'development' 
+    ? ['query', 'error', 'warn'] 
+    : ['error'],
+});
+
+// Query timeout middleware (prevent long-running queries)
+prisma.$use(async (params, next) => {
+  const timeout = 10000; // 10 second timeout
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(`Query timeout: ${params.model}.`)), timeout)
+  );
+
+  try {
+    return await Promise.race([next(params), timeoutPromise]);
+  } catch (error) {
+    console.error(`[Prisma] Query failed:`, {
+      model: params.model,
+      action: params.action,
+      error: error.message,
+    });
+    throw error;
+  }
+});
+
+// Graceful shutdown handler
+async function disconnectPrisma() {
+  await prisma.$disconnect();
+  console.log('[Prisma] Database connection closed');
+}
+
+process.on('SIGINT', disconnectPrisma);
+process.on('SIGTERM', disconnectPrisma);
 
 module.exports = prisma;

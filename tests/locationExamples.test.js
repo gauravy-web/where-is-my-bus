@@ -223,7 +223,7 @@ const SEED = {
   ],
 };
 
-const STATE_KEYS = ['busId', 'busNo', 'currentStop', 'destination', 'eta', 'location', 'safetyChecks', 'trip', 'tripStops'];
+const STATE_KEYS = ['busId', 'busNo', 'currentStop', 'destination', 'eta', 'location', 'locationMode', 'locationSource', 'locationStatus', 'safetyChecks', 'trip', 'tripStops'];
 const LOCATION_KEYS = ['heading', 'lat', 'lng', 'recordedAt', 'speed'];
 const CHILD_KEYS = ['busId', 'busNo', 'dropStopId', 'id', 'name', 'relevantStopId', 'relevantTripStop', 'state', 'stopId'];
 const keysOf = (o) => Object.keys(o).sort();

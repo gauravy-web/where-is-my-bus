@@ -55,9 +55,31 @@ const fakePrisma = {
   trip: { update: jest.fn(async ({ where, data }) => ({ id: where.id, ...data })) },
   emergency: { create: jest.fn(async ({ data }) => ({ id: 'em', ...data })) },
   bus: { update: jest.fn(async ({ where, data }) => ({ id: where.id, ...data })) },
+  admin: {
+    findUnique: jest.fn(async ({ where }) => {
+      if (where.id === 'admin1') return { name: 'Admin User' };
+      return null;
+    }),
+  },
   $queryRaw: jest.fn(async () => []),
 };
 const sendMulticast = jest.fn(async () => ({}));
+
+// Mock chatService for typing indicator tests
+jest.mock('../src/services/chatService', () => ({
+  getSenderDisplayName: jest.fn(async (userId, role) => {
+    const userMap = {
+      'admin1': 'Admin User',
+      'parent1': 'Parent One',
+      'parent2': 'Parent Two',
+      'driver1': 'Driver One',
+      'driver2': 'Driver Two',
+      'conductor1': 'Sunil',
+      'conductor2': 'Spare',
+    };
+    return userMap[userId] || 'User';
+  }),
+}));
 
 // ACTIVE trips by bus id, read through a minimal Trip_Service.
 let activeTrips = {};
@@ -569,5 +591,99 @@ describe('trip:state on connect and reconnect (Req 8.4)', () => {
 
     expect([...states]).toEqual([tripState('b1', ACTIVE_B1), tripState('b1', ACTIVE_B1)]);
     expect(await serverRoomsOf(d1)).toEqual(['bus_b1']);
+  });
+});
+
+// Task 6.1: Chat typing indicator event handler (REQ-RT-005, REQ-RT-006)
+describe('chat:typing event handler', () => {
+  test('authorized user typing is broadcast to other bus members', async () => {
+    const parent = await connect({ token: tokenFor('parent1') });
+    const driver = await connect({ token: tokenFor('driver1') });
+    const typingEvents = record(parent, 'chat:typing');
+
+    // Driver starts typing
+    driver.emit('chat:typing', { busId: 'b1', isTyping: true });
+    
+    // Parent should receive the typing event
+    await until(() => typingEvents.length > 0);
+    expect(typingEvents).toHaveLength(1);
+    expect(typingEvents[0]).toMatchObject({
+      busId: 'b1',
+      userId: 'driver1',
+      isTyping: true,
+    });
+    expect(typingEvents[0].userName).toBeDefined();
+  });
+
+  test('typing sender does not receive their own typing event', async () => {
+    const driver = await connect({ token: tokenFor('driver1') });
+    const typingEvents = record(driver, 'chat:typing');
+
+    // Driver starts typing
+    driver.emit('chat:typing', { busId: 'b1', isTyping: true });
+    
+    // Wait and verify driver doesn't receive own event
+    await sleep(NEGATIVE_WAIT_MS);
+    expect(typingEvents).toHaveLength(0);
+  });
+
+  test('unauthorized user cannot send typing events to other buses', async () => {
+    const parent = await connect({ token: tokenFor('parent1') });
+    const driver2 = await connect({ token: tokenFor('driver2') });
+    const typingEvents = record(driver2, 'chat:typing');
+
+    const err = waitFor(parent, 'error');
+    // Parent tries to send typing to bus_b2 (not authorized)
+    parent.emit('chat:typing', { busId: 'b2', isTyping: true });
+    
+    // Should receive error
+    expect(await err).toMatchObject({ code: 'FORBIDDEN' });
+    
+    // driver2 should not receive any typing event
+    await sleep(NEGATIVE_WAIT_MS);
+    expect(typingEvents).toHaveLength(0);
+  });
+
+  test('isTyping false is broadcast correctly', async () => {
+    const parent = await connect({ token: tokenFor('parent1') });
+    const driver = await connect({ token: tokenFor('driver1') });
+    const typingEvents = record(parent, 'chat:typing');
+
+    // Driver stops typing
+    driver.emit('chat:typing', { busId: 'b1', isTyping: false });
+    
+    await until(() => typingEvents.length > 0);
+    expect(typingEvents[0]).toMatchObject({
+      busId: 'b1',
+      userId: 'driver1',
+      isTyping: false,
+    });
+  });
+
+  test('missing busId is handled gracefully', async () => {
+    const driver = await connect({ token: tokenFor('driver1') });
+    
+    // Send typing event without busId
+    driver.emit('chat:typing', { isTyping: true });
+    
+    // Should not crash - just silently ignore
+    await sleep(NEGATIVE_WAIT_MS);
+    // No error expected - just graceful handling
+  });
+
+  test('conductor can send typing events to their bus', async () => {
+    const parent = await connect({ token: tokenFor('parent1') });
+    const conductor = await connect({ token: tokenFor('conductor1') });
+    const typingEvents = record(parent, 'chat:typing');
+
+    // Conductor starts typing
+    conductor.emit('chat:typing', { busId: 'b1', isTyping: true });
+    
+    await until(() => typingEvents.length > 0);
+    expect(typingEvents[0]).toMatchObject({
+      busId: 'b1',
+      userId: 'conductor1',
+      isTyping: true,
+    });
   });
 });

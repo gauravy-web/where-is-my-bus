@@ -2,6 +2,8 @@ const prisma = require('../db');
 const { createStopService } = require('../services/stopService');
 const locationService = require('../services/locationService');
 
+const locationSource = require('../services/locationSourceService');
+
 const { toIngestFix } = locationService;
 
 const stopService = createStopService(prisma);
@@ -199,6 +201,12 @@ const getBusFullInfo = async (req, res) => {
       },
     });
 
+    const conductor = await prisma.conductor.findFirst({
+      where: {
+        busId,
+      },
+    });
+
 
     // Independent pickup and drop sequences, each in saved order only
     // (Requirements 5.2, 5.3, 5.9).
@@ -234,6 +242,14 @@ const getBusFullInfo = async (req, res) => {
             id: driver.id,
             name: driver.name,
             phone: driver.phone,
+          }
+        : null,
+
+      conductor: conductor
+        ? {
+            id: conductor.id,
+            name: conductor.name,
+            phone: conductor.phone,
           }
         : null,
 
@@ -362,7 +378,9 @@ const MALFORMED_FIX = new Set(['invalid_fix', 'invalid_coordinates', 'invalid_ti
 const updateLocationHttp = async (req, res) => {
   try {
     const busId = String(req.body.busId).trim();
-    const result = await locationService.ingest(busId, toIngestFix(req.body, Date.now()));
+    // The source service forwards to locationService.ingest unless this bus
+    // uses a GPS device as primary (then the phone fix is only a backup).
+    const result = await locationSource.ingestMobile(busId, toIngestFix(req.body, Date.now()));
     if (!result.accepted) {
       if (MALFORMED_FIX.has(result.reason)) {
         return res.status(400).json({ message: 'Invalid location fix', reason: result.reason });

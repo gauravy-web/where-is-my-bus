@@ -1,0 +1,16 @@
+const fs = require("fs");
+const path = require("path");
+const filePath = path.join(__dirname, "..", "WheresMyBus", "src", "screens", "AdminScreen.js");
+let content = fs.readFileSync(filePath, "utf8");
+console.log("Updating AdminScreen.js for Date-Wise Attendance History...");
+const i1 = content.indexOf("const [attendance,  setAttendance]  = useState([]);");
+const i2 = content.indexOf("\n", i1) + 1;
+const newStates = "  const [attendanceDate, setAttendanceDate] = useState('');\n  const [attendanceBusFilter, setAttendanceBusFilter] = useState('');\n  const [attendanceSummary, setAttendanceSummary] = useState(null);\n  const [attendanceLoading, setAttendanceLoading] = useState(false);\n  const [dayTrips, setDayTrips] = useState({ pickup: null, drop: null });\n  const [historicalAttendance, setHistoricalAttendance] = useState([]);\n";
+content = content.substring(0, i2) + newStates + content.substring(i2);
+console.log("Step 1: Added state variables");
+const renderAttendIdx = content.indexOf("const renderAttend = () => (");
+const loadFunc = "\n  const loadAttendanceByDate = async () => {\n    if (!attendanceDate || !attendanceBusFilter) {\n      Alert.alert('Missing Info', 'Please select both date and bus');\n      return;\n    }\n    setAttendanceLoading(true);\n    try {\n      const response = await fetch(`${API}/api/attendance?busId=${attendanceBusFilter}&date=${attendanceDate}`, { headers: { Authorization: `Bearer ${token}` } });\n      const data = await response.json();\n      if (data.success) {\n        setAttendanceSummary(data.summary);\n        setDayTrips(data.dayTrips);\n        setHistoricalAttendance(data.attendance);\n        setAttendanceLoading(false);\n      } else {\n        Alert.alert('Error', 'Failed to load attendance');\n        setAttendanceLoading(false);\n      }\n    } catch (error) {\n      console.error('Error loading attendance:', error);\n      Alert.alert('Error', 'Failed to load attendance history');\n      setAttendanceLoading(false);\n    }\n  };\n\n";
+content = content.substring(0, renderAttendIdx) + loadFunc + content.substring(renderAttendIdx);
+console.log("Step 2: Added loadAttendanceByDate function");
+fs.writeFileSync(filePath, content);
+console.log("\n? AdminScreen.js updated successfully!");

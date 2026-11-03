@@ -30,6 +30,15 @@ const parsePort = (v) => {
   return n;
 };
 
+const parseIntInRange = (key, v, def, min, max) => {
+  if (isBlank(v)) return def;
+  const n = Number(String(v).trim());
+  if (!Number.isInteger(n) || n < min || n > max) {
+    throw new Error(`Invalid env: ${key} must be an integer between ${min} and ${max}`);
+  }
+  return n;
+};
+
 /**
  * Build a validated config object from an env map.
  * Pure: reads only from `env`, never mutates it and never loads files.
@@ -55,6 +64,10 @@ function loadEnv(env = process.env) {
     FIREBASE_SERVICE_ACCOUNT: isBlank(source.FIREBASE_SERVICE_ACCOUNT)
       ? null
       : String(source.FIREBASE_SERVICE_ACCOUNT),
+    GPS_DEVICE_TIMEOUT_MS: parseIntInRange('GPS_DEVICE_TIMEOUT_MS', source.GPS_DEVICE_TIMEOUT_MS, 30000, 5000, 600000),
+    GPS_MOBILE_FRESH_MS: parseIntInRange('GPS_MOBILE_FRESH_MS', source.GPS_MOBILE_FRESH_MS, 30000, 5000, 600000),
+    GPS_SWITCHBACK_COUNT: parseIntInRange('GPS_SWITCHBACK_COUNT', source.GPS_SWITCHBACK_COUNT, 3, 1, 20),
+    GPS_VERIFY_COUNT: parseIntInRange('GPS_VERIFY_COUNT', source.GPS_VERIFY_COUNT, 3, 1, 50),
   });
 }
 

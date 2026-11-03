@@ -27,6 +27,41 @@ model Bus {
   status     BusStatus @default(INACTIVE)
   createdAt  DateTime  @default(now()) @db.Timestamp(6)
   label      String?
+  // GPS device management: configured mode and the source currently authoritative.
+  locationMode    LocationMode   @default(MOBILE_PRIMARY)
+  activeSource    LocationSource @default(MOBILE)
+  sourceChangedAt DateTime?      @db.Timestamp(6)
+}
+
+enum LocationMode {
+  MOBILE_PRIMARY
+  DEVICE_PRIMARY
+}
+
+enum LocationSource {
+  MOBILE
+  DEVICE
+  NONE
+}
+
+// Hardware GPS tracker assigned to at most one bus. Only the SHA-256 hash of
+// its secret is stored.
+model GpsDevice {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()"))
+  deviceId           String    @unique
+  name               String?
+  busId              String?   @unique
+  credentialHash     String
+  credentialIssuedAt DateTime  @default(now()) @db.Timestamp(6)
+  revokedAt          DateTime? @db.Timestamp(6)
+  verifiedAt         DateTime? @db.Timestamp(6)
+  validFixCount      Int       @default(0)
+  lastSeenAt         DateTime? @db.Timestamp(6)
+  lastFixAt          DateTime? @db.Timestamp(6)
+  lastLat            Float?
+  lastLng            Float?
+  createdAt          DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt          DateTime  @default(now()) @updatedAt @db.Timestamp(6)
 }
 
 model LiveLocation {
@@ -135,6 +170,8 @@ model Student {
   fatherName   String?
   motherName   String?
 
+  absenceNotifications AbsenceNotification[]
+
   @@index([admissionNo])
 }
 
@@ -215,7 +252,8 @@ model Trip {
   destLat        Float?
   destLng        Float?
 
-  stops TripStop[]
+  stops                TripStop[]
+  absenceNotifications AbsenceNotification[]
 
   @@index([busId, status])
 }
@@ -249,4 +287,67 @@ model NotificationLog {
   createdAt  DateTime  @default(now()) @db.Timestamp(6)
 
   @@unique([tripId, tripStopId, studentId, type])
+}
+
+enum AbsenceStatus {
+  ACTIVE
+  CANCELLED
+  LATE
+}
+enum MessageType {
+  MESSAGE
+  ANNOUNCEMENT
+}
+
+model AbsenceNotification {
+  id           String        @id @default(dbgenerated("gen_random_uuid()"))
+  studentId    String
+  parentUserId String
+  busId        String
+  tripId       String?
+  stopId       String
+  date         String
+  reason       String?
+  status       AbsenceStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime      @default(now()) @updatedAt @db.Timestamp(6)
+  cancelledAt  DateTime?     @db.Timestamp(6)
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  trip    Trip?   @relation(fields: [tripId], references: [id], onDelete: SetNull)
+
+  @@unique([studentId, busId, date])
+  @@index([busId, date])
+  @@index([studentId, date])
+  @@index([tripId])
+}
+
+model ChatMessage {
+  id            String       @id @default(dbgenerated("gen_random_uuid()"))
+  busId         String       
+  senderId      String       
+  senderRole    Role         
+  senderName    String       
+  content       String       
+  type          MessageType  @default(MESSAGE)
+  createdAt     DateTime     @default(now()) @db.Timestamp(6)
+  editedAt      DateTime?    @db.Timestamp(6)
+  deletedAt     DateTime?    @db.Timestamp(6)
+  deletedBy     String?      
+  isPinned      Boolean      @default(false)
+  
+  @@index([busId, createdAt])
+  @@index([busId, type, isPinned])
+  @@index([createdAt])
+}
+
+model ChatReadStatus {
+  id              String   @id @default(dbgenerated("gen_random_uuid()"))
+  busId           String
+  userId          String
+  lastReadAt      DateTime @default(now()) @db.Timestamp(6)
+  lastMessageId   String?
+  
+  @@unique([busId, userId])
+  @@index([userId])
 }

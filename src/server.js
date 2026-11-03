@@ -11,6 +11,7 @@ const { Server } = require('socket.io');
 const app = require('./app');
 const prisma = require('./db');
 const gpsSocket = require('./sockets/gpsSocket');
+const { startChatCleanup } = require('./jobs/chatCleanup');
 
 const server = http.createServer(app);
 
@@ -33,6 +34,9 @@ async function startServer() {
   try {
     await prisma.$connect();
     console.log('Database Connected ✅');
+
+    // Start chat cleanup cron job
+    startChatCleanup();
 
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT} ✅`);

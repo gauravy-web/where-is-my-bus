@@ -118,6 +118,14 @@ app.use('/api/fuel', fuelRoutes);
 const sosRoutes = require('./routes/sosRoutes');
 app.use('/api/sos', sosRoutes);
 
+// Absence notification routes
+const absenceNotificationRoutes = require('./routes/absenceNotificationRoutes');
+app.use('/api/absence-notifications', absenceNotificationRoutes);
+
+// Chat routes
+const chatRoutes = require('./routes/chatRoutes');
+app.use('/api/chat', chatRoutes);
+
 // Bus routes and admin routes
 const routeRoutes = require('./routes/routeRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -132,6 +140,9 @@ app.use('/api/school', require('./routes/schoolRoutes'));
 
 // State snapshots (Requirements 8.1–8.3). Mounted before the '/api' admin catch-all.
 app.use('/api/tracking', require('./routes/trackingRoutes'));
+
+// GPS devices: device ingest + ADMIN management. Before the '/api' admin catch-all.
+app.use('/api/gps', require('./routes/gpsRoutes'));
 
 app.use('/api', adminRoutes);
 

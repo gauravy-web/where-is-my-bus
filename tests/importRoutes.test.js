@@ -1,4 +1,4 @@
-// Smoke tests for the School_Sheet import routes (task 15.3; full example tests are task 15.5).
+﻿// Smoke tests for the School_Sheet import routes (task 15.3; full example tests are task 15.5).
 // Prisma is an in-memory fake and FCM is mocked. The fixture is built in the test with exceljs;
 // the school's real sheet is never read.
 process.env.NODE_ENV = 'test';
@@ -57,6 +57,8 @@ jest.mock('../src/db', () => {
       { id: 'st-old-p', busId: 'b1', name: 'Old – pickup', lat: 1, lng: 1, order: 1, direction: 'PICKUP', studentId: 's-old' },
       { id: 'st-old-d', busId: 'b1', name: 'Old – drop', lat: 1, lng: 1, order: 1, direction: 'DROP', studentId: 's-old' },
     ];
+    state.routes = [];
+    state.routeStops = [];
     state.trips = [];
     state.users = [];
   };
@@ -70,6 +72,8 @@ jest.mock('../src/db', () => {
     school: model('schools', 'sch'),
     student: model('students', 'stu'),
     stop: model('stops', 'stop'),
+    route: model('routes', 'route'),
+    routeStop: model('routeStops', 'routeStop'),
     trip: model('trips', 'trip'),
     user: model('users', 'usr'),
     $queryRaw: jest.fn(async () => []),

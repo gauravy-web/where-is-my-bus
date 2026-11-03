@@ -22,7 +22,7 @@ const haversineMeters = (a, b) => require('./locationService').haversineMeters(a
 const OSRM_TIMEOUT_MS = 4000;
 const BREAKER_THRESHOLD = 3;
 const BREAKER_OPEN_MS = 60 * 1000;
-const RECOMPUTE_INTERVAL_MS = 15 * 1000;
+const RECOMPUTE_INTERVAL_MS = 7 * 1000;
 const RECOMPUTE_DISTANCE_M = 100;
 
 const isFiniteCoord = (p) => Number.isFinite(p?.lat) && Number.isFinite(p?.lng);

@@ -139,7 +139,28 @@ exports.Prisma.BusScalarFieldEnum = {
   driverName: 'driverName',
   status: 'status',
   createdAt: 'createdAt',
-  label: 'label'
+  label: 'label',
+  locationMode: 'locationMode',
+  activeSource: 'activeSource',
+  sourceChangedAt: 'sourceChangedAt'
+};
+
+exports.Prisma.GpsDeviceScalarFieldEnum = {
+  id: 'id',
+  deviceId: 'deviceId',
+  name: 'name',
+  busId: 'busId',
+  credentialHash: 'credentialHash',
+  credentialIssuedAt: 'credentialIssuedAt',
+  revokedAt: 'revokedAt',
+  verifiedAt: 'verifiedAt',
+  validFixCount: 'validFixCount',
+  lastSeenAt: 'lastSeenAt',
+  lastFixAt: 'lastFixAt',
+  lastLat: 'lastLat',
+  lastLng: 'lastLng',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.LiveLocationScalarFieldEnum = {
@@ -303,6 +324,44 @@ exports.Prisma.NotificationLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AbsenceNotificationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  parentUserId: 'parentUserId',
+  busId: 'busId',
+  tripId: 'tripId',
+  stopId: 'stopId',
+  date: 'date',
+  reason: 'reason',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  cancelledAt: 'cancelledAt'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  busId: 'busId',
+  senderId: 'senderId',
+  senderRole: 'senderRole',
+  senderName: 'senderName',
+  content: 'content',
+  type: 'type',
+  createdAt: 'createdAt',
+  editedAt: 'editedAt',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy',
+  isPinned: 'isPinned'
+};
+
+exports.Prisma.ChatReadStatusScalarFieldEnum = {
+  id: 'id',
+  busId: 'busId',
+  userId: 'userId',
+  lastReadAt: 'lastReadAt',
+  lastMessageId: 'lastMessageId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -330,6 +389,17 @@ exports.BusStatus = exports.$Enums.BusStatus = {
   ON_TRIP: 'ON_TRIP'
 };
 
+exports.LocationMode = exports.$Enums.LocationMode = {
+  MOBILE_PRIMARY: 'MOBILE_PRIMARY',
+  DEVICE_PRIMARY: 'DEVICE_PRIMARY'
+};
+
+exports.LocationSource = exports.$Enums.LocationSource = {
+  MOBILE: 'MOBILE',
+  DEVICE: 'DEVICE',
+  NONE: 'NONE'
+};
+
 exports.TripDirection = exports.$Enums.TripDirection = {
   PICKUP: 'PICKUP',
   DROP: 'DROP'
@@ -349,9 +419,21 @@ exports.TripStopStatus = exports.$Enums.TripStopStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.AbsenceStatus = exports.$Enums.AbsenceStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  LATE: 'LATE'
+};
+
+exports.MessageType = exports.$Enums.MessageType = {
+  MESSAGE: 'MESSAGE',
+  ANNOUNCEMENT: 'ANNOUNCEMENT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Bus: 'Bus',
+  GpsDevice: 'GpsDevice',
   LiveLocation: 'LiveLocation',
   Stop: 'Stop',
   School: 'School',
@@ -365,7 +447,10 @@ exports.Prisma.ModelName = {
   RouteStop: 'RouteStop',
   Trip: 'Trip',
   TripStop: 'TripStop',
-  NotificationLog: 'NotificationLog'
+  NotificationLog: 'NotificationLog',
+  AbsenceNotification: 'AbsenceNotification',
+  ChatMessage: 'ChatMessage',
+  ChatReadStatus: 'ChatReadStatus'
 };
 
 /**

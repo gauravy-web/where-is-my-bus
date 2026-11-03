@@ -3,12 +3,27 @@ const { sendMulticast } = require('../services/notificationService');
 
 const getSosAlerts = async (req, res) => {
   try {
-    const alerts = await prisma.emergency.findMany({ orderBy: { createdAt: 'desc' } });
+    const { status } = req.query;
+    const where = {};
+
+    if (status === 'active') {
+      where.status = { in: ['open', 'acknowledged'] };
+    } else if (status === 'resolved') {
+      where.status = 'resolved';
+    } else if (status) {
+      where.status = status;
+    }
+
+    const alerts = await prisma.emergency.findMany({
+      where,
+      orderBy: { createdAt: 'desc' }
+    });
     res.json({ success: true, alerts });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// Coordinates are optional; anything that is not a finite in-range number is dropped.
 const coord = (v, max) => (typeof v === 'number' && Number.isFinite(v) && Math.abs(v) <= max ? v : null);
 
 const createSosAlert = async (req, res) => {
@@ -20,19 +35,28 @@ const createSosAlert = async (req, res) => {
     if (lat === null || lng === null) { lat = null; lng = null; }
 
     const alert = await prisma.emergency.create({
-      data: { busId, driverName: driverName || 'Driver', notes: notes || message || 'SOS Emergency!', status: 'open' },
+      data: {
+        busId,
+        driverName: driverName || 'Driver',
+        notes: notes || message || 'SOS Emergency!',
+        status: 'open'
+      },
     });
 
-    // Real-time alert to the bus room and admins (Requirement 12.10: the
-    // driver app sends SOS only through this endpoint).
     if (req.io) {
-      const payload = { busId, driverName: driverName || 'Driver', lat, lng, timestamp: new Date().toISOString() };
+      const payload = {
+        ...alert,
+        busId,
+        driverName: driverName || 'Driver',
+        lat,
+        lng,
+        timestamp: new Date().toISOString()
+      };
       req.io.to(`bus_${busId}`).emit('sosAlert', payload);
       req.io.to('admins').emit('sosAlert', payload);
     }
     const coordData = lat !== null ? { lat: String(lat), lng: String(lng) } : {};
 
-    // FCM Notification to Parents of this bus
     try {
       const parentRows = await prisma.$queryRaw`
         SELECT DISTINCT u."fcmToken"
@@ -54,7 +78,9 @@ const createSosAlert = async (req, res) => {
     }
 
     res.json({ success: true, alert });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 const updateSosStatus = async (req, res) => {
@@ -64,8 +90,129 @@ const updateSosStatus = async (req, res) => {
       where: { id: req.params.id },
       data: { status },
     });
+
+    if (req.io) {
+      req.io.to('admins').emit('sosStatusUpdate', alert);
+    }
+
     res.json({ success: true, alert });
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-module.exports = { getSosAlerts, createSosAlert, updateSosStatus };
+const acknowledgeSosAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { adminName, adminId } = req.body;
+
+    if (!adminName && !adminId) {
+      return res.status(400).json({ message: 'Admin identification required' });
+    }
+
+    const existing = await prisma.emergency.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ message: 'SOS alert not found' });
+    }
+
+    if (existing.status !== 'open') {
+      return res.status(400).json({
+        message: `Cannot acknowledge: alert is already ${existing.status}`
+      });
+    }
+
+    const updateData = {
+      status: 'acknowledged',
+      acknowledgedBy: adminName || adminId,
+      acknowledgedAt: new Date()
+    };
+
+    const alert = await prisma.emergency.update({
+      where: { id },
+      data: updateData,
+    }).catch(err => {
+      if (err.message.includes('column') && err.message.includes('does not exist')) {
+        return prisma.emergency.update({
+          where: { id },
+          data: { status: 'acknowledged' },
+        });
+      }
+      throw err;
+    });
+
+    if (req.io) {
+      req.io.to('admins').emit('sosStatusUpdate', alert);
+    }
+
+    res.json({ success: true, alert });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const resolveSosAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { adminName, adminId, resolutionNote } = req.body;
+
+    if (!adminName && !adminId) {
+      return res.status(400).json({ message: 'Admin identification required' });
+    }
+
+    if (!resolutionNote || resolutionNote.trim().length === 0) {
+      return res.status(400).json({ message: 'Resolution note is required' });
+    }
+
+    const existing = await prisma.emergency.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ message: 'SOS alert not found' });
+    }
+
+    if (existing.status === 'resolved') {
+      return res.status(400).json({
+        message: 'Alert is already resolved'
+      });
+    }
+
+    const updateData = {
+      status: 'resolved',
+      resolvedBy: adminName || adminId,
+      resolvedAt: new Date(),
+      resolutionNote: resolutionNote.trim()
+    };
+
+    if (existing.status === 'open') {
+      updateData.acknowledgedBy = adminName || adminId;
+      updateData.acknowledgedAt = new Date();
+    }
+
+    const alert = await prisma.emergency.update({
+      where: { id },
+      data: updateData,
+    }).catch(err => {
+      if (err.message.includes('column') && err.message.includes('does not exist')) {
+        return prisma.emergency.update({
+          where: { id },
+          data: { status: 'resolved' },
+        });
+      }
+      throw err;
+    });
+
+    if (req.io) {
+      req.io.to('admins').emit('sosStatusUpdate', alert);
+    }
+
+    res.json({ success: true, alert });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = {
+  getSosAlerts,
+  createSosAlert,
+  updateSosStatus,
+  acknowledgeSosAlert,
+  resolveSosAlert
+};

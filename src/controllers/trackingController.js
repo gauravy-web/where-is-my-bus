@@ -79,18 +79,29 @@ async function buildBusState(busId, {
   bus,
   locationService = defaultLocationService,
   etaCoordinator = defaultEtaCoordinator,
+  locationSourceService = require('../services/locationSourceService'),
 } = {}) {
   const id = String(busId);
   const [busRow, trip] = await Promise.all([
     bus !== undefined ? bus : prisma.bus.findUnique({ where: { id } }),
     tripService.getCurrentTrip(id),
   ]);
+  const location = latestLocation(locationService, id, trip);
+  // Additive fields: which source is authoritative and whether it is live.
+  let source = {};
+  try {
+    source = locationSourceService.describe(id, {
+      bus: busRow || undefined,
+      latestRecordedAt: location ? location.recordedAt : null,
+    });
+  } catch (_) { source = {}; }
   return {
     ...tripState(id, trip),
     busNo: busRow?.busNo ?? null,
     tripStops: trip && Array.isArray(trip.stops) ? trip.stops : [],
-    location: latestLocation(locationService, id, trip),
+    location,
     eta: latestEta(etaCoordinator, id, trip),
+    ...source,
   };
 }
 
@@ -174,7 +185,24 @@ const getAdminLive = async (req, res) => {
   }
 };
 
+// GET /api/tracking/admin/fleet — ADMIN only. Every bus with its route stops
+// (both directions, saved order), people, trip status, latest location, the
+// authoritative location source and its status. Read-only.
+const getAdminFleet = async (req, res) => {
+  try {
+    const fleet = await require('../services/fleetService').buildFleet({
+      prisma,
+      locationService: locationServiceFor(req),
+      locationSource: require('../services/locationSourceService'),
+    });
+    return res.json({ success: true, ...fleet });
+  } catch (err) {
+    return fail(res, err, 'getAdminFleet');
+  }
+};
+
 module.exports = {
+  getAdminFleet,
   getBusState,
   getParentState,
   getAdminLive,
