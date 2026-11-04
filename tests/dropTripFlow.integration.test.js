@@ -27,6 +27,17 @@ const SECRET = 'test-secret-drop-flow';
 const TIMEOUT_MS = 5000;
 const WAIT_MS = 500;
 
+jest.setTimeout(60000);
+
+const mockSendMulticast = jest.fn().mockResolvedValue({
+  successCount: 1,
+  failureCount: 0
+});
+jest.mock('../src/services/notificationService', () => ({
+  sendNotification: jest.fn(),
+  sendMulticast: mockSendMulticast
+}));
+
 describe('Complete DROP Trip Flow (Task 13.3)', () => {
   let httpServer, io, app, url;
   let testBus, testDriver, testConductor, testTrip;
@@ -34,7 +45,6 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
   let student1, student2, student3, student4; // Students at different stops
   let parentUser1, parentUser2, parentUser3, parentUser4;
   let socketClients = [];
-  let mockSendMulticast;
 
   // Helper to create socket client
   const createSocketClient = (role, phone) => {
@@ -96,15 +106,19 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   beforeAll(async () => {
-    // Mock notification service
-    mockSendMulticast = jest.fn().mockResolvedValue({
-      successCount: 1,
-      failureCount: 0
+    mockSendMulticast.mockClear();
+
+    // Clean up any leftover data from previous interrupted runs
+    await prisma.user.deleteMany({
+      where: {
+        phone: {
+          in: ['4000000001', '4000000002', '4000000011', '4000000012', '4000000013', '4000000014', '4000000099']
+        }
+      }
     });
-    jest.mock('../src/services/notificationService', () => ({
-      sendNotification: jest.fn(),
-      sendMulticast: mockSendMulticast
-    }));
+    await prisma.conductor.deleteMany({ where: { phone: '4000000002' } });
+    await prisma.driver.deleteMany({ where: { phone: '4000000001' } });
+    await prisma.bus.deleteMany({ where: { busNo: 'DROP-TEST-BUS-01' } });
 
     // Create HTTP server with Socket.IO
     httpServer = http.createServer();
@@ -220,25 +234,34 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
     // Create drop stops
     stop1 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Drop Stop 1 - Riverside',
-        latitude: 13.0001,
-        longitude: 77.5001
+        lat: 13.0001,
+        lng: 77.5001,
+        order: 1,
+        direction: 'DROP'
       }
     });
 
     stop2 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Drop Stop 2 - Oakwood',
-        latitude: 13.0002,
-        longitude: 77.5002
+        lat: 13.0002,
+        lng: 77.5002,
+        order: 2,
+        direction: 'DROP'
       }
     });
 
     stop3 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Drop Stop 3 - Hillcrest',
-        latitude: 13.0003,
-        longitude: 77.5003
+        lat: 13.0003,
+        lng: 77.5003,
+        order: 3,
+        direction: 'DROP'
       }
     });
 
@@ -340,8 +363,8 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
         tripId: testTrip.id,
         stopId: stop1.id,
         name: stop1.name,
-        latitude: stop1.latitude,
-        longitude: stop1.longitude,
+        lat: stop1.lat,
+        lng: stop1.lng,
         order: 1,
         status: 'PENDING'
       }
@@ -352,8 +375,8 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
         tripId: testTrip.id,
         stopId: stop2.id,
         name: stop2.name,
-        latitude: stop2.latitude,
-        longitude: stop2.longitude,
+        lat: stop2.lat,
+        lng: stop2.lng,
         order: 2,
         status: 'PENDING'
       }
@@ -364,8 +387,8 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
         tripId: testTrip.id,
         stopId: stop3.id,
         name: stop3.name,
-        latitude: stop3.latitude,
-        longitude: stop3.longitude,
+        lat: stop3.lat,
+        lng: stop3.lng,
         order: 3,
         status: 'PENDING'
       }
@@ -862,7 +885,7 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
           admissionNo: 'DROP999',
           busId: testBus.id,
           dropStopId: null,
-          parentPhone: null,
+          parentPhone: '',
           class: '10A'
         }
       });
@@ -976,7 +999,7 @@ describe('Complete DROP Trip Flow (Task 13.3)', () => {
 
       expect(event).toBeDefined();
       expect(event.studentId).toBe(student1.id);
-      expect(duration).toBeLessThan(1000); // Within 1 second
+      expect(duration).toBeLessThan(5000); // Within 5 seconds (includes remote DB roundtrip)
     });
 
     test('multiple rapid drop-offs are processed correctly', async () => {

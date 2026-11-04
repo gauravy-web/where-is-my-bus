@@ -1,4 +1,4 @@
-﻿const { PrismaClient } = require('./generated/prisma');
+const { PrismaClient } = require('./generated/prisma');
 const { getConfig } = require('./config/env');
 
 // Optimized Prisma client with connection pooling for Neon
@@ -20,9 +20,16 @@ const prisma = new PrismaClient({
 // Query timeout middleware (prevent long-running queries)
 prisma.$use(async (params, next) => {
   const timeout = 10000; // 10 second timeout
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(`Query timeout: ${params.model}.`)), timeout)
-  );
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`Query timeout: ${params.model}.`)),
+      timeout
+    );
+    if (timeoutId && typeof timeoutId.unref === 'function') {
+      timeoutId.unref();
+    }
+  });
 
   try {
     return await Promise.race([next(params), timeoutPromise]);
@@ -33,6 +40,8 @@ prisma.$use(async (params, next) => {
       error: error.message,
     });
     throw error;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
   }
 });
 

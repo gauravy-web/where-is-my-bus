@@ -121,30 +121,28 @@ const acknowledgeSosAlert = async (req, res) => {
       });
     }
 
-    const updateData = {
-      status: 'acknowledged',
-      acknowledgedBy: adminName || adminId,
-      acknowledgedAt: new Date()
-    };
+    const noteSuffix = ` [Ack: ${adminName || adminId}]`;
+    const updatedNotes = existing.notes ? `${existing.notes}${noteSuffix}` : noteSuffix.trim();
 
     const alert = await prisma.emergency.update({
       where: { id },
-      data: updateData,
-    }).catch(err => {
-      if (err.message.includes('column') && err.message.includes('does not exist')) {
-        return prisma.emergency.update({
-          where: { id },
-          data: { status: 'acknowledged' },
-        });
-      }
-      throw err;
+      data: {
+        status: 'acknowledged',
+        notes: updatedNotes,
+      },
     });
 
+    const payload = {
+      ...alert,
+      acknowledgedBy: adminName || adminId,
+      acknowledgedAt: new Date().toISOString(),
+    };
+
     if (req.io) {
-      req.io.to('admins').emit('sosStatusUpdate', alert);
+      req.io.to('admins').emit('sosStatusUpdate', payload);
     }
 
-    res.json({ success: true, alert });
+    res.json({ success: true, alert: payload });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -174,36 +172,30 @@ const resolveSosAlert = async (req, res) => {
       });
     }
 
-    const updateData = {
-      status: 'resolved',
-      resolvedBy: adminName || adminId,
-      resolvedAt: new Date(),
-      resolutionNote: resolutionNote.trim()
-    };
-
-    if (existing.status === 'open') {
-      updateData.acknowledgedBy = adminName || adminId;
-      updateData.acknowledgedAt = new Date();
-    }
+    const noteSuffix = ` [Resolved by ${adminName || adminId}: ${resolutionNote.trim()}]`;
+    const updatedNotes = existing.notes ? `${existing.notes}${noteSuffix}` : noteSuffix.trim();
 
     const alert = await prisma.emergency.update({
       where: { id },
-      data: updateData,
-    }).catch(err => {
-      if (err.message.includes('column') && err.message.includes('does not exist')) {
-        return prisma.emergency.update({
-          where: { id },
-          data: { status: 'resolved' },
-        });
-      }
-      throw err;
+      data: {
+        status: 'resolved',
+        notes: updatedNotes,
+      },
     });
 
+    const payload = {
+      ...alert,
+      status: 'resolved',
+      resolvedBy: adminName || adminId,
+      resolvedAt: new Date().toISOString(),
+      resolutionNote: resolutionNote.trim(),
+    };
+
     if (req.io) {
-      req.io.to('admins').emit('sosStatusUpdate', alert);
+      req.io.to('admins').emit('sosStatusUpdate', payload);
     }
 
-    res.json({ success: true, alert });
+    res.json({ success: true, alert: payload });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

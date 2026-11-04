@@ -9324,6 +9324,7 @@ export namespace Prisma {
     conductorId: string | null
     checkedAt: Date | null
     type: string | null
+    absenceReason: string | null
   }
 
   export type AttendanceMaxAggregateOutputType = {
@@ -9338,6 +9339,7 @@ export namespace Prisma {
     conductorId: string | null
     checkedAt: Date | null
     type: string | null
+    absenceReason: string | null
   }
 
   export type AttendanceCountAggregateOutputType = {
@@ -9352,6 +9354,7 @@ export namespace Prisma {
     conductorId: number
     checkedAt: number
     type: number
+    absenceReason: number
     _all: number
   }
 
@@ -9368,6 +9371,7 @@ export namespace Prisma {
     conductorId?: true
     checkedAt?: true
     type?: true
+    absenceReason?: true
   }
 
   export type AttendanceMaxAggregateInputType = {
@@ -9382,6 +9386,7 @@ export namespace Prisma {
     conductorId?: true
     checkedAt?: true
     type?: true
+    absenceReason?: true
   }
 
   export type AttendanceCountAggregateInputType = {
@@ -9396,6 +9401,7 @@ export namespace Prisma {
     conductorId?: true
     checkedAt?: true
     type?: true
+    absenceReason?: true
     _all?: true
   }
 
@@ -9483,6 +9489,7 @@ export namespace Prisma {
     conductorId: string | null
     checkedAt: Date | null
     type: string | null
+    absenceReason: string | null
     _count: AttendanceCountAggregateOutputType | null
     _min: AttendanceMinAggregateOutputType | null
     _max: AttendanceMaxAggregateOutputType | null
@@ -9514,6 +9521,7 @@ export namespace Prisma {
     conductorId?: boolean
     checkedAt?: boolean
     type?: boolean
+    absenceReason?: boolean
   }, ExtArgs["result"]["attendance"]>
 
   export type AttendanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9528,6 +9536,7 @@ export namespace Prisma {
     conductorId?: boolean
     checkedAt?: boolean
     type?: boolean
+    absenceReason?: boolean
   }, ExtArgs["result"]["attendance"]>
 
   export type AttendanceSelectScalar = {
@@ -9542,6 +9551,7 @@ export namespace Prisma {
     conductorId?: boolean
     checkedAt?: boolean
     type?: boolean
+    absenceReason?: boolean
   }
 
 
@@ -9560,6 +9570,7 @@ export namespace Prisma {
       conductorId: string | null
       checkedAt: Date | null
       type: string | null
+      absenceReason: string | null
     }, ExtArgs["result"]["attendance"]>
     composites: {}
   }
@@ -9964,6 +9975,7 @@ export namespace Prisma {
     readonly conductorId: FieldRef<"Attendance", 'String'>
     readonly checkedAt: FieldRef<"Attendance", 'DateTime'>
     readonly type: FieldRef<"Attendance", 'String'>
+    readonly absenceReason: FieldRef<"Attendance", 'String'>
   }
     
 
@@ -22148,7 +22160,8 @@ export namespace Prisma {
     tripId: 'tripId',
     conductorId: 'conductorId',
     checkedAt: 'checkedAt',
-    type: 'type'
+    type: 'type',
+    absenceReason: 'absenceReason'
   };
 
   export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
@@ -23064,6 +23077,7 @@ export namespace Prisma {
     conductorId?: StringNullableFilter<"Attendance"> | string | null
     checkedAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
     type?: StringNullableFilter<"Attendance"> | string | null
+    absenceReason?: StringNullableFilter<"Attendance"> | string | null
   }
 
   export type AttendanceOrderByWithRelationInput = {
@@ -23078,6 +23092,7 @@ export namespace Prisma {
     conductorId?: SortOrderInput | SortOrder
     checkedAt?: SortOrderInput | SortOrder
     type?: SortOrderInput | SortOrder
+    absenceReason?: SortOrderInput | SortOrder
   }
 
   export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
@@ -23096,6 +23111,7 @@ export namespace Prisma {
     conductorId?: StringNullableFilter<"Attendance"> | string | null
     checkedAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
     type?: StringNullableFilter<"Attendance"> | string | null
+    absenceReason?: StringNullableFilter<"Attendance"> | string | null
   }, "id" | "tripId_studentId_type">
 
   export type AttendanceOrderByWithAggregationInput = {
@@ -23110,6 +23126,7 @@ export namespace Prisma {
     conductorId?: SortOrderInput | SortOrder
     checkedAt?: SortOrderInput | SortOrder
     type?: SortOrderInput | SortOrder
+    absenceReason?: SortOrderInput | SortOrder
     _count?: AttendanceCountOrderByAggregateInput
     _max?: AttendanceMaxOrderByAggregateInput
     _min?: AttendanceMinOrderByAggregateInput
@@ -23130,6 +23147,7 @@ export namespace Prisma {
     conductorId?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
     checkedAt?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
     type?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    absenceReason?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
   }
 
   export type DriverWhereInput = {
@@ -24615,6 +24633,7 @@ export namespace Prisma {
     conductorId?: string | null
     checkedAt?: Date | string | null
     type?: string | null
+    absenceReason?: string | null
   }
 
   export type AttendanceUncheckedCreateInput = {
@@ -24629,6 +24648,7 @@ export namespace Prisma {
     conductorId?: string | null
     checkedAt?: Date | string | null
     type?: string | null
+    absenceReason?: string | null
   }
 
   export type AttendanceUpdateInput = {
@@ -24643,6 +24663,7 @@ export namespace Prisma {
     conductorId?: NullableStringFieldUpdateOperationsInput | string | null
     checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     type?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AttendanceUncheckedUpdateInput = {
@@ -24657,6 +24678,7 @@ export namespace Prisma {
     conductorId?: NullableStringFieldUpdateOperationsInput | string | null
     checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     type?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AttendanceCreateManyInput = {
@@ -24671,6 +24693,7 @@ export namespace Prisma {
     conductorId?: string | null
     checkedAt?: Date | string | null
     type?: string | null
+    absenceReason?: string | null
   }
 
   export type AttendanceUpdateManyMutationInput = {
@@ -24685,6 +24708,7 @@ export namespace Prisma {
     conductorId?: NullableStringFieldUpdateOperationsInput | string | null
     checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     type?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AttendanceUncheckedUpdateManyInput = {
@@ -24699,6 +24723,7 @@ export namespace Prisma {
     conductorId?: NullableStringFieldUpdateOperationsInput | string | null
     checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     type?: NullableStringFieldUpdateOperationsInput | string | null
+    absenceReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DriverCreateInput = {
@@ -26344,6 +26369,7 @@ export namespace Prisma {
     conductorId?: SortOrder
     checkedAt?: SortOrder
     type?: SortOrder
+    absenceReason?: SortOrder
   }
 
   export type AttendanceMaxOrderByAggregateInput = {
@@ -26358,6 +26384,7 @@ export namespace Prisma {
     conductorId?: SortOrder
     checkedAt?: SortOrder
     type?: SortOrder
+    absenceReason?: SortOrder
   }
 
   export type AttendanceMinOrderByAggregateInput = {
@@ -26372,6 +26399,7 @@ export namespace Prisma {
     conductorId?: SortOrder
     checkedAt?: SortOrder
     type?: SortOrder
+    absenceReason?: SortOrder
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {

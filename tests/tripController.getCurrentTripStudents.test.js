@@ -1,6 +1,8 @@
 const request = require('supertest');
 const prisma = require('../src/db');
 
+jest.setTimeout(30000);
+
 // Mock Express app for testing
 const express = require('express');
 const app = express();
@@ -27,6 +29,23 @@ describe('tripController - getCurrentTripStudents', () => {
   let testStudent1, testStudent2, testStudent3, testStudent4, testStudent5;
 
   beforeAll(async () => {
+    // Pre-cleanup any leftover data from previous interrupted runs
+    const existingBus = await prisma.bus.findUnique({ where: { busNo: 'TEST-BUS-TRIP-001' } });
+    if (existingBus) {
+      await prisma.attendance.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.student.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.tripStop.deleteMany({ where: { trip: { busId: existingBus.id } } });
+      await prisma.trip.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.stop.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.conductor.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.driver.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.bus.deleteMany({ where: { id: existingBus.id } });
+    }
+    await prisma.student.deleteMany({ where: { admissionNo: { in: ['ADM001', 'ADM002', 'ADM003', 'ADM004', 'ADM005'] } } });
+    await prisma.conductor.deleteMany({ where: { phone: '2222222222' } });
+    await prisma.driver.deleteMany({ where: { phone: '1111111111' } });
+    await prisma.user.deleteMany({ where: { phone: { in: ['1111111111', '2222222222', '7777777777', '8888888888', '9999999999'] } } });
+
     // Create test bus
     testBus = await prisma.bus.create({
       data: {
@@ -74,25 +93,31 @@ describe('tripController - getCurrentTripStudents', () => {
     // Create test stops
     const stop1 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Stop 1 - School Gate',
-        latitude: 12.9716,
-        longitude: 77.5946
+        lat: 12.9716,
+        lng: 77.5946,
+        order: 1
       }
     });
 
     const stop2 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Stop 2 - Main Street',
-        latitude: 12.9720,
-        longitude: 77.5950
+        lat: 12.9720,
+        lng: 77.5950,
+        order: 2
       }
     });
 
     const stop3 = await prisma.stop.create({
       data: {
+        busId: testBus.id,
         name: 'Stop 3 - Park Avenue',
-        latitude: 12.9730,
-        longitude: 77.5960
+        lat: 12.9730,
+        lng: 77.5960,
+        order: 3
       }
     });
 
@@ -112,8 +137,8 @@ describe('tripController - getCurrentTripStudents', () => {
         tripId: testTrip.id,
         stopId: stop1.id,
         name: stop1.name,
-        latitude: stop1.latitude,
-        longitude: stop1.longitude,
+        lat: stop1.lat,
+        lng: stop1.lng,
         order: 1,
         status: 'PENDING'
       }
@@ -124,8 +149,8 @@ describe('tripController - getCurrentTripStudents', () => {
         tripId: testTrip.id,
         stopId: stop2.id,
         name: stop2.name,
-        latitude: stop2.latitude,
-        longitude: stop2.longitude,
+        lat: stop2.lat,
+        lng: stop2.lng,
         order: 2,
         status: 'PENDING'
       }
@@ -136,8 +161,8 @@ describe('tripController - getCurrentTripStudents', () => {
         tripId: testTrip.id,
         stopId: stop3.id,
         name: stop3.name,
-        latitude: stop3.latitude,
-        longitude: stop3.longitude,
+        lat: stop3.lat,
+        lng: stop3.lng,
         order: 3,
         status: 'PENDING'
       }
@@ -213,7 +238,7 @@ describe('tripController - getCurrentTripStudents', () => {
     await prisma.student.deleteMany({ where: { busId: testBus.id } });
     await prisma.tripStop.deleteMany({ where: { tripId: testTrip.id } });
     await prisma.trip.deleteMany({ where: { id: testTrip.id } });
-    await prisma.stop.deleteMany({});
+    await prisma.stop.deleteMany({ where: { busId: testBus.id } });
     await prisma.conductor.deleteMany({ where: { id: testConductor.id } });
     await prisma.driver.deleteMany({ where: { id: testDriver.id } });
     await prisma.user.deleteMany({ where: { phone: { in: [testUser.phone, testConductorUser.phone] } } });
@@ -416,8 +441,8 @@ describe('tripController - getCurrentTripStudents', () => {
           tripId: dropTrip.id,
           stopId: testStop1.stopId,
           name: testStop1.name,
-          latitude: testStop1.latitude,
-          longitude: testStop1.longitude,
+          lat: testStop1.lat,
+          lng: testStop1.lng,
           order: 1,
           status: 'PENDING'
         }
@@ -428,8 +453,8 @@ describe('tripController - getCurrentTripStudents', () => {
           tripId: dropTrip.id,
           stopId: testStop2.stopId,
           name: testStop2.name,
-          latitude: testStop2.latitude,
-          longitude: testStop2.longitude,
+          lat: testStop2.lat,
+          lng: testStop2.lng,
           order: 2,
           status: 'PENDING'
         }
@@ -505,9 +530,21 @@ describe('tripController - getCurrentTripStudents', () => {
           tripId: dropTrip.id,
           stopId: testStop1.stopId,
           name: testStop1.name,
-          latitude: testStop1.latitude,
-          longitude: testStop1.longitude,
+          lat: testStop1.lat,
+          lng: testStop1.lng,
           order: 1,
+          status: 'PENDING'
+        }
+      });
+
+      await prisma.tripStop.create({
+        data: {
+          tripId: dropTrip.id,
+          stopId: testStop2.stopId,
+          name: testStop2.name,
+          lat: testStop2.lat,
+          lng: testStop2.lng,
+          order: 2,
           status: 'PENDING'
         }
       });

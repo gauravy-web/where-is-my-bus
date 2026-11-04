@@ -338,7 +338,7 @@ const ROUTES = [
   adminOnly('PATCH', '/api/sos/e1', { status: 'resolved' }),
 
   // Attendance
-  ...perBus('POST', () => '/api/attendance', (b) => ({ studentId: 's1', busId: b, date: '2026-01-05', boarded: true })),
+  ...perBus('POST', () => '/api/attendance', (b) => ({ studentId: 's1', busId: b, date: '2026-01-05', boarded: true }), { conductor: true }),
   adminOnly('GET', '/api/attendance'),
 
   // Emergencies (adminRoutes mounted at /api)

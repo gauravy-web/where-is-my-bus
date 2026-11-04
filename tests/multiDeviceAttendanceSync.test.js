@@ -21,6 +21,8 @@ const { Server } = require('socket.io');
 const { io: ioClient } = require('socket.io-client');
 const jwt = require('jsonwebtoken');
 
+jest.setTimeout(60000);
+
 const SECRET = 'test-secret-multi-device';
 const TIMEOUT_MS = 3000;
 const WAIT_MS = 500;

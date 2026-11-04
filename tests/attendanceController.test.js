@@ -1,6 +1,8 @@
 const request = require('supertest');
 const prisma = require('../src/db');
 
+jest.setTimeout(30000);
+
 // Mock Express app for testing
 const express = require('express');
 const app = express();
@@ -13,16 +15,21 @@ jest.mock('../src/services/notificationService', () => ({
   sendMulticast: mockSendMulticast
 }));
 
-// Mock io middleware
+// Mock io and user middleware
+let currentIo = {
+  to: (room) => ({
+    emit: (event, data) => {
+      // Mock emit for testing
+    }
+  })
+};
+let currentUser = null;
+
 app.use((req, res, next) => {
-  req.io = {
-    to: (room) => ({
-      emit: (event, data) => {
-        // Mock emit for testing
-        console.log(`Emitting ${event} to ${room}`, data);
-      }
-    })
-  };
+  req.io = currentIo;
+  if (currentUser) {
+    req.user = currentUser;
+  }
   next();
 });
 
@@ -36,6 +43,22 @@ describe('attendanceController - markAttendance', () => {
   let testStudent, testBus, testDriver, testTrip, testConductor;
 
   beforeAll(async () => {
+    // Pre-cleanup any leftover data from previous interrupted runs
+    const existingBus = await prisma.bus.findUnique({ where: { busNo: 'TEST-BUS-001' } });
+    if (existingBus) {
+      await prisma.attendance.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.tripStop.deleteMany({ where: { trip: { busId: existingBus.id } } });
+      await prisma.trip.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.student.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.conductor.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.driver.deleteMany({ where: { busId: existingBus.id } });
+      await prisma.bus.deleteMany({ where: { id: existingBus.id } });
+    }
+    await prisma.student.deleteMany({ where: { admissionNo: { in: ['ADM001', 'ADM002', 'ADM003', 'ADM004'] } } });
+    await prisma.conductor.deleteMany({ where: { phone: '9876543210' } });
+    await prisma.driver.deleteMany({ where: { phone: '1234567890' } });
+    await prisma.user.deleteMany({ where: { phone: { in: ['1111111111', '2222222222', '3333333333'] } } });
+
     // Create test data
     testBus = await prisma.bus.create({
       data: {
@@ -97,6 +120,7 @@ describe('attendanceController - markAttendance', () => {
     await prisma.attendance.deleteMany({ where: { studentId: testStudent.id } });
     // Clear mock calls
     mockSendMulticast.mockClear();
+    currentUser = null;
   });
 
   describe('Trip Validation (Requirements 19.1, 19.2, 19.3, 19.4)', () => {
@@ -197,10 +221,7 @@ describe('attendanceController - markAttendance', () => {
       const today = new Date().toISOString().split('T')[0];
       
       // Mock req.user for conductor
-      app.use((req, res, next) => {
-        req.user = { role: 'CONDUCTOR', phone: testConductor.phone };
-        next();
-      });
+      currentUser = { role: 'CONDUCTOR', phone: testConductor.phone };
 
       const response = await request(app)
         .post('/api/attendance')
@@ -386,17 +407,14 @@ describe('attendanceController - markAttendance', () => {
       });
 
       // Override the mock io middleware
-      app.use((req, res, next) => {
-        req.io = {
-          to: jest.fn((room) => ({
-            emit: (event, data) => {
-              emittedEvents.push({ room, event, data });
-              emitToSpy(event, data);
-            }
-          }))
-        };
-        next();
-      });
+      currentIo = {
+        to: jest.fn((room) => ({
+          emit: (event, data) => {
+            emittedEvents.push({ room, event, data });
+            emitToSpy(event, data);
+          }
+        }))
+      };
     });
 
     test('should emit attendance:updated event to bus room when attendance is marked', async () => {
@@ -476,10 +494,7 @@ describe('attendanceController - markAttendance', () => {
       const today = new Date().toISOString().split('T')[0];
       
       // Mock req.user for conductor
-      app.use((req, res, next) => {
-        req.user = { role: 'CONDUCTOR', phone: testConductor.phone };
-        next();
-      });
+      currentUser = { role: 'CONDUCTOR', phone: testConductor.phone };
 
       await request(app)
         .post('/api/attendance')
@@ -849,7 +864,7 @@ describe('attendanceController - markAttendance', () => {
           name: 'Student No Parents',
           admissionNo: 'ADM004',
           busId: testBus.id,
-          parentPhone: null,
+          parentPhone: '',
           parentPhone2: null,
           class: '8D'
         }

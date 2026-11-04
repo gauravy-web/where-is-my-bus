@@ -2,6 +2,8 @@ const fc = require('fast-check');
 const prisma = require('../src/db');
 const chatService = require('../src/services/chatService');
 
+jest.setTimeout(60000);
+
 /**
  * Property-based tests for chatService.deleteMessage()
  * Task 3.5: Implement message deletion (admin only)

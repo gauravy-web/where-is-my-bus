@@ -112,19 +112,21 @@ model Admin {
 }
 
 model Attendance {
-  id          String    @id @default(dbgenerated("gen_random_uuid()"))
-  busId       String
-  studentId   String
-  date        String
-  tripType    String    @default("pickup")
-  boarded     Boolean?  @default(false)
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  tripId      String?
-  conductorId String?
-  checkedAt   DateTime? @db.Timestamp(6)
-  type        String?
+  id            String    @id @default(dbgenerated("gen_random_uuid()"))
+  busId         String
+  studentId     String
+  date          String
+  tripType      String    @default("pickup")
+  boarded       Boolean?  @default(false)
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  tripId        String?
+  conductorId   String?
+  checkedAt     DateTime? @db.Timestamp(6)
+  type          String?
+  absenceReason String?
 
   @@unique([tripId, studentId, type])
+  @@index([absenceReason])
 }
 
 model Driver {

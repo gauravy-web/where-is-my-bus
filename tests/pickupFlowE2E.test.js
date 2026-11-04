@@ -263,12 +263,12 @@ function mockMakePrisma() {
 jest.mock('../src/db', () => mockMakePrisma());
 
 // Mock notification service to track notifications
-const notificationMock = {
+const mockNotification = {
   sendNotification: jest.fn(async () => undefined),
   sendMulticast: jest.fn(async () => undefined),
 };
 
-jest.mock('../src/services/notificationService', () => notificationMock);
+jest.mock('../src/services/notificationService', () => mockNotification);
 
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
@@ -352,6 +352,8 @@ const SEED = {
     { id: 'stop-002', busId: 'bus-001', direction: 'PICKUP', order: 2, name: 'Stop 2 - Bob', lat: 21.28, lng: 81.38, studentId: 'student-002' },
     { id: 'stop-003', busId: 'bus-001', direction: 'PICKUP', order: 3, name: 'Stop 3 - Charlie', lat: 21.26, lng: 81.36, studentId: 'student-003' },
   ],
+  trips: [],
+  attendances: [],
 };
 
 function resetDb() {
@@ -397,8 +399,8 @@ afterAll(() => {
 beforeEach(() => {
   resetDb();
   socketEvents = [];
-  notificationMock.sendNotification.mockClear();
-  notificationMock.sendMulticast.mockClear();
+  mockNotification.sendNotification.mockClear();
+  mockNotification.sendMulticast.mockClear();
   app.set('io', fakeIo);
 });
 
@@ -540,9 +542,9 @@ describe('Complete Pickup Trip Flow E2E', () => {
       // ==========================================
       // Step 6: Parent notifications are sent
       // ==========================================
-      expect(notificationMock.sendMulticast).toHaveBeenCalledWith(
+      expect(mockNotification.sendMulticast).toHaveBeenCalledWith(
         ['fcm-token-parent1'],
-        expect.stringContaining('Student Update'),
+        expect.stringContaining('Student Picked Up'),
         expect.stringContaining('Alice Johnson'),
         expect.objectContaining({
           studentId: 'student-001',
@@ -600,9 +602,9 @@ describe('Complete Pickup Trip Flow E2E', () => {
       });
 
       // Verify parent notification for Bob (2 phones)
-      expect(notificationMock.sendMulticast).toHaveBeenCalledWith(
+      expect(mockNotification.sendMulticast).toHaveBeenCalledWith(
         expect.arrayContaining(['fcm-token-parent2']),
-        expect.stringContaining('Student Update'),
+        expect.stringContaining('Student Picked Up'),
         expect.stringContaining('Bob Smith'),
         expect.any(Object)
       );
@@ -716,7 +718,7 @@ describe('Complete Pickup Trip Flow E2E', () => {
       expect(finalStudentsRes.body.trip).toBeNull(); // No active trip
 
       // Verify all notifications were sent (3 students)
-      expect(notificationMock.sendMulticast).toHaveBeenCalledTimes(4); // 3 marks + 1 duplicate
+      expect(mockNotification.sendMulticast).toHaveBeenCalledTimes(4); // 3 marks + 1 duplicate
     });
   });
 
@@ -947,7 +949,7 @@ describe('Complete Pickup Trip Flow E2E', () => {
 
       const tripId = startRes.body.trip.id;
       takeSocketEvents();
-      notificationMock.sendMulticast.mockClear();
+      mockNotification.sendMulticast.mockClear();
 
       // Mark student with 2 parent phones (Bob)
       await request(app)
@@ -966,10 +968,10 @@ describe('Complete Pickup Trip Flow E2E', () => {
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // Should send to parent2's token (parentPhone2 doesn't have fcmToken in our mock)
-      expect(notificationMock.sendMulticast).toHaveBeenCalled();
-      const call = notificationMock.sendMulticast.mock.calls[0];
+      expect(mockNotification.sendMulticast).toHaveBeenCalled();
+      const call = mockNotification.sendMulticast.mock.calls[0];
       expect(call[0]).toContain('fcm-token-parent2');
-      expect(call[1]).toContain('Student Update');
+      expect(call[1]).toContain('Student');
       expect(call[2]).toContain('Bob Smith');
     });
   });

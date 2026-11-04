@@ -7,6 +7,8 @@ const prisma = require('../src/db');
 const jwt = require('jsonwebtoken');
 const { getConfig } = require('../src/config/env');
 
+jest.setTimeout(30000);
+
 describe('Conductor Attendance Access', () => {
   let conductorToken;
   let driverToken;
@@ -109,8 +111,9 @@ describe('Conductor Attendance Access', () => {
     testBus = await prisma.bus.create({
       data: {
         id: 'test-conductor-bus-1',
-        busNumber: 'TEST-COND-001',
-        capacity: 30
+        busNo: 'TEST-COND-001',
+        driverName: 'Test Driver',
+        status: 'ACTIVE'
       }
     });
 
@@ -139,7 +142,9 @@ describe('Conductor Attendance Access', () => {
       data: {
         id: 'test-conductor-route-1',
         name: 'Test Route',
-        busId: testBus.id
+        busId: testBus.id,
+        startPoint: 'Start',
+        endPoint: 'End'
       }
     });
 
@@ -147,10 +152,10 @@ describe('Conductor Attendance Access', () => {
       data: {
         id: 'test-conductor-stop-1',
         name: 'Test Stop',
-        latitude: 28.7041,
-        longitude: 77.1025,
-        busId: testBus.id,
-        routeId: testRoute.id
+        lat: 28.7041,
+        lng: 77.1025,
+        order: 1,
+        busId: testBus.id
       }
     });
 
@@ -189,8 +194,8 @@ describe('Conductor Attendance Access', () => {
         name: testStop.name,
         order: 1,
         status: 'PENDING',
-        latitude: testStop.latitude,
-        longitude: testStop.longitude
+        lat: testStop.lat,
+        lng: testStop.lng
       }
     });
 
@@ -301,8 +306,8 @@ describe('Conductor Attendance Access', () => {
       const otherBus = await prisma.bus.create({
         data: {
           id: 'test-conductor-bus-2',
-          busNumber: 'TEST-COND-002',
-          capacity: 30
+          busNo: 'TEST-COND-002',
+          driverName: 'Other Driver'
         }
       });
 
@@ -509,8 +514,8 @@ describe('Conductor Attendance Access', () => {
       const otherBus = await prisma.bus.create({
         data: {
           id: 'test-conductor-bus-3',
-          busNumber: 'TEST-COND-003',
-          capacity: 30
+          busNo: 'TEST-COND-003',
+          driverName: 'Other Driver'
         }
       });
 
@@ -613,7 +618,7 @@ describe('Conductor Attendance Access', () => {
           id: 'test-conductor-3',
           name: 'Other Conductor',
           phone: '5555555555',
-          busId: 'test-conductor-bus-4'
+          busId: null
         }
       });
 

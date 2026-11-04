@@ -342,9 +342,9 @@ const getCurrentTripStudents = async (req, res) => {
     // Categorize students
     const noStopStudents = [];
     enrichedStudents.forEach(student => {
-      if (!student.relevantStop) {
+      if (!student.relevantStop || !stopMap[student.relevantStop]) {
         noStopStudents.push(student);
-      } else if (stopMap[student.relevantStop]) {
+      } else {
         stopMap[student.relevantStop].students.push(student);
       }
     });

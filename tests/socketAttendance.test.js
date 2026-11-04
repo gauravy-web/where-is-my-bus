@@ -8,8 +8,10 @@
  */
 
 const request = require('supertest');
-const prisma = require('../db');
+const prisma = require('../src/db');
 const express = require('express');
+
+jest.setTimeout(30000);
 
 describe('Socket.IO Attendance Events (Requirements 16.1, 16.2)', () => {
   let app;

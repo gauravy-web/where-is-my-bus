@@ -250,12 +250,7 @@ const getTripNotifications = async (req, res) => {
 
     // Step 1: Load trip to get busId and date (Requirement 5.2)
     const trip = await prisma.trip.findUnique({
-      where: { id: tripId },
-      select: { 
-        busId: true, 
-        status: true, 
-        startedAt: true 
-      }
+      where: { id: tripId }
     });
 
     if (!trip) {
@@ -275,7 +270,8 @@ const getTripNotifications = async (req, res) => {
     }
 
     // Step 3: Query active notifications for the trip's bus and date (Requirements 5.3, 6.5, 14.4)
-    const date = trip.startedAt.toISOString().split('T')[0];
+    const tripStart = trip.startedAt || trip.startTime || new Date();
+    const date = new Date(tripStart).toISOString().split('T')[0];
     const notifications = await prisma.absenceNotification.findMany({
       where: {
         busId: trip.busId,
@@ -296,13 +292,15 @@ const getTripNotifications = async (req, res) => {
     // We need to fetch stop information separately and join it
     const enrichedNotifications = await Promise.all(
       notifications.map(async (notification) => {
-        const stop = await prisma.stop.findUnique({
-          where: { id: notification.stopId },
-          select: { 
-            name: true, 
-            order: true 
-          }
-        });
+        const stop = notification.stopId && notification.stopId !== 'no-stop'
+          ? await prisma.stop.findUnique({
+              where: { id: notification.stopId },
+              select: { 
+                name: true, 
+                order: true 
+              }
+            })
+          : null;
 
         return {
           id: notification.id,
@@ -379,16 +377,33 @@ const getAdminNotifications = async (req, res) => {
       late: notifications.filter(n => n.status === 'LATE').length
     };
 
+    // Resolve stop names for notifications without an embedded stop object
+    const stopMap = new Map();
+    const stopIds = [...new Set(
+      notifications
+        .filter(n => !n.stop && n.stopId && n.stopId !== 'no-stop')
+        .map(n => n.stopId)
+    )];
+    if (stopIds.length > 0 && typeof prisma.stop?.findMany === 'function') {
+      const stops = await prisma.stop.findMany({
+        where: { id: { in: stopIds } },
+        select: { id: true, name: true }
+      });
+      if (Array.isArray(stops)) {
+        stops.forEach(s => stopMap.set(s.id, s.name));
+      }
+    }
+
     // Format response with complete details (Requirement 10.4)
     const formattedNotifications = notifications.map(n => ({
       id: n.id,
       studentId: n.studentId,
-      studentName: n.student.name,
-      studentAdmissionNo: n.student.admissionNo,
-      parentPhone: n.student.parentPhone,
+      studentName: n.student?.name || null,
+      studentAdmissionNo: n.student?.admissionNo || null,
+      parentPhone: n.student?.parentPhone || null,
       busId: n.busId,
       stopId: n.stopId,
-      stopName: n.stop.name,
+      stopName: n.stop?.name || stopMap.get(n.stopId) || null,
       date: n.date,
       reason: n.reason,
       status: n.status,
@@ -440,15 +455,32 @@ module.exports = {
         }
       });
 
+      // Resolve stop names in batch
+      const stopMap = new Map();
+      const stopIds = [...new Set(
+        notifications
+          .filter(n => !n.stop && n.stopId && n.stopId !== 'no-stop')
+          .map(n => n.stopId)
+      )];
+      if (stopIds.length > 0 && typeof prisma.stop?.findMany === 'function') {
+        const stops = await prisma.stop.findMany({
+          where: { id: { in: stopIds } },
+          select: { id: true, name: true }
+        });
+        if (Array.isArray(stops)) {
+          stops.forEach(s => stopMap.set(s.id, s.name));
+        }
+      }
+
       // Format response
       const formattedNotifications = notifications.map(n => ({
         id: n.id,
         studentId: n.studentId,
-        studentName: n.student.name,
+        studentName: n.student?.name || null,
         busId: n.busId,
         tripId: n.tripId,
         stopId: n.stopId,
-        stopName: null,  // Stop relation not in schema
+        stopName: n.stop?.name || stopMap.get(n.stopId) || null,
         date: n.date,
         reason: n.reason,
         status: n.status,

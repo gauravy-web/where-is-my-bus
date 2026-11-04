@@ -213,7 +213,8 @@ exports.Prisma.AttendanceScalarFieldEnum = {
   tripId: 'tripId',
   conductorId: 'conductorId',
   checkedAt: 'checkedAt',
-  type: 'type'
+  type: 'type',
+  absenceReason: 'absenceReason'
 };
 
 exports.Prisma.DriverScalarFieldEnum = {

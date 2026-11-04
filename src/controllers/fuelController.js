@@ -2,6 +2,7 @@ const prisma = require('../db');
 
 const getFuelLogs = async (req, res) => {
   try {
+    if (!prisma.fuelLog) return res.json({ success: true, logs: [] });
     const logs = await prisma.fuelLog.findMany({ orderBy: { date: 'desc' } });
     res.json({ success: true, logs });
   } catch (err) { res.status(500).json({ message: err.message }); }
@@ -11,6 +12,7 @@ const addFuelLog = async (req, res) => {
   try {
     const { busId, litres, cost, odometer, date } = req.body;
     if (!busId || !litres) return res.status(400).json({ message: 'busId and litres required' });
+    if (!prisma.fuelLog) return res.status(501).json({ message: 'Fuel log model not configured' });
     const log = await prisma.fuelLog.create({
       data: { busId, litres: parseFloat(litres), cost: parseFloat(cost)||0, odometer: parseFloat(odometer)||0, date: date||new Date().toISOString() },
     });
@@ -20,6 +22,7 @@ const addFuelLog = async (req, res) => {
 
 const deleteFuelLog = async (req, res) => {
   try {
+    if (!prisma.fuelLog) return res.status(501).json({ message: 'Fuel log model not configured' });
     await prisma.fuelLog.delete({ where: { id: req.params.id } });
     res.json({ success: true });
   } catch (err) { res.status(500).json({ message: err.message }); }

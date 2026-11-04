@@ -1,4 +1,4 @@
-﻿const prisma = require('../db');
+const prisma = require('../db');
 const { validateDropStop, validatePickupStop } = require('../services/stopService');
 const { offsetPaginate, paginationResponse } = require('../utils/pagination');
 
@@ -37,6 +37,7 @@ async function resolveStopLinks(student, pickup, drop) {
 const getStudents = async (req, res) => {
   try {
     const { page, limit, busId, search } = req.query;
+    const isPaginated = page !== undefined || limit !== undefined;
     const { skip, take, page: pageNum, limit: limitNum } = offsetPaginate(page, limit);
 
     // Build where clause
@@ -50,32 +51,38 @@ const getStudents = async (req, res) => {
       ];
     }
 
-    // Fetch paginated students
-    const [students, total] = await Promise.all([
-      prisma.student.findMany({
-        where,
-        skip,
-        take,
-        orderBy: { createdAt: 'desc' },
-        select: {
-          id: true,
-          name: true,
-          admissionNo: true,
-          busId: true,
-          parentPhone: true,
-          parentPhone2: true,
-          class: true,
-          stopId: true,
-          dropStopId: true,
-          fatherName: true,
-          motherName: true,
-          createdAt: true,
-        },
-      }),
-      prisma.student.count({ where }),
-    ]);
+    const queryOptions = {
+      where,
+      ...(isPaginated ? { skip, take } : {}),
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        admissionNo: true,
+        busId: true,
+        parentPhone: true,
+        parentPhone2: true,
+        class: true,
+        stopId: true,
+        dropStopId: true,
+        fatherName: true,
+        motherName: true,
+        createdAt: true,
+      },
+    };
 
-    res.json(paginationResponse(students, total, pageNum, limitNum));
+    const students = await prisma.student.findMany(queryOptions);
+    const total =
+      isPaginated && typeof prisma.student.count === 'function'
+        ? await prisma.student.count({ where })
+        : students.length;
+
+    const effectiveLimit = isPaginated ? limitNum : Math.max(total, limitNum);
+    res.json({
+      success: true,
+      students,
+      ...paginationResponse(students, total, isPaginated ? pageNum : 1, effectiveLimit),
+    });
   } catch (err) {
     console.error('[studentController] getStudents error:', err);
     res.status(500).json({ message: err.message });

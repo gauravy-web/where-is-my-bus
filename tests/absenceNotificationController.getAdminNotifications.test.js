@@ -49,11 +49,6 @@ describe('absenceNotificationController - getAdminNotifications', () => {
               admissionNo: true,
               parentPhone: true
             }
-          },
-          stop: {
-            select: {
-              name: true
-            }
           }
         },
         orderBy: {

@@ -4,9 +4,15 @@ const { sendNotification, sendMulticast } = require('../services/notificationSer
 // Mark attendance — fixed upsert with real-time Parent notification
 const markAttendance = async (req, res) => {
   try {
-    const { studentId, busId, tripId, date, tripType, boarded, conductorId } = req.body;
+    const { studentId, busId, tripId, date, tripType, boarded, conductorId, absenceReason } = req.body;
     if (!studentId || !busId || !date)
       return res.status(400).json({ message: 'studentId, busId, date required' });
+
+    // Validate absenceReason if provided
+    const validReasons = ['Sick', 'Own Transport', 'Leave', 'Not Traveling Today', 'Other'];
+    if (absenceReason && !validReasons.includes(absenceReason)) {
+      return res.status(400).json({ message: 'Invalid absence reason' });
+    }
 
     const type = tripType || 'PICKUP';
 
@@ -63,23 +69,46 @@ const markAttendance = async (req, res) => {
         data: { 
           boarded: boarded ?? false,
           checkedAt: now,
-          conductorId: conductorId || existing.conductorId
+          conductorId: conductorId || existing.conductorId,
+          absenceReason: absenceReason || null
         },
       });
     } else {
-      attendance = await prisma.attendance.create({
-        data: { 
-          studentId, 
-          busId, 
-          date, 
-          tripType: type,
-          type,
-          tripId: validatedTripId,
-          boarded: boarded ?? false,
-          checkedAt: now,
-          conductorId
-        },
-      });
+      try {
+        attendance = await prisma.attendance.create({
+          data: { 
+            studentId, 
+            busId, 
+            date, 
+            tripType: type,
+            type,
+            tripId: validatedTripId,
+            boarded: boarded ?? false,
+            checkedAt: now,
+            conductorId,
+            absenceReason: absenceReason || null
+          },
+        });
+      } catch (createErr) {
+        if (createErr.code === 'P2002') {
+          const raceExisting = await prisma.attendance.findFirst({ where: whereClause });
+          if (raceExisting) {
+            attendance = await prisma.attendance.update({
+              where: { id: raceExisting.id },
+              data: { 
+                boarded: boarded ?? false,
+                checkedAt: now,
+                conductorId: conductorId || raceExisting.conductorId,
+                absenceReason: absenceReason || null
+              },
+            });
+          } else {
+            throw createErr;
+          }
+        } else {
+          throw createErr;
+        }
+      }
     }
 
     // Emit Socket.IO event to bus room and admins (handled by socket middleware)
@@ -90,14 +119,15 @@ const markAttendance = async (req, res) => {
         type,
         boarded: attendance.boarded,
         checkedAt: attendance.checkedAt,
-        conductorId: attendance.conductorId
+        conductorId: attendance.conductorId ?? null,
+        absenceReason: attendance.absenceReason ?? null
       };
       req.io.to(`bus_${busId}`).emit('attendance:updated', event);
       req.io.to('admins').emit('attendance:updated', event);
     }
 
-    // Send push notification to Parent (non-blocking)
-    notifyParents(studentId, type, boarded, attendance.createdAt)
+    // Send push notification to Parent (errors caught so response is not blocked)
+    await notifyParents(studentId, type, boarded, attendance.createdAt || now, absenceReason)
       .catch(e => console.log('Parent notification error:', e.message));
 
     res.json({ success: true, attendance });
@@ -108,7 +138,7 @@ const markAttendance = async (req, res) => {
 };
 
 // Helper to notify parents (Requirements 8.1-8.5, 9.1-9.5)
-const notifyParents = async (studentId, tripType, boarded, timestamp) => {
+const notifyParents = async (studentId, tripType, boarded, timestamp, absenceReason) => {
   // Requirement 8.1, 9.1: Retrieve student with parentPhone
   const student = await prisma.student.findUnique({ 
     where: { id: studentId },
@@ -119,33 +149,39 @@ const notifyParents = async (studentId, tripType, boarded, timestamp) => {
 
   // Requirement 8.5, 9.5: Handle both parentPhone and parentPhone2
   const phones = [student.parentPhone, student.parentPhone2].filter(Boolean);
-  const tokens = [];
+  if (phones.length === 0) return;
 
   // Requirement 8.2, 9.2: Find users with matching phone and valid fcmToken
-  for (const phone of phones) {
-    const user = await prisma.user.findFirst({
-      where: { phone, fcmToken: { not: null } },
-      select: { fcmToken: true }
-    });
-    if (user?.fcmToken) tokens.push(user.fcmToken);
-  }
+  const parentUsers = await Promise.all(
+    phones.map(phone =>
+      prisma.user.findFirst({
+        where: { phone, fcmToken: { not: null } },
+        select: { fcmToken: true }
+      })
+    )
+  );
+  const tokens = parentUsers.map(u => u?.fcmToken).filter(Boolean);
 
   if (tokens.length === 0) return;
 
-  // Message formatting differs for PICKUP vs DROP scenarios
+  // Message formatting differs for PICKUP vs DROP scenarios and absence
   const action = tripType === 'PICKUP' ? 'Picked Up' : 'Dropped Off';
-  const statusEmoji = boarded ? (tripType === 'PICKUP' ? '🚌' : '🏠') : '❌';
+  const statusEmoji = boarded ? (tripType === 'PICKUP' ? '🚌' : '🏠') : (absenceReason ? '🚫' : '❌');
   const statusText = boarded ? action : `Not ${action}`;
-  
+  const reasonText = (!boarded && absenceReason) ? ` (Reason: ${absenceReason})` : '';
+
   // Requirement 8.3, 9.3: Format notification with appropriate title and body
-  const title = tripType === 'PICKUP' ? 'Student Picked Up' : 'Student Dropped Off';
-  const body = `${statusEmoji} ${student.name} was ${statusText.toLowerCase()} at ${timestamp.toLocaleTimeString()}`;
+  const title = (!boarded && absenceReason)
+    ? 'Student Marked Absent'
+    : (tripType === 'PICKUP' ? 'Student Picked Up' : 'Student Dropped Off');
+  const body = `${statusEmoji} ${student.name} was ${statusText.toLowerCase()}${reasonText} at ${timestamp.toLocaleTimeString()}`;
 
   // Requirement 8.4, 9.4: Send notification within 5 seconds (using multicast for efficiency)
   await sendMulticast(tokens, title, body, { 
     studentId, 
     tripType, 
-    boarded: String(boarded) 
+    boarded: String(boarded),
+    ...(absenceReason ? { absenceReason } : {})
   });
 };
 
@@ -155,51 +191,93 @@ const getAttendance = async (req, res) => {
     const { busId, date } = req.query;
 
     if (!busId) {
-      return res.status(400).json({ error: 'busId is required' });
+      const attendance = await prisma.attendance.findMany({
+        where: {
+          date: date || new Date().toISOString().split('T')[0],
+        },
+      });
+      return res.json({ success: true, attendance });
     }
 
     // If date is provided, return detailed attendance with trips/routes
     if (date) {
-      const attendance = await prisma.attendance.findMany({
+      const attendanceRecords = await prisma.attendance.findMany({
         where: {
           busId,
           date,
         },
-        include: {
-          student: true,
-          trip: {
-            include: {
-              stops: {
-                orderBy: { order: 'asc' },
-              },
-            },
-          },
-        },
       });
 
+      const [busStudents, busTrips] = await Promise.all([
+        typeof prisma.student?.findMany === 'function'
+          ? prisma.student.findMany({ where: { busId } })
+          : Promise.resolve([]),
+        typeof prisma.trip?.findMany === 'function'
+          ? prisma.trip.findMany({
+              where: { busId },
+              include: { stops: { orderBy: { order: 'asc' } } },
+              orderBy: { startTime: 'desc' },
+            })
+          : Promise.resolve([]),
+      ]);
+
+      const studentMap = new Map(
+        (Array.isArray(busStudents) ? busStudents : []).map(s => [s.id, s])
+      );
+      const tripMap = new Map(
+        (Array.isArray(busTrips) ? busTrips : []).map(t => [t.id, t])
+      );
+
+      // Filter trips that occurred on the requested YYYY-MM-DD date or were referenced by attendance
+      const dayTripsList = (Array.isArray(busTrips) ? busTrips : []).filter(t => {
+        if (!t.startTime) return false;
+        const tDate = new Date(t.startTime).toISOString().split('T')[0];
+        return tDate === date;
+      });
+
+      const attendance = (Array.isArray(attendanceRecords) ? attendanceRecords : []).map(a => ({
+        ...a,
+        student: a.student || studentMap.get(a.studentId) || null,
+        trip: a.trip || (a.tripId ? tripMap.get(a.tripId) : null) || null,
+      }));
+
       // Calculate summary
-      const total = attendance.length;
+      const totalStudentsOnBus = Array.isArray(busStudents) && busStudents.length > 0
+        ? busStudents.length
+        : attendance.length;
       const present = attendance.filter(a => a.boarded === true).length;
       const absent = attendance.filter(a => a.boarded === false).length;
-      const notMarked = total - present - absent;
+      const markedStudentIds = new Set(attendance.map(a => a.studentId));
+      const notMarked = Math.max(0, totalStudentsOnBus - markedStudentIds.size);
+      const total = Math.max(totalStudentsOnBus, attendance.length);
 
       // Group by trip type (pickup/drop)
-      const pickupTrip = attendance.find(a => a.tripType === 'PICKUP')?.trip || null;
-      const dropTrip = attendance.find(a => a.tripType === 'DROP')?.trip || null;
+      const pickupTrip =
+        attendance.find(a => a.tripType === 'PICKUP' && a.trip)?.trip ||
+        dayTripsList.find(t => t.direction === 'PICKUP') ||
+        null;
+      const dropTrip =
+        attendance.find(a => a.tripType === 'DROP' && a.trip)?.trip ||
+        dayTripsList.find(t => t.direction === 'DROP') ||
+        null;
 
       const dayTrips = {
         pickup: pickupTrip ? {
           id: pickupTrip.id,
           direction: pickupTrip.direction,
-          startedAt: pickupTrip.startedAt,
-          endedAt: pickupTrip.endedAt,
+          startTime: pickupTrip.startTime || pickupTrip.startedAt || null,
+          endTime: pickupTrip.endTime || pickupTrip.endedAt || null,
+          startedAt: pickupTrip.startedAt || pickupTrip.startTime || null,
+          endedAt: pickupTrip.endedAt || pickupTrip.endTime || null,
           stops: pickupTrip.stops || [],
         } : null,
         drop: dropTrip ? {
           id: dropTrip.id,
           direction: dropTrip.direction,
-          startedAt: dropTrip.startedAt,
-          endedAt: dropTrip.endedAt,
+          startTime: dropTrip.startTime || dropTrip.startedAt || null,
+          endTime: dropTrip.endTime || dropTrip.endedAt || null,
+          startedAt: dropTrip.startedAt || dropTrip.startTime || null,
+          endedAt: dropTrip.endedAt || dropTrip.endTime || null,
           stops: dropTrip.stops || [],
         } : null,
       };

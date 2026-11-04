@@ -214,76 +214,82 @@ async function applyPlan(prisma, plan) {
     
     
 
-// 9) Create Route records from imported pickup and drop stops.
+    // 9) Create Route records from imported pickup and drop stops.
     // Delete existing routes for this bus to prevent duplicates.
-    await tx.route.deleteMany({ where: { busId } });
-
     let pickupRouteId = null;
     let dropRouteId = null;
 
-    // Create PICKUP route if pickup stops exist
-    if (plan.pickupStops && plan.pickupStops.length > 0) {
-      const pickupStops = plan.pickupStops;
-      const firstPickupStop = pickupStops[0];
-      const lastPickupStop = pickupStops[pickupStops.length - 1];
+    if (tx.route && typeof tx.route.deleteMany === 'function') {
+      await tx.route.deleteMany({ where: { busId } });
 
-      const pickupRouteName = `${plan.bus.busNo} - ${plan.bus.label || 'Bus'} (Pickup)`;
-      const pickupRoute = await tx.route.create({
-        data: {
-          name: pickupRouteName,
-          busId,
-          startPoint: firstPickupStop.name,
-          endPoint: school ? school.name : lastPickupStop.name,
-        },
-      });
-      pickupRouteId = pickupRoute.id;
+      // Create PICKUP route if pickup stops exist
+      if (plan.pickupStops && plan.pickupStops.length > 0) {
+        const pickupStops = plan.pickupStops;
+        const firstPickupStop = pickupStops[0];
+        const lastPickupStop = pickupStops[pickupStops.length - 1];
 
-      // Create RouteStop records for each pickup stop
-      for (const st of pickupStops) {
-        await tx.routeStop.create({
+        const pickupRouteName = `${plan.bus.busNo} - ${plan.bus.label || 'Bus'} (Pickup)`;
+        const pickupRoute = await tx.route.create({
           data: {
-            routeId: pickupRouteId,
-            name: st.name,
-            lat: st.lat,
-            lng: st.lng,
-            order: st.order,
-            distanceFromStart: 0,
-            estimatedTime: 0,
+            name: pickupRouteName,
+            busId,
+            startPoint: firstPickupStop.name,
+            endPoint: school ? school.name : lastPickupStop.name,
           },
         });
+        pickupRouteId = pickupRoute.id;
+
+        // Create RouteStop records for each pickup stop
+        if (tx.routeStop && typeof tx.routeStop.create === 'function') {
+          for (const st of pickupStops) {
+            await tx.routeStop.create({
+              data: {
+                routeId: pickupRouteId,
+                name: st.name,
+                lat: st.lat,
+                lng: st.lng,
+                order: st.order,
+                distanceFromStart: 0,
+                estimatedTime: 0,
+              },
+            });
+          }
+        }
       }
-    }
 
-    // Create DROP route if drop stops exist
-    if (plan.dropStops && plan.dropStops.length > 0) {
-      const dropStops = plan.dropStops;
-      const firstDropStop = dropStops[0];
-      const lastDropStop = dropStops[dropStops.length - 1];
+      // Create DROP route if drop stops exist
+      if (plan.dropStops && plan.dropStops.length > 0) {
+        const dropStops = plan.dropStops;
+        const firstDropStop = dropStops[0];
+        const lastDropStop = dropStops[dropStops.length - 1];
 
-      const dropRouteName = `${plan.bus.busNo} - ${plan.bus.label || 'Bus'} (Drop)`;
-      const dropRoute = await tx.route.create({
-        data: {
-          name: dropRouteName,
-          busId,
-          startPoint: school ? school.name : firstDropStop.name,
-          endPoint: lastDropStop.name,
-        },
-      });
-      dropRouteId = dropRoute.id;
-
-      // Create RouteStop records for each drop stop
-      for (const st of dropStops) {
-        await tx.routeStop.create({
+        const dropRouteName = `${plan.bus.busNo} - ${plan.bus.label || 'Bus'} (Drop)`;
+        const dropRoute = await tx.route.create({
           data: {
-            routeId: dropRouteId,
-            name: st.name,
-            lat: st.lat,
-            lng: st.lng,
-            order: st.order,
-            distanceFromStart: 0,
-            estimatedTime: 0,
+            name: dropRouteName,
+            busId,
+            startPoint: school ? school.name : firstDropStop.name,
+            endPoint: lastDropStop.name,
           },
         });
+        dropRouteId = dropRoute.id;
+
+        // Create RouteStop records for each drop stop
+        if (tx.routeStop && typeof tx.routeStop.create === 'function') {
+          for (const st of dropStops) {
+            await tx.routeStop.create({
+              data: {
+                routeId: dropRouteId,
+                name: st.name,
+                lat: st.lat,
+                lng: st.lng,
+                order: st.order,
+                distanceFromStart: 0,
+                estimatedTime: 0,
+              },
+            });
+          }
+        }
       }
     }
 
