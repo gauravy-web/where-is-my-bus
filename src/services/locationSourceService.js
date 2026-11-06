@@ -46,7 +46,7 @@ const toMs = (v) => {
 function normalizeDeviceFix(body) {
   const src = body && typeof body === 'object' ? body : null;
   if (!src) return null;
-  let { recordedAt } = src;
+  let recordedAt = src.recordedAt !== undefined ? src.recordedAt : src.timestamp;
   if (typeof recordedAt === 'string' && /^\d+(\.\d+)?$/.test(recordedAt.trim())) {
     recordedAt = Number(recordedAt);
   }
