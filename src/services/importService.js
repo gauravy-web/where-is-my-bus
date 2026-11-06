@@ -119,8 +119,37 @@ async function applyPlan(prisma, plan) {
     }
 
     // 3) Driver and Conductor by phone, assigned to this bus only.
-    if (plan.driver) await assignStaff(tx.driver, plan.driver, busId);
-    if (plan.conductor) await assignStaff(tx.conductor, plan.conductor, busId);
+    let driverUsersCreated = 0;
+    
+    if (plan.driver) {
+      await assignStaff(tx.driver, plan.driver, busId);
+      
+      // Auto-create User account for driver with password = phone (for testing)
+      try {
+        const bcrypt = require('bcrypt');
+        const existingUser = await tx.user.findUnique({ where: { phone: plan.driver.phone } });
+        
+        if (!existingUser) {
+          const hashedPassword = await bcrypt.hash(plan.driver.phone, 10);
+          await tx.user.create({
+            data: {
+              phone: plan.driver.phone,
+              name: plan.driver.name || null,
+              role: 'DRIVER',
+              password: hashedPassword,
+            },
+          });
+          driverUsersCreated += 1;
+          console.log(`[IMPORT] Auto-created driver user with password = phone (testing mode)`);
+        }
+      } catch (userErr) {
+        console.log(`[IMPORT] Driver user creation failed:`, userErr.message);
+      }
+    }
+    
+    if (plan.conductor) {
+      await assignStaff(tx.conductor, plan.conductor, busId);
+    }
 
     // 4) School name and contact; coordinates are never set by the importer.
     const school = await tx.school.findFirst();
@@ -138,6 +167,8 @@ async function applyPlan(prisma, plan) {
     let created = 0;
     let updated = 0;
     const idByAdmissionNo = new Map();
+    const parentPhonesToCreate = new Set(); // Track unique parent phones
+    
     for (const s of plan.students) {
       const data = {
         name: s.name,
@@ -156,6 +187,38 @@ async function applyPlan(prisma, plan) {
         created += 1;
       }
       idByAdmissionNo.set(s.admissionNo, row.id);
+      
+      // Collect parent phones for user creation
+      if (s.parentPhone) parentPhonesToCreate.add(s.parentPhone);
+    }
+
+    // Auto-create User accounts for parents with password = phone (for testing)
+    const bcrypt = require('bcrypt');
+    let parentsCreated = 0;
+    
+    for (const phone of parentPhonesToCreate) {
+      try {
+        const existingUser = await tx.user.findUnique({ where: { phone } });
+        
+        if (!existingUser) {
+          const hashedPassword = await bcrypt.hash(phone, 10);
+          await tx.user.create({
+            data: {
+              phone,
+              role: 'PARENT',
+              password: hashedPassword,
+            },
+          });
+          parentsCreated += 1;
+        }
+      } catch (userErr) {
+        console.log(`[IMPORT] Parent user creation failed for ${phone}:`, userErr.message);
+        // Continue with other users even if one fails
+      }
+    }
+    
+    if (parentsCreated > 0) {
+      console.log(`[IMPORT] Auto-created ${parentsCreated} parent users with password = phone (testing mode)`);
     }
 
     // 6) Students of this bus missing from the sheet keep their row; clear links to this bus's stops.
@@ -340,7 +403,7 @@ function createImportService({ prisma, now = () => Date.now(), ttlMs = DEFAULT_T
     return { previewToken, fileName, rows: parsed.students, ...plan };
   }
 
-  async function confirm({ previewToken, adminId }) {
+  async function confirm({ previewToken, adminId, resolveConflicts = false }) {
     sweep();
     const entry = typeof previewToken === 'string' ? cache.get(previewToken) : undefined;
     if (!entry || entry.adminId === undefined || entry.adminId !== adminId) {
@@ -348,7 +411,7 @@ function createImportService({ prisma, now = () => Date.now(), ttlMs = DEFAULT_T
     }
 
     const existing = await loadExisting(prisma, entry.parsed);
-    const plan = buildPlan({ ...entry.parsed, missing: entry.missing }, existing);
+    const plan = buildPlan({ ...entry.parsed, missing: entry.missing }, existing, { resolveConflicts: Boolean(resolveConflicts) });
     if (existing.activeTrip) throw new ImportError(409, ACTIVE_TRIP_MESSAGE);
     if (!plan.canConfirm) {
       throw new ImportError(400, 'The sheet has problems', { blockers: plan.blockers });

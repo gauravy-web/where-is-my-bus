@@ -585,7 +585,7 @@ function buildStops(students, field, suffix) {
  * @param {{ students: object[], errors?: object[], missing?: string[] }} parsed
  * @param {object} [existing]
  */
-function buildPlan(parsed, existing = {}) {
+function buildPlan(parsed, existing = {}, options = {}) {
   const students = (parsed && Array.isArray(parsed.students)) ? parsed.students : [];
   const rowErrors = (parsed && Array.isArray(parsed.errors)) ? parsed.errors : [];
   const missingHeaders = (parsed && Array.isArray(parsed.missing)) ? parsed.missing : [];
@@ -691,12 +691,28 @@ function buildPlan(parsed, existing = {}) {
   if (students.length === 0) blockers.push('The sheet has no student rows');
   if (rowErrors.length > 0) blockers.push(`${rowErrors.length} row error(s)`);
   for (const c of conflicts) {
-    blockers.push(`Rows disagree on ${FIELD_LABELS[c.field]}: ${c.values.map((v) => `"${v.value}" (rows ${v.rows.join(', ')})`).join(' vs ')}`);
+    if (options.resolveConflicts && c.field !== 'busNo') {
+      const chosen = firstNonBlank(students, c.field);
+      warnings.push(`Resolved conflict for ${FIELD_LABELS[c.field] || c.field}: using "${chosen}" (disagreed across rows)`);
+    } else {
+      blockers.push(`Rows disagree on ${FIELD_LABELS[c.field]}: ${c.values.map((v) => `"${v.value}" (rows ${v.rows.join(', ')})`).join(' vs ')}`);
+    }
   }
   for (const e of [...pickupCheck.errors, ...dropCheck.errors]) blockers.push(e.message);
   for (const d of duplicateRollNumbers) blockers.push(`Roll Number ${d.rollNo} is used by rows ${d.rows.join(', ')}`);
   for (const a of ambiguous) blockers.push(`Roll Number ${a.admissionNo} matches ${a.matches.length} existing students`);
   if (ex.activeTrip) blockers.push('The bus has an active trip');
+
+  const canResolveConflicts = conflicts.length > 0
+    && conflicts.every((c) => c.field !== 'busNo')
+    && missingHeaders.length === 0
+    && students.length > 0
+    && rowErrors.length === 0
+    && pickupCheck.errors.length === 0
+    && dropCheck.errors.length === 0
+    && duplicateRollNumbers.length === 0
+    && ambiguous.length === 0
+    && !ex.activeTrip;
 
   return {
     bus,
@@ -714,6 +730,7 @@ function buildPlan(parsed, existing = {}) {
     duplicateRollNumbers,
     warnings,
     canConfirm: blockers.length === 0,
+    canResolveConflicts,
     blockers,
   };
 }

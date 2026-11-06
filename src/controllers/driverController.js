@@ -71,6 +71,30 @@ const createDriver = async (req, res) => {
     });
     console.log('[DRIVER] createDriver: CREATED SUCCESSFULLY', driver.id);
 
+    // Auto-create User account for driver with password = phone (for testing)
+    try {
+      const bcrypt = require('bcrypt');
+      const existingUser = await prisma.user.findUnique({ where: { phone } });
+      
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(phone, 10);
+        await prisma.user.create({
+          data: {
+            phone,
+            name: name || null,
+            role: 'DRIVER',
+            password: hashedPassword,
+          },
+        });
+        console.log('[DRIVER] createDriver: Auto-created user account with password = phone (testing mode)');
+      } else {
+        console.log('[DRIVER] createDriver: User account already exists, skipping user creation');
+      }
+    } catch (userErr) {
+      console.log('[DRIVER] createDriver: User creation failed (non-fatal):', userErr.message);
+      // Don't fail the driver creation if user creation fails
+    }
+
     res.status(201).json({ success: true, driver });
     console.log('[DRIVER] createDriver: response sent');
   } catch (err) {

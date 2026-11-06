@@ -120,6 +120,31 @@ const addStudent = async (req, res) => {
         ...optional,
       },
     });
+
+    // Auto-create User account for parent with password = parentPhone (for testing)
+    try {
+      const bcrypt = require('bcrypt');
+      const existingUser = await prisma.user.findUnique({ where: { phone: parentPhone } });
+      
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(parentPhone, 10);
+        await prisma.user.create({
+          data: {
+            phone: parentPhone,
+            name: optional.fatherName || optional.motherName || null,
+            role: 'PARENT',
+            password: hashedPassword,
+          },
+        });
+        console.log('[STUDENT] addStudent: Auto-created parent user with password = phone (testing mode)');
+      } else {
+        console.log('[STUDENT] addStudent: Parent user already exists, skipping user creation');
+      }
+    } catch (userErr) {
+      console.log('[STUDENT] addStudent: Parent user creation failed (non-fatal):', userErr.message);
+      // Don't fail the student creation if user creation fails
+    }
+
     res.json({ success: true, student });
   } catch (err) {
     console.error('[studentController] addStudent error:', err);

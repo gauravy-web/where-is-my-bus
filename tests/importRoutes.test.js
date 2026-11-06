@@ -1,4 +1,4 @@
-﻿// Smoke tests for the School_Sheet import routes (task 15.3; full example tests are task 15.5).
+// Smoke tests for the School_Sheet import routes (task 15.3; full example tests are task 15.5).
 // Prisma is an in-memory fake and FCM is mocked. The fixture is built in the test with exceljs;
 // the school's real sheet is never read.
 process.env.NODE_ENV = 'test';
@@ -229,6 +229,37 @@ describe('confirm', () => {
     const again = await request(app).post('/api/import/school-sheet/confirm')
       .set('Authorization', ADMIN).send({ previewToken: pre.body.previewToken });
     expect(again.status).toBe(410);
+  });
+
+  test('confirm with resolveConflicts: true successfully imports sheet with conflicting staff phone', async () => {
+    // Row 4 has different driver contact number
+    const rowsWithConflict = [
+      ...ROWS.slice(0, 2),
+      [
+        3, 'Amit Kumar', 'KPS-103', 'Suresh', 'Lata', '+91 98765-43213', '', 5, 'RJ 37 PJ 5689', 'kalu', 'Rohan',
+        '21.260000, 81.320000', '21.260000, 81.320000', 'Krishna Public School', '9898989898', '9988776655', '9090909090', 3, 1,
+      ],
+    ];
+    const quote = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const lines = [HEADERS, ...rowsWithConflict].map((r) => r.map(quote).join(','));
+    const conflictBuf = Buffer.from(`\uFEFF${lines.join('\r\n')}\r\n`, 'utf8');
+
+    const pre = await preview(conflictBuf, 'conflict.csv');
+    expect(pre.status).toBe(200);
+    expect(pre.body.canConfirm).toBe(false);
+    expect(pre.body.canResolveConflicts).toBe(true);
+
+    // Confirm without resolveConflicts fails
+    const failRes = await request(app).post('/api/import/school-sheet/confirm')
+      .set('Authorization', ADMIN).send({ previewToken: pre.body.previewToken, resolveConflicts: false });
+    expect(failRes.status).toBe(400);
+
+    // Confirm with resolveConflicts succeeds
+    const okRes = await request(app).post('/api/import/school-sheet/confirm')
+      .set('Authorization', ADMIN).send({ previewToken: pre.body.previewToken, resolveConflicts: true });
+    expect(okRes.status).toBe(200);
+    expect(okRes.body.success).toBe(true);
+    expect(okRes.body.result.warnings.length).toBeGreaterThan(0);
   });
 
   test('unknown token or another admin gets 410', async () => {

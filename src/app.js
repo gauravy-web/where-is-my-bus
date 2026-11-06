@@ -11,6 +11,9 @@ const { getConfig } = require('./config/env');
 
 const app = express();
 
+// Trust reverse proxy headers (Render, Cloudflare) for rate limiting & IP resolution
+app.set('trust proxy', 1);
+
 // Public, credential-free build marker. It lets a mobile client or browser
 // prove which backend is handling a request without exposing database details.
 const runtimeInfo = Object.freeze({

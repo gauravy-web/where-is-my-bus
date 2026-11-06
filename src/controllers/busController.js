@@ -201,13 +201,7 @@ const getBusFullInfo = async (req, res) => {
       },
     });
 
-    const conductor = prisma.conductor?.findFirst
-      ? await prisma.conductor.findFirst({
-          where: {
-            busId,
-          },
-        })
-      : null;
+    const conductor = null;
 
 
     // Independent pickup and drop sequences, each in saved order only
@@ -247,17 +241,7 @@ const getBusFullInfo = async (req, res) => {
           }
         : null,
 
-      ...(prisma.conductor?.findFirst
-        ? {
-            conductor: conductor
-              ? {
-                  id: conductor.id,
-                  name: conductor.name,
-                  phone: conductor.phone,
-                }
-              : null,
-          }
-        : {}),
+      conductor: null,
 
       // `stops` stays the pickup sequence for older clients.
       stops: pickupStops.map(toStopDto),

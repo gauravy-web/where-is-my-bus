@@ -405,4 +405,16 @@ describe('buildPlan', () => {
     }]);
     expect(plan.students[0].action).toBe('ambiguous');
   });
+
+  test('staff conflicts can be resolved with resolveConflicts option', () => {
+    const parsed = parseSample();
+    const previewPlan = buildPlan(parsed, {});
+    expect(previewPlan.canConfirm).toBe(false);
+    expect(previewPlan.canResolveConflicts).toBe(true);
+
+    const resolvedPlan = buildPlan(parsed, {}, { resolveConflicts: true });
+    expect(resolvedPlan.canConfirm).toBe(true);
+    expect(resolvedPlan.warnings.length).toBeGreaterThan(0);
+    expect(resolvedPlan.driver.phone).toBe('9111111111');
+  });
 });
